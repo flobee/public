@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# Options:
+#free -m
+#free -g
+#cat /proc/meminfo
+# echo "$(grep 'MemFree' /proc/meminfo | cut -d: -f2) / $(grep 'MemTotal' /proc/meminfo | cut -d: -f2)"
+# echo $(grep 'Buffer' /proc/meminfo | cut -d: -f2)
+
+free -m | grep - | awk '{print $4}'

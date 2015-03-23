@@ -1,0 +1,3 @@
+#!/bin/sh
+
+free -m | grep - | awk '{print $3}'

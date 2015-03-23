@@ -1,0 +1,8 @@
+#!/bin/bash
+#
+# Hmmm !?
+#awk 'NR==1 {p=substr(sprintf("%3.2f", ($2+$3)/($2+$3+$4+$5)*100),0,4); printf "%g\n", p;}' < /proc/stat
+#awk 'NR==2 {p=substr(sprintf("%3.2f", ($2+$3)/($2+$3+$4+$5)*100),0,4); printf "%g\n", p;}' < /proc/stat
+#awk 'NR==3 {p=substr(sprintf("%3.2f", ($2+$3)/($2+$3+$4+$5)*100),0,4); printf "%g\n", p;}' < /proc/stat
+# calculation of all processes
+ps aux | awk {'sum+=$3;print sum'} | tail -n 1
