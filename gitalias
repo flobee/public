@@ -1,32 +1,32 @@
 [alias]
-	co = checkout
-	ci = commit
-	st = status
-	stat = status -sb
-	br = branch
-	#fall = fetch --all
-	#mr = merge
-	unstage = reset HEAD
-	#pl = pull
-	#ps = push
-	#ls = stash list
-	#save = stash save
-	#pop = stash pop
-	#verbose = log --graph --stat --pretty=format:'The author of %C(red)%h%Creset was %C(green)%an%Creset, %C(blue)%ar%Creset, and they said \n%s\n%b\n%Creset'
-	# gist = log --format='%C(red)%h%Creset %C(green)%an%Creset - %C(yellow)%s%Creset' --graph
-	#gist = log --pretty=format:'%C(red)%h%Creset%C(blue)%d %C(green)%an%Creset - %s %C(blue)(%cr)%Creset' --graph --date=relative
-	#continue = !git add . && git rebase --continue
-	#url = config --local --get-regexp remote\\.\\.\\*\\.url
-	last = log -1 --graph --stat --pretty=format:'The author of %Cblue%h%Creset was %C(yellow)%an%Creset, %C(blue)%ar%Creset, and they said \n%C(yellow)%s\n%b\n%Creset'
-	#all = !git add . && git commit
-	#amend = commit --amend
-	#spl = !git svn fetch && git svn rebase
-	#sps = !git svn dcommit
-	#df = diff
-	#patch = add --patch
-	#cached = !git diff --cached --
-	discard = "!git checkout -- "
-	#local = branch --list 
+    co = checkout
+    ci = commit
+    st = status
+    stat = status -sb
+    br = branch
+    #fall = fetch --all
+    #mr = merge
+    unstage = reset HEAD
+    #pl = pull
+    #ps = push
+    #ls = stash list
+    #save = stash save
+    #pop = stash pop
+    #verbose = log --graph --stat --pretty=format:'The author of %C(red)%h%Creset was %C(green)%an%Creset, %C(blue)%ar%Creset, and they said \n%s\n%b\n%Creset'
+    # gist = log --format='%C(red)%h%Creset %C(green)%an%Creset - %C(yellow)%s%Creset' --graph
+    #gist = log --pretty=format:'%C(red)%h%Creset%C(blue)%d %C(green)%an%Creset - %s %C(blue)(%cr)%Creset' --graph --date=relative
+    #continue = !git add . && git rebase --continue
+    #url = config --local --get-regexp remote\\.\\.\\*\\.url
+    last = log -1 --graph --stat --pretty=format:'The author of %Cblue%h%Creset was %C(yellow)%an%Creset, %C(blue)%ar%Creset, and they said \n%C(yellow)%s\n%b\n%Creset'
+    #all = !git add . && git commit
+    #amend = commit --amend
+    #spl = !git svn fetch && git svn rebase
+    #sps = !git svn dcommit
+    #df = diff
+    #patch = add --patch
+    #cached = !git diff --cached --
+    discard = "!git checkout -- "
+    #local = branch --list
 
     # git alias : list all aliases
     # useful in order to learn git syntax
