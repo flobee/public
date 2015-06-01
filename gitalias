@@ -1,0 +1,72 @@
+[alias]
+	co = checkout
+	ci = commit
+	st = status
+	stat = status -sb
+	br = branch
+	#fall = fetch --all
+	#mr = merge
+	unstage = reset HEAD
+	#pl = pull
+	#ps = push
+	#ls = stash list
+	#save = stash save
+	#pop = stash pop
+	#verbose = log --graph --stat --pretty=format:'The author of %C(red)%h%Creset was %C(green)%an%Creset, %C(blue)%ar%Creset, and they said \n%s\n%b\n%Creset'
+	# gist = log --format='%C(red)%h%Creset %C(green)%an%Creset - %C(yellow)%s%Creset' --graph
+	#gist = log --pretty=format:'%C(red)%h%Creset%C(blue)%d %C(green)%an%Creset - %s %C(blue)(%cr)%Creset' --graph --date=relative
+	#continue = !git add . && git rebase --continue
+	#url = config --local --get-regexp remote\\.\\.\\*\\.url
+	last = log -1 --graph --stat --pretty=format:'The author of %Cblue%h%Creset was %C(yellow)%an%Creset, %C(blue)%ar%Creset, and they said \n%C(yellow)%s\n%b\n%Creset'
+	#all = !git add . && git commit
+	#amend = commit --amend
+	#spl = !git svn fetch && git svn rebase
+	#sps = !git svn dcommit
+	#df = diff
+	#patch = add --patch
+	#cached = !git diff --cached --
+	discard = "!git checkout -- "
+	#local = branch --list 
+
+    # git alias : list all aliases
+    # useful in order to learn git syntax
+    alias = "!git config -l | grep alias | cut -c 7-"
+
+
+
+######################
+#Submodules aliases
+######################
+
+
+#git sm-trackbranch : places all submodules on their respective branch specified in .gitmodules
+#This works if submodules are configured to track a branch, i.e if .gitmodules looks like :
+#[submodule "my-submodule"]
+#   path = my-submodule
+#   url = git@wherever.you.like/my-submodule.git
+#   branch = my-branch
+sm-trackbranch = "! git submodule foreach -q --recursive 'branch=\"$(git config -f $toplevel/.gitmodules submodule.$name.branch)\"; git checkout $branch'"
+
+#sm-pullrebase :
+# - pull --rebase on the master repo
+# - sm-trackbranch on every submodule
+# - pull --rebase on each submodule
+#
+# Important note :
+#- have a clean master repo and subrepos before doing this !
+#- this is *not* equivalent to getting the last committed 
+#  master repo + its submodules: if some submodules are tracking branches 
+#  that have evolved since the last commit in the master repo,
+#  they will be using those more recent commits !
+#
+#  (Note : On the contrary, git submodule update will stick 
+#to the last committed SHA1 in the master repo)
+#
+sm-pullrebase = "! git pull --rebase; git submodule update; git sm-trackbranch ; git submodule foreach 'git pull --rebase' "
+
+# git sm-diff will diff the master repo *and* its submodules
+sm-diff = "! git diff && git submodule foreach 'git diff' "
+
+#git sm-push will ask to push also submodules
+sm-push = push --recurse-submodules=on-demand
+
