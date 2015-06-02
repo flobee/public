@@ -12,7 +12,7 @@
     #ls = stash list
     #save = stash save
     #pop = stash pop
-    #verbose = log --graph --stat --pretty=format:'The author of %C(red)%h%Creset was %C(green)%an%Creset, %C(blue)%ar%Creset, and they said \n%s\n%b\n%Creset'
+    verbose = log --graph --stat --pretty=format:'The author of %C(red)%h%Creset was %C(green)%an%Creset, %C(blue)%ar%Creset, and they said \n%s\n%b\n%Creset'
     # gist = log --format='%C(red)%h%Creset %C(green)%an%Creset - %C(yellow)%s%Creset' --graph
     #gist = log --pretty=format:'%C(red)%h%Creset%C(blue)%d %C(green)%an%Creset - %s %C(blue)(%cr)%Creset' --graph --date=relative
     #continue = !git add . && git rebase --continue
@@ -26,7 +26,7 @@
     #patch = add --patch
     #cached = !git diff --cached --
     discard = "!git checkout -- "
-    #local = branch --list
+    local = branch --list
 
     # git alias : list all aliases
     # useful in order to learn git syntax
