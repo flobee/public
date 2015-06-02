@@ -1,8 +1,8 @@
 [alias]
     co = checkout
     ci = commit
-    st = status
-    stat = status -sb
+    st = status -sb
+    stat = status
     br = branch
     #fall = fetch --all
     #mr = merge
