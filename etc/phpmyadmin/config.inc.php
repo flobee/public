@@ -1,6 +1,9 @@
 <?php
 
 // bring back my old fashion style
+$cfg['Servers'][$i]['controluser'] = 'das ist richtig!';
+$cfg['Servers'][$i]['controlpass'] = 'guckst du digga :-)';
+
 
 $cfg['NumRecentTables'] = 20;
 $cfg['NumFavoriteTables'] = 20;
