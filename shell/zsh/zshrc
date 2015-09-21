@@ -1,0 +1,667 @@
+# Filename:      /etc/zsh/zshrc
+# Purpose:       config file for zsh (z shell)
+# Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
+# Bug-Reports:   see http://grml.org/bugs/
+# License:       This file is licensed under the GPL v2.
+################################################################################
+# This file is sourced only for interactive shells. It
+# should contain commands to set up aliases, functions,
+# options, key bindings, etc.
+#
+# Global Order: zshenv, zprofile, zshrc, zlogin
+################################################################################
+# USAGE
+# If you are using this file as your ~/.zshrc file, please use ~/.zshrc.pre
+# and ~/.zshrc.local for your own customisations. The former file is read
+# before ~/.zshrc, the latter is read after it. Also, consider reading the
+# refcard and the reference manual for this setup, both available from:
+#     <http://grml.org/zsh/>
+
+# Contributing:
+# If you want to help to improve grml's zsh setup, clone the grml-etc-core
+# repository from git.grml.org:
+#   git clone git://git.grml.org/grml-etc-core.git
+#
+# Make your changes, commit them; use 'git format-patch' to create a series
+# of patches and send those to the following address via 'git send-email':
+#   grml-etc-core@grml.org
+#
+# Doing so makes sure the right people get your patches for review and
+# possibly inclusion.
+
+# zsh-refcard-tag documentation:
+#   You may notice strange looking comments in this file.
+#   These are there for a purpose. grml's zsh-refcard can now be
+#   automatically generated from the contents of the actual configuration
+#   file. However, we need a little extra information on which comments
+#   and what lines of code to take into account (and for what purpose).
+#
+# Here is what they mean:
+#
+# List of tags (comment types) used:
+#   #a#     Next line contains an important alias, that should
+#           be included in the grml-zsh-refcard.
+#           (placement tag: @@INSERT-aliases@@)
+#   #f#     Next line contains the beginning of an important function.
+#           (placement tag: @@INSERT-functions@@)
+#   #v#     Next line contains an important variable.
+#           (placement tag: @@INSERT-variables@@)
+#   #k#     Next line contains an important keybinding.
+#           (placement tag: @@INSERT-keybindings@@)
+#   #d#     Hashed directories list generation:
+#               start   denotes the start of a list of 'hash -d'
+#                       definitions.
+#               end     denotes its end.
+#           (placement tag: @@INSERT-hasheddirs@@)
+#   #A#     Abbreviation expansion list generation:
+#               start   denotes the beginning of abbreviations.
+#               end     denotes their end.
+#           Lines within this section that end in '#d .*' provide
+#           extra documentation to be included in the refcard.
+#           (placement tag: @@INSERT-abbrev@@)
+#   #m#     This tag allows you to manually generate refcard entries
+#           for code lines that are hard/impossible to parse.
+#               Example:
+#                   #m# k ESC-h Call the run-help function
+#               That would add a refcard entry in the keybindings table
+#               for 'ESC-h' with the given comment.
+#           So the syntax is: #m# <section> <argument> <comment>
+#   #o#     This tag lets you insert entries to the 'other' hash.
+#           Generally, this should not be used. It is there for
+#           things that cannot be done easily in another way.
+#           (placement tag: @@INSERT-other-foobar@@)
+#
+#   All of these tags (except for m and o) take two arguments, the first
+#   within the tag, the other after the tag:
+#
+#   #<tag><section># <comment>
+#
+#   Where <section> is really just a number, which are defined by the
+#   @secmap array on top of 'genrefcard.pl'. The reason for numbers
+#   instead of names is, that for the reader, the tag should not differ
+#   much from a regular comment. For zsh, it is a regular comment indeed.
+#   The numbers have got the following meanings:
+#         0 -> "default"
+#         1 -> "system"
+#         2 -> "user"
+#         3 -> "debian"
+#         4 -> "search"
+#         5 -> "shortcuts"
+#         6 -> "services"
+#
+#   So, the following will add an entry to the 'functions' table in the
+#   'system' section, with a (hopefully) descriptive comment:
+#       #f1# Edit an alias via zle
+#       edalias() {
+#
+#   It will then show up in the @@INSERT-aliases-system@@ replacement tag
+#   that can be found in 'grml-zsh-refcard.tex.in'.
+#   If the section number is omitted, the 'default' section is assumed.
+#   Furthermore, in 'grml-zsh-refcard.tex.in' @@INSERT-aliases@@ is
+#   exactly the same as @@INSERT-aliases-default@@. If you want a list of
+#   *all* aliases, for example, use @@INSERT-aliases-all@@.
+
+# zsh profiling
+# just execute 'ZSH_PROFILE_RC=1 zsh' and run 'zprof' to get the details
+if [[ $ZSH_PROFILE_RC -gt 0 ]] ; then
+    zmodload zsh/zprof
+fi
+
+# load .zshrc.pre to give the user the chance to overwrite the defaults
+[[ -r ${HOME}/.zshrc.pre ]] && source ${HOME}/.zshrc.pre
+
+# check for version/system
+# check for versions (compatibility reasons)
+is4(){
+    [[ $ZSH_VERSION == <4->* ]] && return 0
+    return 1
+}
+
+is41(){
+    [[ $ZSH_VERSION == 4.<1->* || $ZSH_VERSION == <5->* ]] && return 0
+    return 1
+}
+
+is42(){
+    [[ $ZSH_VERSION == 4.<2->* || $ZSH_VERSION == <5->* ]] && return 0
+    return 1
+}
+
+is425(){
+    [[ $ZSH_VERSION == 4.2.<5->* || $ZSH_VERSION == 4.<3->* || $ZSH_VERSION == <5->* ]] && return 0
+    return 1
+}
+
+is43(){
+    [[ $ZSH_VERSION == 4.<3->* || $ZSH_VERSION == <5->* ]] && return 0
+    return 1
+}
+
+is433(){
+    [[ $ZSH_VERSION == 4.3.<3->* || $ZSH_VERSION == 4.<4->* \
+                                 || $ZSH_VERSION == <5->* ]] && return 0
+    return 1
+}
+
+is439(){
+    [[ $ZSH_VERSION == 4.3.<9->* || $ZSH_VERSION == 4.<4->* \
+                                 || $ZSH_VERSION == <5->* ]] && return 0
+    return 1
+}
+
+#f1# Checks whether or not you're running grml
+isgrml(){
+    [[ -f /etc/grml_version ]] && return 0
+    return 1
+}
+
+#f1# Checks whether or not you're running a grml cd
+isgrmlcd(){
+    [[ -f /etc/grml_cd ]] && return 0
+    return 1
+}
+
+if isgrml ; then
+#f1# Checks whether or not you're running grml-small
+    isgrmlsmall() {
+        if [[ ${${${(f)"$(</etc/grml_version)"}%% *}##*-} == 'small' ]]; then
+            return 0
+        fi
+        return 1
+    }
+else
+    isgrmlsmall() { return 1 }
+fi
+
+isdarwin(){
+    [[ $OSTYPE == darwin* ]] && return 0
+    return 1
+}
+
+#f1# are we running within an utf environment?
+isutfenv() {
+    case "$LANG $CHARSET $LANGUAGE" in
+        *utf*) return 0 ;;
+        *UTF*) return 0 ;;
+        *)     return 1 ;;
+    esac
+}
+
+# check for user, if not running as root set $SUDO to sudo
+(( EUID != 0 )) && SUDO='sudo' || SUDO=''
+
+# change directory to home on first invocation of zsh
+# important for rungetty -> autologin
+# Thanks go to Bart Schaefer!
+isgrml && checkhome() {
+    if [[ -z "$ALREADY_DID_CD_HOME" ]] ; then
+        export ALREADY_DID_CD_HOME=$HOME
+        cd
+    fi
+}
+
+# check for zsh v3.1.7+
+
+if ! [[ ${ZSH_VERSION} == 3.1.<7->*      \
+     || ${ZSH_VERSION} == 3.<2->.<->*    \
+     || ${ZSH_VERSION} == <4->.<->*   ]] ; then
+
+    printf '-!-\n'
+    printf '-!- In this configuration we try to make use of features, that only\n'
+    printf '-!- require version 3.1.7 of the shell; That way this setup can be\n'
+    printf '-!- used with a wide range of zsh versions, while using fairly\n'
+    printf '-!- advanced features in all supported versions.\n'
+    printf '-!-\n'
+    printf '-!- However, you are running zsh version %s.\n' "$ZSH_VERSION"
+    printf '-!-\n'
+    printf '-!- While this *may* work, it might as well fail.\n'
+    printf '-!- Please consider updating to at least version 3.1.7 of zsh.\n'
+    printf '-!-\n'
+    printf '-!- DO NOT EXPECT THIS TO WORK FLAWLESSLY!\n'
+    printf '-!- If it does today, you'\''ve been lucky.\n'
+    printf '-!-\n'
+    printf '-!- Ye been warned!\n'
+    printf '-!-\n'
+
+    function zstyle() { : }
+fi
+
+# autoload wrapper - use this one instead of autoload directly
+# We need to define this function as early as this, because autoloading
+# 'is-at-least()' needs it.
+function zrcautoload() {
+    emulate -L zsh
+    setopt extended_glob
+    local fdir ffile
+    local -i ffound
+
+    ffile=$1
+    (( found = 0 ))
+    for fdir in ${fpath} ; do
+        [[ -e ${fdir}/${ffile} ]] && (( ffound = 1 ))
+    done
+
+    (( ffound == 0 )) && return 1
+    if [[ $ZSH_VERSION == 3.1.<6-> || $ZSH_VERSION == <4->* ]] ; then
+        autoload -U ${ffile} || return 1
+    else
+        autoload ${ffile} || return 1
+    fi
+    return 0
+}
+
+# Load is-at-least() for more precise version checks Note that this test will
+# *always* fail, if the is-at-least function could not be marked for
+# autoloading.
+zrcautoload is-at-least || is-at-least() { return 1 }
+
+# set some important options (as early as possible)
+
+# append history list to the history file; this is the default but we make sure
+# because it's required for share_history.
+setopt append_history
+
+# import new commands from the history file also in other zsh-session
+is4 && setopt share_history
+
+# save each command's beginning timestamp and the duration to the history file
+setopt extended_history
+
+# If a new command line being added to the history list duplicates an older
+# one, the older command is removed from the list
+is4 && setopt histignorealldups
+
+# remove command lines from the history list when the first character on the
+# line is a space
+setopt histignorespace
+
+# if a command is issued that can't be executed as a normal command, and the
+# command is the name of a directory, perform the cd command to that directory.
+setopt auto_cd
+
+# in order to use #, ~ and ^ for filename generation grep word
+# *~(*.gz|*.bz|*.bz2|*.zip|*.Z) -> searches for word not in compressed files
+# don't forget to quote '^', '~' and '#'!
+setopt extended_glob
+
+# display PID when suspending processes as well
+setopt longlistjobs
+
+# try to avoid the 'zsh: no matches found...'
+setopt nonomatch
+
+# report the status of backgrounds jobs immediately
+setopt notify
+
+# whenever a command completion is attempted, make sure the entire command path
+# is hashed first.
+setopt hash_list_all
+
+# not just at the end
+setopt completeinword
+
+# Don't send SIGHUP to background processes when the shell exits.
+setopt nohup
+
+# make cd push the old directory onto the directory stack.
+setopt auto_pushd
+
+# avoid "beep"ing
+setopt nobeep
+
+# don't push the same dir twice.
+setopt pushd_ignore_dups
+
+# * shouldn't match dotfiles. ever.
+setopt noglobdots
+
+# use zsh style word splitting
+setopt noshwordsplit
+
+# don't error out when unset parameters are used
+setopt unset
+
+# setting some default values
+NOCOR=${NOCOR:-0}
+NOMENU=${NOMENU:-0}
+NOPRECMD=${NOPRECMD:-0}
+COMMAND_NOT_FOUND=${COMMAND_NOT_FOUND:-0}
+GRML_ZSH_CNF_HANDLER=${GRML_ZSH_CNF_HANDLER:-/usr/share/command-not-found/command-not-found}
+BATTERY=${BATTERY:-0}
+GRMLSMALL_SPECIFIC=${GRMLSMALL_SPECIFIC:-1}
+ZSH_NO_DEFAULT_LOCALE=${ZSH_NO_DEFAULT_LOCALE:-0}
+
+# utility functions
+# this function checks if a command exists and returns either true
+# or false. This avoids using 'which' and 'whence', which will
+# avoid problems with aliases for which on certain weird systems. :-)
+# Usage: check_com [-c|-g] word
+#   -c  only checks for external commands
+#   -g  does the usual tests and also checks for global aliases
+check_com() {
+    emulate -L zsh
+    local -i comonly gatoo
+
+    if [[ $1 == '-c' ]] ; then
+        (( comonly = 1 ))
+        shift
+    elif [[ $1 == '-g' ]] ; then
+        (( gatoo = 1 ))
+    else
+        (( comonly = 0 ))
+        (( gatoo = 0 ))
+    fi
+
+    if (( ${#argv} != 1 )) ; then
+        printf 'usage: check_com [-c] <command>\n' >&2
+        return 1
+    fi
+
+    if (( comonly > 0 )) ; then
+        [[ -n ${commands[$1]}  ]] && return 0
+        return 1
+    fi
+
+    if   [[ -n ${commands[$1]}    ]] \
+      || [[ -n ${functions[$1]}   ]] \
+      || [[ -n ${aliases[$1]}     ]] \
+      || [[ -n ${reswords[(r)$1]} ]] ; then
+
+        return 0
+    fi
+
+    if (( gatoo > 0 )) && [[ -n ${galiases[$1]} ]] ; then
+        return 0
+    fi
+
+    return 1
+}
+
+# creates an alias and precedes the command with
+# sudo if $EUID is not zero.
+salias() {
+    emulate -L zsh
+    local only=0 ; local multi=0
+    while [[ $1 == -* ]] ; do
+        case $1 in
+            (-o) only=1 ;;
+            (-a) multi=1 ;;
+            (--) shift ; break ;;
+            (-h)
+                printf 'usage: salias [-h|-o|-a] <alias-expression>\n'
+                printf '  -h      shows this help text.\n'
+                printf '  -a      replace '\'' ; '\'' sequences with '\'' ; sudo '\''.\n'
+                printf '          be careful using this option.\n'
+                printf '  -o      only sets an alias if a preceding sudo would be needed.\n'
+                return 0
+                ;;
+            (*) printf "unkown option: '%s'\n" "$1" ; return 1 ;;
+        esac
+        shift
+    done
+
+    if (( ${#argv} > 1 )) ; then
+        printf 'Too many arguments %s\n' "${#argv}"
+        return 1
+    fi
+
+    key="${1%%\=*}" ;  val="${1#*\=}"
+    if (( EUID == 0 )) && (( only == 0 )); then
+        alias -- "${key}=${val}"
+    elif (( EUID > 0 )) ; then
+        (( multi > 0 )) && val="${val// ; / ; sudo }"
+        alias -- "${key}=sudo ${val}"
+    fi
+
+    return 0
+}
+
+# a "print -l ${(u)foo}"-workaround for pre-4.2.0 shells
+# usage: uprint foo
+#   Where foo is the *name* of the parameter you want printed.
+#   Note that foo is no typo; $foo would be wrong here!
+if ! is42 ; then
+    uprint () {
+        emulate -L zsh
+        local -a u
+        local w
+        local parameter=$1
+
+        if [[ -z ${parameter} ]] ; then
+            printf 'usage: uprint <parameter>\n'
+            return 1
+        fi
+
+        for w in ${(P)parameter} ; do
+            [[ -z ${(M)u:#$w} ]] && u=( $u $w )
+        done
+
+        builtin print -l $u
+    }
+fi
+
+# Check if we can read given files and source those we can.
+xsource() {
+    if (( ${#argv} < 1 )) ; then
+        printf 'Check if file(s) extists and source them'
+        printf 'usage: xsource FILE(s)...\n' >&2
+        return 1
+    fi
+
+    while (( ${#argv} > 0 )) ; do
+        [[ -r "$1" ]] && source "$1"
+        shift
+    done
+    return 0
+}
+
+# Check if we can read a given file and 'cat(1)' it.
+xcat() {
+    emulate -L zsh
+    if (( ${#argv} != 1 )) ; then
+        printf 'usage: xcat FILE\n' >&2
+        return 1
+    fi
+
+    [[ -r $1 ]] && cat $1
+    return 0
+}
+
+# Remove these functions again, they are of use only in these
+# setup files. This should be called at the end of .zshrc.
+xunfunction() {
+    emulate -L zsh
+    local -a funcs
+    funcs=(salias xcat xsource xunfunction zrcautoload)
+
+    for func in $funcs ; do
+        [[ -n ${functions[$func]} ]] \
+            && unfunction $func
+    done
+    return 0
+}
+
+# this allows us to stay in sync with grml's zshrc and put own
+# modifications in ~/.zshrc.local
+zrclocal() {
+    xsource "/etc/zsh/zshrc.local"
+    xsource "${HOME}/.zshrc.local"
+    return 0
+}
+
+# locale setup
+if (( ZSH_NO_DEFAULT_LOCALE == 0 )); then
+    xsource "/etc/default/locale"
+fi
+
+for var in LANG LC_ALL LC_MESSAGES ; do
+    [[ -n ${(P)var} ]] && export $var
+done
+
+xsource "/etc/sysconfig/keyboard"
+
+TZ=$(xcat /etc/timezone)
+
+# set some variables
+if check_com -c vim ; then
+#v#
+    export EDITOR=${EDITOR:-vim}
+else
+    export EDITOR=${EDITOR:-vi}
+fi
+
+#v#
+export PAGER=${PAGER:-less}
+
+#v#
+export MAIL=${MAIL:-/var/mail/$USER}
+
+# if we don't set $SHELL then aterm, rxvt,.. will use /bin/sh or /bin/bash :-/
+export SHELL='/bin/zsh'
+
+# color setup for ls:
+check_com -c dircolors && eval $(dircolors -b)
+# color setup for ls on OS X:
+isdarwin && export CLICOLOR=1
+
+# do MacPorts setup on darwin
+if isdarwin && [[ -d /opt/local ]]; then
+    # Note: PATH gets set in /etc/zprofile on Darwin, so this can't go into
+    # zshenv.
+    PATH="/opt/local/bin:/opt/local/sbin:$PATH"
+    MANPATH="/opt/local/share/man:$MANPATH"
+fi
+# do Fink setup on darwin
+isdarwin && xsource /sw/bin/init.sh
+
+# load our function and completion directories
+for fdir in /usr/share/grml/zsh/completion /usr/share/grml/zsh/functions; do
+    fpath=( ${fdir} ${fdir}/**/*(/N) ${fpath} )
+    if [[ ${fpath} == '/usr/share/grml/zsh/functions' ]] ; then
+        for func in ${fdir}/**/[^_]*[^~](N.) ; do
+            zrcautoload ${func:t}
+        done
+    fi
+done
+unset fdir func
+
+# support colors in less
+export LESS_TERMCAP_mb=$'\E[01;31m'
+export LESS_TERMCAP_md=$'\E[01;31m'
+export LESS_TERMCAP_me=$'\E[0m'
+export LESS_TERMCAP_se=$'\E[0m'
+export LESS_TERMCAP_so=$'\E[01;44;33m'
+export LESS_TERMCAP_ue=$'\E[0m'
+export LESS_TERMCAP_us=$'\E[01;32m'
+
+# mailchecks
+MAILCHECK=30
+
+# report about cpu-/system-/user-time of command if running longer than
+# 5 seconds
+REPORTTIME=5
+
+# watch for everyone but me and root
+watch=(notme root)
+
+# automatically remove duplicates from these arrays
+typeset -U path cdpath fpath manpath
+
+# keybindings
+if [[ "$TERM" != emacs ]] ; then
+    [[ -z "$terminfo[kdch1]" ]] || bindkey -M emacs "$terminfo[kdch1]" delete-char
+    [[ -z "$terminfo[khome]" ]] || bindkey -M emacs "$terminfo[khome]" beginning-of-line
+    [[ -z "$terminfo[kend]"  ]] || bindkey -M emacs "$terminfo[kend]"  end-of-line
+    [[ -z "$terminfo[kdch1]" ]] || bindkey -M vicmd "$terminfo[kdch1]" vi-delete-char
+    [[ -z "$terminfo[khome]" ]] || bindkey -M vicmd "$terminfo[khome]" vi-beginning-of-line
+    [[ -z "$terminfo[kend]"  ]] || bindkey -M vicmd "$terminfo[kend]"  vi-end-of-line
+    [[ -z "$terminfo[cuu1]"  ]] || bindkey -M viins "$terminfo[cuu1]"  vi-up-line-or-history
+    [[ -z "$terminfo[cuf1]"  ]] || bindkey -M viins "$terminfo[cuf1]"  vi-forward-char
+    [[ -z "$terminfo[kcuu1]" ]] || bindkey -M viins "$terminfo[kcuu1]" vi-up-line-or-history
+    [[ -z "$terminfo[kcud1]" ]] || bindkey -M viins "$terminfo[kcud1]" vi-down-line-or-history
+    [[ -z "$terminfo[kcuf1]" ]] || bindkey -M viins "$terminfo[kcuf1]" vi-forward-char
+    [[ -z "$terminfo[kcub1]" ]] || bindkey -M viins "$terminfo[kcub1]" vi-backward-char
+    # ncurses stuff:
+    [[ "$terminfo[kcuu1]" == $'\eO'* ]] && bindkey -M viins "${terminfo[kcuu1]/O/[}" vi-up-line-or-history
+    [[ "$terminfo[kcud1]" == $'\eO'* ]] && bindkey -M viins "${terminfo[kcud1]/O/[}" vi-down-line-or-history
+    [[ "$terminfo[kcuf1]" == $'\eO'* ]] && bindkey -M viins "${terminfo[kcuf1]/O/[}" vi-forward-char
+    [[ "$terminfo[kcub1]" == $'\eO'* ]] && bindkey -M viins "${terminfo[kcub1]/O/[}" vi-backward-char
+    [[ "$terminfo[khome]" == $'\eO'* ]] && bindkey -M viins "${terminfo[khome]/O/[}" beginning-of-line
+    [[ "$terminfo[kend]"  == $'\eO'* ]] && bindkey -M viins "${terminfo[kend]/O/[}"  end-of-line
+    [[ "$terminfo[khome]" == $'\eO'* ]] && bindkey -M emacs "${terminfo[khome]/O/[}" beginning-of-line
+    [[ "$terminfo[kend]"  == $'\eO'* ]] && bindkey -M emacs "${terminfo[kend]/O/[}"  end-of-line
+fi
+
+## keybindings (run 'bindkeys' for details, more details via man zshzle)
+# use emacs style per default:
+bindkey -e
+# use vi style:
+# bindkey -v
+
+## beginning-of-line OR beginning-of-buffer OR beginning of history
+## by: Bart Schaefer <schaefer@brasslantern.com>, Bernhard Tittelbach
+beginning-or-end-of-somewhere() {
+    local hno=$HISTNO
+    if [[ ( "${LBUFFER[-1]}" == $'\n' && "${WIDGET}" == beginning-of* ) || \
+      ( "${RBUFFER[1]}" == $'\n' && "${WIDGET}" == end-of* ) ]]; then
+        zle .${WIDGET:s/somewhere/buffer-or-history/} "$@"
+    else
+        zle .${WIDGET:s/somewhere/line-hist/} "$@"
+        if (( HISTNO != hno )); then
+            zle .${WIDGET:s/somewhere/buffer-or-history/} "$@"
+        fi
+    fi
+}
+zle -N beginning-of-somewhere beginning-or-end-of-somewhere
+zle -N end-of-somewhere beginning-or-end-of-somewhere
+
+
+#if [[ "$TERM" == screen ]] ; then
+
+## with HOME/END, move to beginning/end of line (on multiline) on first keypress
+## to beginning/end of buffer on second keypress
+## and to beginning/end of history on (at most) the third keypress
+# terminator & non-debian xterm
+bindkey '\eOH' beginning-of-somewhere  # home
+bindkey '\eOF' end-of-somewhere        # end
+# freebsd console
+bindkey '\e[H' beginning-of-somewhere   # home
+bindkey '\e[F' end-of-somewhere         # end
+# xterm,gnome-terminal,quake,etc
+bindkey '^[[1~' beginning-of-somewhere  # home
+bindkey '^[[4~' end-of-somewhere        # end
+# if terminal type is set to 'rxvt':
+bindkey '\e[7~' beginning-of-somewhere  # home
+bindkey '\e[8~' end-of-somewhere        # end
+#fi
+
+bindkey '\e[A'  up-line-or-search       # cursor up
+bindkey '\e[B'  down-line-or-search     # <ESC>-
+
+## use Ctrl-left-arrow and Ctrl-right-arrow for jumping to word-beginnings on the CL
+bindkey "\e[5C" forward-word
+bindkey "\e[5D" backward-word
+bindkey "\e[1;5C" forward-word
+bindkey "\e[1;5D" backward-word
+## the same for alt-left-arrow and alt-right-arrow
+bindkey '^[[1;3C' forward-word
+bindkey '^[[1;3D' backward-word
+
+# Search backward in the history for a line beginning with the current
+# line up to the cursor and move the cursor to the end of the line then
+zle -N history-beginning-search-backward-end history-search-end
+zle -N history-beginning-search-forward-end  history-search-end
+#k# search history backward for entry beginning with typed text
+bindkey '^xp'   history-beginning-search-backward-end
+#k# search history forward for entry beginning with typed text
+bindkey '^xP'   history-beginning-search-forward-end
+#k# search history backward for entry beginning with typed text
+bindkey "\e[5~" history-beginning-search-backward-end # PageUp
+#k# search history forward for entry beginning with typed text
+bindkey "\e[6~" history-beginning-search-forward-end  # PageDown
+
+# bindkey -s '^L' "|less\n"             # ctrl-L pipes to less
+# bindkey -s '^B' " &\n"                # ctrl-B runs it in the background
+
+# insert unicode character
+# usage example: 'ctrl-x i' 00A7 'ctrl-x i' will give you an 
