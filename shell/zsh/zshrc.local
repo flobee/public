@@ -1,0 +1,45 @@
+# if [ -f /etc/env.rc ]; then
+#     source /etc/env.rc
+# fi
+
+if [ -f $HOME/.profile ]; then
+    source $HOME/.profile
+fi
+
+export VISUAL=vim
+export EDITOR=vim
+
+unsetopt promptcr
+unsetopt share_history
+#unsetopt append_history 
+
+bindkey -e
+bindkey '^R' history-incremental-search-backward
+bindkey '^E' edit-command-line
+bindkey "^[OH" beginning-of-line
+bindkey "^[OF" end-of-line
+
+
+#
+alias rm='rm -i'
+alias cp='cp -i'
+alias konqueror='konqueror --profile filemanagement'
+
+if [ -f $HOME/.bash_aliases ]; then
+    source $HOME/.bash_aliases
+fi
+
+# mysql() {
+#    ATTRS=" --compress --auto-rehash --line-numbers --column-names --pager=less --show-warnings -T"
+#
+#    if [ -e /m/common/scripts/mysql ]; then
+#		MYSQL="/m/common/scripts/mysql"
+#    else 
+#		if [ -x /usr/bin/mysql ]; then
+#			MYSQL="/usr/bin/mysql"
+#		fi
+#    fi
+#    
+#    #$MYSQL $@ "$ATTRS"
+#    $MYSQL $@
+# }
