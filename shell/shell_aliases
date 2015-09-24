@@ -27,6 +27,6 @@ alias ll='ls -al --color=auto'
 #alias la='ls -A'
 alias l='ls --color=auto'
 
-alias grep='grep -n --color --exclude-dir=".svn"' --exclude-dir=".git"'
+alias grep='grep -n --color --exclude-dir=".svn" --exclude-dir=".git"'
 
 alias konqueror='konqueror --profile filemanagement'
