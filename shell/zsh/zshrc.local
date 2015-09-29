@@ -25,9 +25,10 @@ alias rm='rm -i'
 alias cp='cp -i'
 alias konqueror='konqueror --profile filemanagement'
 
-if [ -f $HOME/.bash_aliases ]; then
-    source $HOME/.bash_aliases
-fi
+# added in zshrc.pre
+#if [ -f $HOME/.shell_aliases ]; then
+#    source $HOME/.shell_aliases
+#fi
 
 # mysql() {
 #    ATTRS=" --compress --auto-rehash --line-numbers --column-names --pager=less --show-warnings -T"

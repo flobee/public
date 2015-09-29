@@ -31,7 +31,7 @@ set tabstop=4
 set shiftwidth=4
 
 " Show line numbers by default
-set number
+"set number
 
 " Enable folding by fold markers
 set foldmethod=marker
