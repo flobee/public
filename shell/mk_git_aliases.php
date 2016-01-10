@@ -1,4 +1,4 @@
-#!/usr/bin/env php -H
+#!/usr/bin/env php 
 <?php
 
 # Git alias generator
@@ -59,8 +59,9 @@ function gitaliases()
                 #'url' => 'config --local --get-regexp remote\\.\\.\\*\\.url',
 
                 #'amend' => 'commit --amend',
-                #'svnupdate' => '!git svn fetch && git svn rebase',
-                #'svncommit' => '!git svn dcommit',
+
+                'svnupdate' => '!git svn fetch && git svn rebase',
+                'svncommit' => '!git svn dcommit',
 
                 #'patch' => 'add --patch',
                 #'cached' => '!git diff --cached --',
