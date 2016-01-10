@@ -14,6 +14,27 @@
 function gitaliases()
 {
     $aliases = array(
+        'cleanup' => array(
+            // removes all aliases from the current project .git/config
+            'local' => false,
+            // removes all aliases from $HOME/.gitconfig
+            'global' => false,
+
+            // removes all aliases from $(prefix)/etc/gitconfig
+            'system' => false,
+        ),
+        'drop' => array(
+            // removes aliases from the current project .git/config
+            'local' => array(
+            ),
+            // removes aliases from $HOME/.gitconfig
+            'global' => array(
+                'last' => true, // set to true to drop or delete this line!
+            ),
+            // removes aliases from $(prefix)/etc/gitconfig (probably only for root)
+            'system' => array(
+            ),
+        ),
         'add' => array(
             // adds aliases to the current project .git/config
             'local' => array(),
@@ -109,29 +130,6 @@ function gitaliases()
                 'sm-push' => 'push --recurse-submodules=on-demand',
             ),
          ),
-        'drop' => array(
-            // removes aliases from the current project .git/config
-            'local' => array(
-            ),
-            // removes aliases from $HOME/.gitconfig
-            'global' => array(
-                'last' => true, // set to true to drop or delete this line!
-            ),
-            // removes aliases from $(prefix)/etc/gitconfig (probably only for root)
-            'system' => array(
-            ),
-        ),
-
-        'cleanup' => array(
-            // removes all aliases from the current project .git/config
-            'local' => false,
-            // removes all aliases from $HOME/.gitconfig
-            'global' => false,
-
-            // removes all aliases from $(prefix)/etc/gitconfig
-            'system' => false,
-        ),
-
     );
 
     foreach($aliases as $job => $list)
