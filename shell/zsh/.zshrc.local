@@ -21,14 +21,16 @@ bindkey "^[OF" end-of-line
 
 
 #
+alias grep=' grep --color --line-number --exclude-dir=".svn" --exclude-dir=".git"'
 alias rm='rm -i'
 alias cp='cp -i'
 alias konqueror='konqueror --profile filemanagement'
 
-# added in zshrc.pre
-#if [ -f $HOME/.shell_aliases ]; then
-#    source $HOME/.shell_aliases
-#fi
+# more aliases added
+if [ -f $HOME/.shell_aliases ]; then
+    source $HOME/.shell_aliases
+fi
+
 
 # mysql() {
 #    ATTRS=" --compress --auto-rehash --line-numbers --column-names --pager=less --show-warnings -T"
@@ -44,3 +46,4 @@ alias konqueror='konqueror --profile filemanagement'
 #    #$MYSQL $@ "$ATTRS"
 #    $MYSQL $@
 # }
+
