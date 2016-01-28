@@ -9,7 +9,6 @@
 # not all are in here. 
 # chmod set x flag to plugins probably for all/world, if world, use absolute links
 # enjoy!
-# ------------------------------------------------------------------------------
 
 
 # ------------------------------------------------------------------------------
@@ -72,24 +71,25 @@ sorendition kR # black on red
 # turn sending of screen messages to hardstatus off
 hardstatus on
 
-# ------------------------------
-# Plugins using backtick command
 
 # demo for backtick command; e.g. use in hardstatus string: "%1`%{-}" for backtick 1
-#backtick 1 90 90 /path/to/screenrc.plugin.mem-used
-
-#backtick 2 90 90 /path/to/screenrc.plugin.mem-free
-#backtick 3 45 45 /path/to/screenrc.plugin.cpu-temp-core0
-#backtick 4 90 90 /path/to/screenrc.plugin.swap_used
-#backtick 5 30 30 /path/to/screenrc.plugin.cpu-usage-core0
-#backtick 6 30 30 /path/to/screenrc.plugin.disk-free_sda1
-#backtick 7 60 60 /path/to/screenrc.plugin.sensors-fan_fan1
+# backtick 2 90 90 $HOME/scripts/homes/.screenrc.plugin.test
+backtick 1 90 90 ~/scripts/homes/.screenrc.plugin.mem-used
+backtick 2 90 90 ~/scripts/homes/.screenrc.plugin.mem-free
+backtick 3 45 45 ~/scripts/homes/.screenrc.plugin.cpu-temp-core0
+backtick 4 90 90 ~/scripts/homes/.screenrc.plugin.swap-used
+backtick 5 30 30 ~/scripts/homes/.screenrc.plugin.cpu-usage-core0
+backtick 6 30 30 ~/scripts/homes/.screenrc.plugin.disk-free_crypt-sda3-home
+backtick 7 60 60 ~/scripts/homes/.screenrc.plugin.sensors-fan1
 
 
 #caption always "%{= mw}%c:%s | %Y%m%d | %=  %{= mw}%-w%{= wm}%50>%n-%t%{-}%+w%{= mw}%-38=%1` | %l"
 hardstatus alwayslastline 
 # demo: hardstatus string '%{= kG}%-Lw%{= kW}%50> %n*%f %t%{= kG}%+Lw%< %{= kG}%-=%D %m/%d/%y | %C:%s %A | %1`%{-} %2`%{-} '
-hardstatus string "%{Gb} %-Lw%{= Gb} %40>%n%f+ %t %{-}%+Lw %= |%l%?|%{Gb}%1`%{-}/%2`MB|Cpu:%5`%% %3` %7`|%6` %4`%{Gb}MB|$USER@%H%?|%d%M|%{Gb}%c:%s"
+#hardstatus alwayslastline "%{Gb}%c:%s | %d %M | %-Lw%{= BG} %50>%n%f+ %t %{-}%+Lw  %= |Host: %H%? |LAvg: %l%?"
+# hardstatus string '%{Gb}%c:%s | %d %M | %-Lw%{= BG} %50>%n%f+ %t %{-}%+Lw  %= |Host:%H%? |LAvg:%l%? |Cpu:%3`%{-}?'
+hardstatus string "%{Gb} %-Lw%{= Gb} %40>%n%f+ %t %{-}%+Lw %= |%l%?|%{Gb}%1`/%2`MB|Cpu:%5`%% %3` %7`|%6` %4`%{Gb}MB|$USER@%H%?|%d%M|%{Gb}%c:%s"
+
 
 # Set the hardstatus prop on gui terms to set the titlebar/icon title
 termcapinfo xterm*|rxvt*|kterm*|Eterm* hs:ts=\E]0;:fs=\007:ds=\E]0;\007
@@ -122,9 +122,12 @@ termcapinfo xterm 'is=\E[r\E[m\E[2J\E[H\E[?7h\E[?1;4;6l'
 
 # Example of automatically running some programs in windows on screen startup.
 #
-# screen -t storage ssh user@storage
-#screen -t top 8 top
+# screen -t monkey ssh monkey
+#screen -t prozesse 11 top
+screen -t presseportal-log 7 tail -f /home/flobee/servers/master/flobee/mycron/logs/presseportal.cli.cfg.php.log
+screen -t feedcache-log 8 tail -f /home/flobee/servers/master/flobee/mycron/logs/feedcache.cli.cfg.php.log
 screen -t syslog 9 tail -f -n300 /var/log/syslog
-# screen -t mail 7 mutt
-# this screen i want to see frist when i start the screen, so this goes to the last line
-screen -t bash 0 bash
+# screen -t mail 10 mutt
+# this screen we i want to see frist when i start the screen cmd, so this goes to the last line
+screen -t zsh 0 zsh
+
