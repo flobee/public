@@ -8,3 +8,4 @@ fi
 [[ -r ${HOME}/.shell_aliases ]] && source ${HOME}/.shell_aliases
 
 
+export PS1="%n@%m:%~ %%"
