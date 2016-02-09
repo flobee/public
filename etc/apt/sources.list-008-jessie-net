@@ -1,0 +1,16 @@
+#############
+# jessie net
+deb http://http.debian.net/debian jessie main
+deb-src http://http.debian.net/debian jessie main
+
+deb http://http.debian.net/debian jessie-updates main
+deb-src http://http.debian.net/debian jessie-updates main
+
+deb http://security.debian.org/ jessie/updates main
+deb-src http://security.debian.org/ jessie/updates main
+
+# www.deb-multimedia.org
+deb http://www.deb-multimedia.org jessie main non-free
+# deb http://gig:9999/debian-multimedia jessie main non-free
+
+

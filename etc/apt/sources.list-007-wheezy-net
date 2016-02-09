@@ -1,0 +1,26 @@
+#############
+# wheezy net
+deb http://http.debian.net/debian wheezy main
+deb-src http://http.debian.net/debian wheezy main
+
+deb http://http.debian.net/debian wheezy-updates main
+deb-src http://http.debian.net/debian wheezy-updates main
+
+deb http://security.debian.org/ wheezy/updates main
+deb-src http://security.debian.org/ wheezy/updates main
+
+
+######################
+### fun and extras ###
+######################
+### syscp proj. is OFFLINE ###
+# deb http://gig:9999/debian-syscp squeeze/
+
+# www.deb-multimedia.org
+# deb http://www.deb-multimedia.org wheezy main non-free
+# deb http://gig:9999/debian-multimedia wheezy main non-free
+
+# Tine20 for Debian Squeeze:
+# deb http://packages.tine20.org/debian squeeze stable
+# Import the key (as root or with sudo):
+##apt-key adv --recv-keys --keyserver gpg-keyserver.de 7F6F6895

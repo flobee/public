@@ -1,0 +1,29 @@
+deb http://security.debian.org/ squeeze/updates main contrib non-free
+deb-src http://security.debian.org/ squeeze/updates main contrib non-free
+
+deb http://security.debian.org/ squeeze/updates main contrib non-free
+deb-src http://security.debian.org/ squeeze/updates main contrib non-free
+
+deb http://ftp.debian.org/debian squeeze main contrib non-free
+deb-src http://ftp.debian.org/debian squeeze main contrib non-free
+
+###
+# read for mor information: http://www.debian.org/volatile/
+# The debian-volatile project has been discontinued with the Debian "Squeeze" release. See this announcement for details. 
+#
+# deb http://volatile.debian.org/debian-volatile testing/volatile main contrib non-free
+# deb-src http://volatile.debian.org/debian-volatile testing/volatile main contrib non-free
+
+
+######################
+### fun and extras ###
+######################
+### syscp ###
+# deb http://tv:9999/debian-syscp testing/
+
+# deb http://www.deb-multimedia.org testing main
+
+# Tine20 for Debian Squeeze:
+# deb http://packages.tine20.org/debian squeeze stable
+# Import the key (as root or with sudo):
+# apt-key adv --recv-keys --keyserver gpg-keyserver.de 7F6F6895
