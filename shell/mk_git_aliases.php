@@ -73,8 +73,10 @@ function gitaliases()
                 'verbose' => "log --graph --stat --pretty=format:'Author of %C(red)%h%Creset was %C(green)%an%Creset, %C(blue)%ar%Creset, message was \n%s\n%b\n%Creset'",
                 // 'l' => 'log --format=\'%C(red)%h%Creset %C(green)%an%Creset - %C(yellow)%s%Creset\' --graph',
                 'll' => 'log --pretty=format:\'%C(red)%h%Creset%C(blue)%d %C(green)%an%Creset - %s %C(blue)(%cr)%Creset\' --graph --date=relative',
-                'last' => "log -5 --graph --stat --pretty=format:'Author of %Cblue%h%Creset was %C(yellow)%an%Creset, %C(blue)%ar%Creset, message was\n%C(yellow)%s\n%b\n%Creset'",
+                'llog' => 'log --graph --stat --pretty=format:\'Author of %Cblue%h%Creset was %C( yellow)%ae%Creset, %C( blue)%ar%Creset, message: \n%C( yellow)%s\n%b\n%Creset\'',
 
+                //'last' => "log -5 --graph --stat --pretty=format:'Author of %Cblue%h%Creset was %C(yellow)%an%Creset, %C(blue)%ar%Creset, message was\n%C(yellow)%s\n%b\n%Creset'",
+                'last' => 'log -5 --pretty=format:\'%C( red)%h%Creset%C( blue)%d %C( green)%an%Creset - %s %C( blue)( %cr)%Creset\' --graph --date=relative',
 
                 #'continue' => '!git add . && git rebase --continue',
                 #'url' => 'config --local --get-regexp remote\\.\\.\\*\\.url',
