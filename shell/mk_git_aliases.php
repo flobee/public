@@ -149,6 +149,11 @@ function gitaliases($test)
     {
         foreach($list as  $way => $commands)
         {
+            if ($way == 'system' && $_SERVER['USER'] != 'root') {
+                // echo 'skip, not root' . PHP_EOL;
+                continue;
+            }
+
             if ($way == 'local') {
                 $way = '';
             } else {
@@ -173,29 +178,36 @@ function gitaliases($test)
 
                 case 'add':
                     foreach($commands as $alias => $cmd) {
-                        $execlist[] = 'git config' . $way . ' alias.' . $alias . ' "' . ($cmd) .'"';// stripslashes
+                        $execlist[] = 'git config' . $way . ' alias.' . $alias . ' "' . $cmd .'"';
                     }
                 break;
             }
         }
     }
 
-    foreach($execlist as $cmd) {
-        if ($test === false) {
-            exec($cmd);
+    foreach($execlist as $cmd)
+    {
+        if ($test === false)
+        {
+            $x = exec($cmd, $data, $exitCode);
+            if ( $x || $data || $exitCode > 5 ) {
+                echo 'Problem? cmd: ' . $cmd . PHP_EOL;
+                echo (empty($x) ? '0':$x) . " || data || $exitCode" . PHP_EOL;
+            }
+            if ($exitCode == 255) {
+                echo 'ERROR: permission problem with: '. $cmd . PHP_EOL;
+            }
         } else {
             echo $cmd . PHP_EOL;
         }
     }
 }
 
+
 $test = true;
 if (@$_SERVER['argv'][1] == 'run') {
     $test = false;
-    echo 'Will execute commands' . PHP_EOL;
+    //echo 'Will execute commands...' . PHP_EOL;
 }
 
 gitaliases($test);
-
-
-
