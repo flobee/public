@@ -2,18 +2,18 @@ deb http://ftp.de.debian.org/debian stable main contrib non-free
 deb http://ftp.debian.org/debian/ stable-updates main contrib non-free
 deb http://security.debian.org/ stable/updates main contrib non-free
 
-#Third Parties Repos
-#Debian Mozilla team
-#deb http://backports.debian.org/debian-backports squeeze-backports main
+# Third Parties Repos
+# Debian Mozilla team
+# deb http://backports.debian.org/debian-backports squeeze-backports main
 
-#The Opera .deb Repository
-#http://deb.opera.com/opera/ stable non-free
+# The Opera .deb Repository
+# http://deb.opera.com/opera/ stable non-free
 
-#Universidade Federal do Paraná - UFPR
-#ftp://debian.c3sl.ufpr.br/debian/dists/squeeze/contrib/
+# Universidade Federal do Paraná - UFPR
+# ftp://debian.c3sl.ufpr.br/debian/dists/squeeze/contrib/
 
-#deb-multimedia.org
-deb http://www.deb-multimedia.org stable main non-free
+# deb-multimedia.org
+# deb http://www.deb-multimedia.org stable main non-free
 
 	
 # Some third packages needs special attention. After you run the command above, run these ones:
@@ -33,6 +33,3 @@ deb http://www.deb-multimedia.org stable main non-free
 #
 ##Remastersys
 #wget -O - http://www.remastersys.com/ubuntu/remastersys.gpg.key 
-#
-#
-
