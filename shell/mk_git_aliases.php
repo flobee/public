@@ -105,6 +105,7 @@ function gitaliases($test)
                 #local = branch --list
                 'visual'  => '!gitk',
 
+                'tags' => '!git tag',
 
                 ######################
                 #Submodules aliases

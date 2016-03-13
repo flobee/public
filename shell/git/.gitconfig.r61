@@ -91,4 +91,5 @@
 	ll = log --pretty=format:'%C(red)%h%Creset%C(blue)%d %C(green)%an%Creset - %s %C(blue)(%cr)%Creset' --graph --date=relative
 	llog = log --graph --stat --pretty=format:'Author of %Cblue%h%Creset was %C(yellow)%ae%Creset, %C(blue)%ar%Creset, message: \n%C(yellow)%s\n%b\n%Creset'
 	last = log -5 --pretty=format:'%C(red)%h%Creset%C(blue)%d %C( green)%an%Creset - %s %C(blue)( %cr)%Creset' --graph --date=relative
+	tags = !git tag
 
