@@ -32,6 +32,7 @@ function gitaliases($test)
             'global' => array(
                 'last' => true, // set to true to drop or delete this line!
                 'll' => true,
+                'l' => true,
                 'llog' => true,
             ),
             // removes aliases from $(prefix)/etc/gitconfig (probably only for root)
@@ -45,13 +46,14 @@ function gitaliases($test)
             // adds aliases to $(prefix)/etc/gitconfig (probably only root can do this)
             // if you see some here and you are not the first user, they are already available for you :-)
             'system' => array(
-                'co' => 'checkout',
+/*                'co' => 'checkout',
                 'ci' => 'commit',
                 'st' => 'status -sb',
                 'stat' => 'status',
                 'br' => 'branch',
                 'alias' => '!git config -l | grep alias | cut -c 7-',
                 'df' => 'diff',
+*/
             ),
 
             // adds aliases to $HOME/.gitconfig
@@ -69,7 +71,7 @@ function gitaliases($test)
                 'unstage' => 'reset HEAD',
                 /* git alias : list all aliases
                  * useful in order to learn git syntax */
-                'alias' => '!git config -l | grep alias | cut -c 7-',
+                'alias' => '!git config --list | grep alias | cut -c 7-',
                 // push and pull all
                 'pa' => '!git push --all && git pull --all',
                 #'pl' => 'pull',
@@ -82,7 +84,7 @@ function gitaliases($test)
 
                 // --- showing logs ---
                 'verbose' => "log --graph --stat --pretty=format:'Author of %C(red)%h%Creset was %C(green)%an%Creset, %C(blue)%ar%Creset, message was \n%s\n%b\n%Creset'",
-                // 'l' => 'log --format=\'%C(red)%h%Creset %C(green)%an%Creset - %C(yellow)%s%Creset\' --graph',
+                #'l' => 'log --format=\'%C(red)%h%Creset %C(green)%an%Creset - %C(yellow)%s%Creset\' --graph',
                 'll' => 'log --pretty=format:\'%C(red)%h%Creset%C(blue)%d %C(green)%an%Creset - %s %C(blue)(%cr)%Creset\' --graph --date=relative',
                 'llog' => "log --graph --stat --pretty=format:'Author of %Cblue%h%Creset was %C(yellow)%ae%Creset, %C(blue)%ar%Creset, message: \n%C(yellow)%s\n%b\n%Creset'",
                 
@@ -104,13 +106,14 @@ function gitaliases($test)
                 #local = branch --list
                 'visual'  => '!gitk',
 
+                'tags' => '!git tag',
 
                 ######################
                 #Submodules aliases
                 ######################
 
                 # submodules aliases
-                'sm-last' => '! git last && git submodule foreach \'git last\' ',
+                # 'sm-last' => '! git last && git submodule foreach \'git last\' ',
 
                 #git sm-trackbranch : places all submodules on their respective branch specified in .gitmodules
                 #This works if submodules are configured to track a branch, i.e if .gitmodules looks like :
@@ -118,7 +121,7 @@ function gitaliases($test)
                 #   path = my-submodule
                 #   url = git@wherever.you.like/my-submodule.git
                 #   branch = my-branch
-                'sm-trackbranch' => '! git submodule foreach -q --recursive \'branch="$(git config -f $toplevel/.gitmodules submodule.$name.branch)"; git checkout $branch\'',
+                # 'sm-trackbranch' => '! git submodule foreach -q --recursive \'branch="\$(git config -f $toplevel/.gitmodules submodule.$name.branch)"; git checkout $branch\'',
 
                 #sm-pullrebase :
                 # - pull --rebase on the master repo
