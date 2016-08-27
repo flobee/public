@@ -63,6 +63,7 @@ function gitaliases($test)
                 'up' => 'pull -v',
                 'st' => 'status -sb',
                 'stat' => 'status',
+                # todo 'stat-dir' => '! git-stat-dir.sh',
                 'br' => 'branch',
                 #'fall' => 'fetch --all',
                 #'mr' => 'merge',
