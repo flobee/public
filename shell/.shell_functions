@@ -1,0 +1,9 @@
+html2pdf () {
+    echo '+--------------------------------------------+';
+    echo '| note usage: html2pdf urlOrFile pdfFile.pdf |';
+    echo '+--------------------------------------------+';
+    if [ $1!="" && $2!=""] ;
+    then
+        htmldoc --webpage "$1" -f "$2";
+    fi
+}
