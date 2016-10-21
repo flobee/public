@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #
-echo "Permanetly changes for apple keyboard with numeric pad, german keyboard";
+echo "Default changes for apple keyboard with numeric pad, german keyboard";
 
 echo "Run this script when changing or update the kernel to reactivate this";
 echo "settings. Note: Settings will be repalaced. Dont edit target file or";
