@@ -78,7 +78,7 @@ function gitaliases($test)
                 // push and pull all
                 'pa' => '!git push --all && git pull --all',
                 'aa' => '!git add -A',
-                'pl' => 'pull',
+                'pl' => 'pull -v',
                 #'ps' => 'push',
                 #'all' => '!git add . && git commit',
 
