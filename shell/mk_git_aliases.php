@@ -74,6 +74,7 @@ function gitaliases($test)
                 'alias' => '!git config --list | grep alias | cut -c 7-',
                 // push and pull all
                 'pa' => '!git push --all && git pull --all',
+                'aa' => '!git add -A',
                 #'pl' => 'pull',
                 #'ps' => 'push',
                 #'all' => '!git add . && git commit',
