@@ -3,6 +3,7 @@
 	email = flobee@r61
 [push]
 	default = simple
+
 [credential]
 	helper = cache --timeout=3600
 
