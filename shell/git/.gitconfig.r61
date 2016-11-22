@@ -18,13 +18,12 @@
 	#fall = fetch --all
 	#mr = merge
 	unstage = reset HEAD
-	pl = pull
+	pl = pull -v
 	up = pull -v
 	ps = push
 	ls = stash list
 	#save = stash save
 	#pop = stash pop
-	verbose = log --graph --stat --pretty=format:'Author of %C(red)%h%Creset was %C(green)%an%Creset, %C(blue)%ar%Creset, message was \n%s\n%b\n%Creset'
 	# gist = log --format='%C(red)%h%Creset %C(green)%an%Creset - %C(yellow)%s%Creset' --graph
 	#continue = !git add . && git rebase --continue
 	#url = config --local --get-regexp remote\\.\\.\\*\\.url
@@ -84,13 +83,15 @@
     #
     sm-stat = "! git status && git submodule foreach 'git status' "
 
-    svnupdate = !git svn fetch && git svn rebase
-    svncommit = !git svn dcommit
-    pa = !git push --all && git pull --all
-    visual = !gitk
-    sm-pullrebase = "! git pull --rebase; git submodule update; git sm-trackbranch ; git submodule foreach 'git pull --rebase' "
-    ll = log --pretty=format:'%C(red)%h%Creset%C(blue)%d %C(green)%an%Creset - %s %C(blue)(%cr)%Creset' --graph --date=relative
-    llog = log --graph --stat --pretty=format:'Author of %Cblue%h%Creset was %C(yellow)%ae%Creset, %C(blue)%ar%Creset, message: \n%C(yellow)%s\n%b\n%Creset'
-    last = log -5 --pretty=format:'%C(red)%h%Creset%C(blue)%d %C( green)%an%Creset - %s %C(blue)( %cr)%Creset' --graph --date=relative
-    tags = !git tag
+	svnupdate = !git svn fetch && git svn rebase
+	svncommit = !git svn dcommit
+	pa = !git push --all && git pull --all
+	visual = !gitk
+	sm-pullrebase = "! git pull --rebase; git submodule update; git sm-trackbranch ; git submodule foreach 'git pull --rebase' "
+	tags = !git tag
+	aa = !git add -A
+	verbose = log --graph --stat '--pretty=format:Author of %C(red)%h%Creset was %C(green)%an%Creset, %C(blue)%ar%Creset, message was:\n%s\n%b\n%Creset'
+	ll = log --pretty=format:'%C(red)%h%Creset%C(blue)%d %C(green)%an%Creset - %s %C(blue)(%cr)%Creset' --graph --date=relative
+	llog = log --graph --stat '--pretty=format:Author of %Cred%h%Creset was %C(green)%ae%Creset, %C(blue)%ar%Creset, message:\n%C(yellow)%s\n%b\n%Creset'
+	last = log -5 --pretty=format:'%C(red)%h%Creset%C(blue)%d %C( green)%an%Creset - %s %C(blue)( %cr)%Creset' --graph --date=relative
 
