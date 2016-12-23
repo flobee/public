@@ -1,5 +1,8 @@
-#!/bin/sh
-
+#!/bin/shi
+# 
+# Helper:
+# xev | grep keycode
+#
 #
 # Toggle <> and ^° keys
 #
