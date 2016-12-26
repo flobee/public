@@ -1,4 +1,4 @@
-#!/bin/shi
+#!/bin/sh
 # 
 # Helper:
 # xev | grep keycode
