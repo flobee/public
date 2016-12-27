@@ -5,7 +5,8 @@
 #
 # https://wiki.archlinux.org/index.php/xmodmap
 #
-
+# Scritps belongs to:
+# http://flobee.cgix.de/die-apple-tastatur-tastenbelegung-unter-linux-debian-oder-ubuntu/
 
 # configuration file for xmodmap using on debian 8
 
@@ -23,8 +24,14 @@ else
     exit 1;
 fi
 
+# backup current status for the first usage
+if [ ! -f ".xmodmap.initial-usage.bak" ] ;
+then
+    xmodmap -pke > ".xmodmap.initial-usage.bak";
+fi
+
 # sourece generated config file
-xmodmap .xmodmap.tmp
+xmodmap .xmodmap.tmp;
 
 
 exit;
