@@ -1,17 +1,15 @@
 #!/bin/sh
 
 # Helper:
+# > xev | grep keycode
+#
 # https://wiki.archlinux.org/index.php/xmodmap
 #
-# xev | grep keycode
-#
-# Have a X Menu on right and left cmd key
-# keycode 133 = Menu
-# keycode 134 = Menu'
-#
+
+
 # configuration file for xmodmap using on debian 8
 
-lc='GB';
+lc='gb';
 tmpfile='.xmodmap.tmp';
 configfile="xmodmap.$lc.cfg";
 
@@ -21,10 +19,11 @@ then
     # drop comments
     sed -e '/^\s*$/d' -e '/^#/d' -e '/^;/d' $configfile > $tmpfile
 else
-    echo "error";
+    echo "error: configfile not found";
+    exit 1;
 fi
 
-# sourece generatet config file
+# sourece generated config file
 xmodmap .xmodmap.tmp
 
 

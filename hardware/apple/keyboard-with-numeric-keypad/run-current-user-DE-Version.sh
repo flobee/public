@@ -1,16 +1,30 @@
 #!/bin/sh
-# 
+
 # Helper:
-# xev | grep keycode
+# > xev | grep keycode
 #
+# https://wiki.archlinux.org/index.php/xmodmap
 #
-# Toggle <> and ^° keys
-#
-xmodmap \
-    -e 'keycode 49 = less greater less greater bar brokenbar bar' \
-    -e 'keycode 94 = dead_circumflex degree dead_circumflex degree U2032 U2033 U2032'
 
-#
-# Have a X Menu on right cmd key
-xmodmap -e 'keycode 134 = Menu'
 
+# configuration file for xmodmap using on debian 8
+
+lc='de';
+tmpfile='.xmodmap.tmp';
+configfile="xmodmap.$lc.cfg";
+
+
+if [ -f $configfile ] ;
+then
+    # drop comments
+    sed -e '/^\s*$/d' -e '/^#/d' -e '/^;/d' $configfile > $tmpfile
+else
+    echo "error: configfile not found";
+    exit 1;
+fi
+
+# sourece generated config file
+xmodmap .xmodmap.tmp
+
+
+exit;
