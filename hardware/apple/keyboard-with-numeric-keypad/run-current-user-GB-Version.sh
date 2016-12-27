@@ -26,11 +26,13 @@ else
 fi
 
 # backup current status for the first usage
-if [ ! -f ".xmodmap.initial-usage.bak" ] ;
+if [ ! -f ".xmodmap.status-initially.bak" ] ;
 then
-    xmodmap -pke > ".xmodmap.initial-usage.bak";
+    xmodmap -pke > ".xmodmap.status-initially.bak";
 fi
 
+# dump current status of changes to check changes via "git status"
+xmodmap -pke > ".xmodmap.status-current.bak";
 
 # sourece generated config file
 xmodmap .xmodmap.tmp;
