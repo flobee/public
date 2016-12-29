@@ -12,7 +12,7 @@
 
 
 
-if [ "${lc}" = "" ]] ; then
+if [ "${lc}" = "" ] ; then
     echo "Missing language code to use. Exit!"
     exit 1;
 fi
