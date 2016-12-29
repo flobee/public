@@ -1,3 +1,9 @@
-.xmodmap.status-initially.bak
-.xmodmap.status.befor
-.xmodmap.status.after
+.xmodmap.status-initially.de.bak
+.xmodmap.status-initially.gb.bak
+.xmodmap.status-initially.gb4de.bak
+.xmodmap.status.de.after
+.xmodmap.status.de.befor
+.xmodmap.status.gb.after
+.xmodmap.status.gb.befor
+.xmodmap.status.gb4de.after
+.xmodmap.status.gb4de.befor

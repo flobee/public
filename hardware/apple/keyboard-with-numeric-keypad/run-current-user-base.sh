@@ -30,7 +30,7 @@ configfile="xmodmap.$lc.cfg";
 
 if [ -f $configfile ] ;
 then
-    # drop comments
+    # drop comments in config files
     sed -e '/^\s*$/d' -e '/^#/d' -e '/^;/d' $configfile > $tmpfile
 else
     echo "error: configfile not found";
@@ -46,7 +46,7 @@ fi
 # dump current status of changes to check changes via "git status"
 xmodmap -pke > "$backupfile";
 
-# sourece generated config file
+# source generated config file
 xmodmap "$tmpfile";
 
 
