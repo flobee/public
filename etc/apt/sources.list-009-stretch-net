@@ -42,3 +42,8 @@ deb-src http://ftp.de.debian.org/debian/ stretch-updates main contrib non-free
 # Debian Backports
 # deb http://backports.debian.org/debian-backports squeeze-backports main
 
+# eTobi VDR
+# deb http://e-tobi.net/vdr-experimental stretch vdr-multipatch base
+# deb-src http://e-tobi.net/vdr-experimental stretch vdr-multipatch base
+
+
