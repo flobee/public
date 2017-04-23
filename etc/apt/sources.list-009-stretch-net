@@ -1,20 +1,15 @@
 # old jessie
-deb http://ftp.de.debian.org/debian jessie main contrib non-free
-deb http://ftp.debian.org/debian/ jessie-updates main contrib non-free
-deb http://security.debian.org/ jessie/updates main contrib non-free
+# deb http://ftp.de.debian.org/debian jessie main contrib non-free
+# deb http://ftp.debian.org/debian/ jessie-updates main contrib non-free
+# deb http://security.debian.org/ jessie/updates main contrib non-free
 
 # stretch
 deb http://ftp.de.debian.org/debian stretch main contrib non-free
 deb-src http://ftp.de.debian.org/debian stretch main contrib non-free
+
 deb http://ftp.debian.org/debian/ stretch-updates main contrib non-free
 deb http://security.debian.org/ stretch/updates main contrib non-free
 
-### deb http://ftp.de.debian.org/debian/ stretch main
-deb http://security.debian.org/debian-security stretch/updates main contrib non-free
-deb-src http://security.debian.org/debian-security stretch/updates main contrib non-free
-# stretch-updates, previously known as 'volatile'
-deb http://ftp.de.debian.org/debian/ stretch-updates main contrib non-free
-deb-src http://ftp.de.debian.org/debian/ stretch-updates main contrib non-free
 # stretch-backports, previously on backports.debian.org
 # Line commented out by installer because it failed to verify:
 # deb http://ftp.de.debian.org/debian/ stretch-backports main contrib non-free
@@ -30,15 +25,16 @@ deb-src http://ftp.de.debian.org/debian/ stretch-updates main contrib non-free
 # deb-multimedia.org
 # deb http://www.deb-multimedia.org squeeze main non-free
 # deb http://www.deb-multimedia.org jessie main non-free
-#deb http://www.deb-multimedia.org stretch main non-free
-#deb http://www.deb-multimedia.org testing main non-free
+deb http://www.deb-multimedia.org stretch main non-free
+
 
 # Oracle VM VirtualBox
 # deb http://download.virtualbox.org/virtualbox/debian wheezy contrib non-free
 # Some third packages needs special attention. After you run the command above, run these ones: 
 # Oracle VM VirtualBox
-# wget -q http://download.virtualbox.org/virtualbox/debian/oracle_vbox.asc -O- | sudo apt-key add -
+## wget -q http://download.virtualbox.org/virtualbox/debian/oracle_vbox.asc -O- | sudo apt-key add -
 
 # Debian Backports
 # deb http://backports.debian.org/debian-backports squeeze-backports main
+	
 
