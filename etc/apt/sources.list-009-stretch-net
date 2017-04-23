@@ -38,3 +38,8 @@ deb http://www.deb-multimedia.org stretch main non-free
 # deb http://backports.debian.org/debian-backports squeeze-backports main
 	
 
+# eTobi VDR
+# deb http://e-tobi.net/vdr-experimental stretch vdr-multipatch base
+# deb-src http://e-tobi.net/vdr-experimental stretch vdr-multipatch base
+
+
