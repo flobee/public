@@ -1,0 +1,32 @@
+# deb http://ftp.freenet.de/debian/ lenny main
+# deb-src http://ftp.freenet.de/debian/ lenny main
+
+# deb http://security.debian.org/ lenny/updates main contrib
+# deb-src http://security.debian.org/ lenny/updates main contrib
+deb http://security.debian.org/ stable/updates main contrib non-free
+deb-src http://security.debian.org/ stable/updates main contrib non-free
+#deb http://tv:9999/security lenny/updates main contrib
+#deb-src http://tv:9999/security lenny/updates main contrib
+
+
+#deb http://tv:9999/debian lenny main contrib non-free
+#deb-src http://tv:9999/debian lenny main contrib non-free
+deb http://ftp.debian.org/debian lenny main contrib non-free
+deb-src http://ftp.debian.org/debian lenny main contrib non-free
+
+###
+# read for mor information: http://www.debian.org/volatile/
+#
+deb http://volatile.debian.org/debian-volatile lenny/volatile main contrib non-free
+deb-src http://volatile.debian.org/debian-volatile lenny/volatile main contrib non-free
+
+
+######################
+### fun and extras ###
+######################
+### syscp ###
+#deb http://tv:9999/debian-syscp lenny/
+
+deb http://www.debian-multimedia.org lenny main
+#deb http://tv:9999/debian-multimedia lenny main
+
