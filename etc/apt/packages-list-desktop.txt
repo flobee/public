@@ -1,519 +1,531 @@
-# dpkg -l; Shows all packages. 
+# dpkg -l; Shows all packages.
 # This list is very limited and shows some or more i often forget :)
 # You may check for help handling packages for other CPUs:
 # https://askubuntu.com/questions/17823/how-to-list-all-installed-packages/496042#496042
+#
+# You may try this:
+# Create a backup of what packages are currently installed:
+# > dpkg --get-selections > list.txt
+# Then (on another system) restore installations from that list:
+# > dpkg --clear-selections
+# > sudo dpkg --set-selections < list.txt
+# To get rid of stale packages:
+# > sudo apt-get autoremove
+# To get installed like at backup time (i.e. to install packages set by dpkg --set-selections):
+# > sudo apt-get dselect-upgrade
+#
+# dpkg --set-selections < <this file>
 
-
-anacron
-apache2-utils
-apt
-apt-listchanges
-apt-transport-https
-apt-utils
-aptitude
-aptitude-common
-arj
-ark
-aspell
-aspell-de
-aspell-de-1901
-aspell-de-alt
-aspell-en
-at
-bash-completion
-binutils
-bsdmainutils
-bsdutils
-build-essential
-busybox
-bzip2
-ca-certificates
-ca-certificates-java
-cabextract
-calendar-google-provider
-chromium
-chromium-driver
-chromium-l10n
-chromium-shell
-chromium-widevine
-cifs-utils
-composer
-console-setup
-console-setup-linux
-coreutils
-cpp
-cpulimit
-crda
-cron
-cryptsetup
-cryptsetup-bin
-cups-client
-cups-common
-cups-pk-helper
-curl
-dash
-davfs2
-ddrescueview
-debianutils
-default-jre
-default-jre-headless
-desktop-file-utils
-dh-autoreconf
-dh-make
-dh-php
-dh-python
-dh-strip-nondeterminism
-diffuse
-diffutils
-diffutils-doc
-dmsetup
-dolphin
-dolphin-owncloud
-dolphin-plugins
-dosfstools
-dpkg
-dpkg-dev
-dvbcut
-dvd+rw-tools
-e2fsprogs
-enigmail
-enscript
-esound-common
-ethtool
-faad
-fakeroot
-ffmpeg
-ffmpeg-doc
-findutils
-firefox-esr
-firefox-esr-l10n-de
-firmware-iwlwifi
-flac
-freepats
-fuse
-gddrescue
-gdisk
-genisoimage
-geoip-database
-gettext
-gettext-base
-gettext-doc
-ghostscript
-gimp
-git
-git-extras
-git-gui
-git-man
-git-svn
-gitg
-github-backup
-gitk
-gitstats
-gnome-accessibility-themes
-gnome-desktop3-data
-gnome-icon-theme
-gnome-keyring
-gnome-orca
-gnome-themes-standard
-gnome-themes-standard-data
-gnome-user-guide
-gnupg
-gnupg-agent
-gnuplot
-gnuplot-data
-gnuplot-doc
-gnuplot-qt
-gnustep-base-runtime
-gnustep-common
-gnutls-bin
-gpm
-graphviz
-grep
-groff-base
-growisofs
-gsmartcontrol
-gwenview
-gxine
-gzip
-hashdeep
-hddtemp
-hdparm
-hicolor-icon-theme
-html2ps
-htop
-hunspell-de-at
-hunspell-de-ch
-hunspell-de-de
-hunspell-en-us
-hyphen-de
-hyphen-en-us
-icedove
-icoutils
-imagemagick
-imagemagick-doc
-ingerman
-inkscape
-installation-report
-intltool-debian
-iproute2
-iptables
-isc-dhcp-client
-isc-dhcp-common
-iso-codes
-iw
-javascript-common
-jsonlint
-k3b
-k3b-data
-k3b-i18n
-kamera
-kate
-katepart
-kdesvn
-kdiff3
-kdiff3-doc
-keyutils
-kompare
-krank
-krename
-krusader
-lame
-less
-libavcodec-extra57
-libavdevice57
-libavfilter6
-libavformat57
-libavresample3
-libavutil55
-libdvdcss2
-libdvdcss2-dbgsym
-libpam-mount
-libpam-ssh
-libreoffice
-libreoffice-avmedia-backend-gstreamer
-libreoffice-base
-libreoffice-base-core
-libreoffice-base-drivers
-libreoffice-calc
-libreoffice-common
-libreoffice-core
-libreoffice-draw
-libreoffice-gtk2
-libreoffice-help-de
-libreoffice-help-en-us
-libreoffice-impress
-libreoffice-java-common
-libreoffice-l10n-de
-libreoffice-librelogo
-libreoffice-math
-libreoffice-mysql-connector
-libreoffice-nlpsolver
-libreoffice-ogltrans
-libreoffice-pdfimport
-libreoffice-report-builder
-libreoffice-report-builder-bin
-libreoffice-script-provider-bsh
-libreoffice-script-provider-js
-libreoffice-script-provider-python
-libreoffice-style-galaxy
-libreoffice-style-tango
-libreoffice-wiki-publisher
-libreoffice-writer
-libtool
-libwine
-libxine2
-libxine2-bin
-libxine2-doc
-libxine2-ffmpeg
-libxine2-gnome
-libxine2-misc-plugins
-libxine2-plugins
-libxine2-vdr
-libxine2-x
-libxine2-xvdr
-libxineliboutput-sxfe
-lightdm-gtk-greeter
-lightning
-lm-sensors
-locales
-logrotate
-lsb-base
-lsb-release
-lsof
-make
-man-db
-manpages
-manpages-de
-manpages-dev
-mc
-mc-data
-md5deep
-media-player-info
-meld
-mixmaster
-mjpegtools
-mjpegtools-gtk
-mlocate
-mobile-broadband-provider-info
-mp3blaster
-mp3check
-mp3diags
-mp3info
-mp3info-gtk
-mp3rename
-mp4v2-utils
-mplayer
-mppenc
-multiarch-support
-multitail
-munin-doc
-munin-node
-munin-plugins-core
-munin-plugins-extra
-mutt
-mysql-common
-nano
-ncftp
-ndiff
-net-tools
-netbase
-netcat-traditional
-netpbm
-neverball
-neverball-common
-neverball-data
-neverputt
-neverputt-data
-nfs-common
-nmap
-node-depd
-nodejs
-notification-daemon
-ntfs-3g
-ntp
-ntpdate
-okteta
-okular
-openclipart-libreoffice
-openclipart-png
-openclipart-svg
-openssh-client
-openssh-server
-openssh-sftp-server
-openssl
-owncloud-client
-owncloud-client-l10n
-oxygen-icon-theme
-p7zip
-p7zip-full
-parted
-patch
-pavucontrol
-pciutils
-pdepend
-perl
-phing
-php-codecoverage
-php-codesniffer
-php-common
-php-pear
-php-psr-log
-php-tcpdf
-php-cli
-php-common
-php-curl
-php-gd
-php-json
-php-mbstring
-php-mysql
-php-opcache
-php-readline
-php-recode
-php-soap
-php-sqlite3
-php-tidy
-php-xml
-php-xmlrpc
-php-xsl
-php-zip
-phpmd
-phpunit
-phpunit-dbunit
-picon-domains
-picon-misc
-picon-news
-picon-unknown
-picon-usenix
-picon-users
-picon-weather
-pkg-php-tools
-poedit
-poedit-common
-procps
-psmisc
-rar
-rename
-reportbug
-rrdtool
-rsync
-sane-utils
-screen
-screenruler
-seahorse
-sed
-shared-mime-info
-smartmontools
-smb4k
-smbc
-smbclient
-smbnetfs
-sound-theme-freedesktop
-soundkonverter
-sox
-sqlitebrowser
-sshfs
-strace
-subversion
-subversion-tools
-sudo
-svn2cl
-swell-foop
-tango-icon-theme
-tar
-telnet
-thunar
-thunar-archive-plugin
-thunar-data
-thunar-media-tags-plugin
-thunar-volman
-thunderbird
-thunderbird-l10n-de
-traceroute
-transfig
-tree
-ttf-dejavu
-ttf-dejavu-core
-ttf-dejavu-extra
-ttf-mscorefonts-installer
-tumbler
-tumbler-common
-ucf
-unace
-unar
-unrar
-unzip
-update-inetd
-ure
-urlview
-usbutils
-vdr
-vdr-plugin-epgsearch
-vdr-plugin-femon
-vdr-plugin-osdteletext
-vdr-plugin-streamdev-client
-vdr-plugin-streamdev-server
-vdr-plugin-xine
-vdr-plugin-xineliboutput
-vdradmin-am
-vim
-vim-addon-manager
-vim-common
-vim-doc
-vim-runtime
-vim-scripts
-vim-tiny
-virtualbox-5.1
-vlc
-vlc-bin
-vlc-data
-vlc-l10n
-vlc-plugin-base
-vlc-plugin-notify
-vlc-plugin-qt
-vlc-plugin-samba
-vlc-plugin-skins2
-vlc-plugin-video-output
-vlc-plugin-video-splitter
-vlc-plugin-visualization
-vorbis-tools
-vorbisgain
-w-scan
-w3m
-wav2cdr
-wavpack
-wget
-whiptail
-wine
-wine32
-wine64
-winff
-winff-gtk2
-wireless-tools
-wodim
-wpasupplicant
-x264
-x265
-xarchiver
-xfaces
-xfburn
-xfce4
-xfce4-appfinder
-xfce4-battery-plugin
-xfce4-clipman
-xfce4-clipman-plugin
-xfce4-cpufreq-plugin
-xfce4-cpugraph-plugin
-xfce4-datetime-plugin
-xfce4-dict
-xfce4-diskperf-plugin
-xfce4-fsguard-plugin
-xfce4-genmon-plugin
-xfce4-goodies
-xfce4-mailwatch-plugin
-xfce4-mount-plugin
-xfce4-netload-plugin
-xfce4-notes
-xfce4-notes-plugin
-xfce4-notifyd
-xfce4-panel
-xfce4-places-plugin
-xfce4-power-manager
-xfce4-power-manager-data
-xfce4-power-manager-plugins
-xfce4-pulseaudio-plugin
-xfce4-screenshooter
-xfce4-sensors-plugin
-xfce4-session
-xfce4-settings
-xfce4-smartbookmark-plugin
-xfce4-systemload-plugin
-xfce4-taskmanager
-xfce4-terminal
-xfce4-timer-plugin
-xfce4-verve-plugin
-xfce4-wavelan-plugin
-xfce4-weather-plugin
-xfce4-whiskermenu-plugin
-xfce4-xkb-plugin
-xfconf
-xfdesktop4
-xfdesktop4-data
-xfig
-xfsprogs
-xfwm4
-xfwm4-themes
-xhtml2ps
-xine-ui
-xineliboutput-sxfe
-xsane
-xsane-common
-xul-ext-adblock-plus
-xul-ext-colorediffs
-xul-ext-gnome-keyring
-xul-ext-google-tasks-sync
-zenmap
-zip
-zsh
-zsh-common
-zsh-doc
-bash
+anacron                                          install
+apache2-utils                                    install
+apt                                              install
+apt-listchanges                                  install
+apt-transport-https                              install
+apt-utils                                        install
+aptitude                                         install
+aptitude-common                                  install
+arj                                              install
+ark                                              install
+aspell                                           install
+aspell-de                                        install
+aspell-de-1901                                   install
+aspell-de-alt                                    install
+aspell-en                                        install
+at                                               install
+bash-completion                                  install
+binutils                                         install
+bsdmainutils                                     install
+bsdutils                                         install
+build-essential                                  install
+busybox                                          install
+bzip2                                            install
+ca-certificates                                  install
+ca-certificates-java                             install
+cabextract                                       install
+calendar-google-provider                         install
+chromium                                         install
+chromium-driver                                  install
+chromium-l10n                                    install
+chromium-shell                                   install
+chromium-widevine                                install
+cifs-utils                                       install
+composer                                         install
+console-setup                                    install
+console-setup-linux                              install
+coreutils                                        install
+cpp                                              install
+cpulimit                                         install
+crda                                             install
+cron                                             install
+cryptsetup                                       install
+cryptsetup-bin                                   install
+cups-client                                      install
+cups-common                                      install
+cups-pk-helper                                   install
+curl                                             install
+dash                                             install
+davfs2                                           install
+ddrescueview                                     install
+debianutils                                      install
+default-jre                                      install
+default-jre-headless                             install
+desktop-file-utils                               install
+dh-autoreconf                                    install
+dh-make                                          install
+dh-php                                           install
+dh-python                                        install
+dh-strip-nondeterminism                          install
+diffuse                                          install
+diffutils                                        install
+diffutils-doc                                    install
+dmsetup                                          install
+dolphin                                          install
+dolphin-owncloud                                 install
+dolphin-plugins                                  install
+dosfstools                                       install
+dpkg                                             install
+dpkg-dev                                         install
+dvbcut                                           install
+dvd+rw-tools                                     install
+e2fsprogs                                        install
+enigmail                                         install
+enscript                                         install
+esound-common                                    install
+ethtool                                          install
+faad                                             install
+fakeroot                                         install
+ffmpeg                                           install
+ffmpeg-doc                                       install
+findutils                                        install
+firefox-esr                                      install
+firefox-esr-l10n-de                              install
+firmware-iwlwifi                                 install
+flac                                             install
+freepats                                         install
+fuse                                             install
+gddrescue                                        install
+gdisk                                            install
+genisoimage                                      install
+geoip-database                                   install
+gettext                                          install
+gettext-base                                     install
+gettext-doc                                      install
+ghostscript                                      install
+gimp                                             install
+git                                              install
+git-extras                                       install
+git-gui                                          install
+git-man                                          install
+git-svn                                          install
+gitg                                             install
+github-backup                                    install
+gitk                                             install
+gitstats                                         install
+gnome-accessibility-themes                       install
+gnome-desktop3-data                              install
+gnome-icon-theme                                 install
+gnome-keyring                                    install
+gnome-orca                                       install
+gnome-themes-standard                            install
+gnome-themes-standard-data                       install
+gnome-user-guide                                 install
+gnupg                                            install
+gnupg-agent                                      install
+gnuplot                                          install
+gnuplot-data                                     install
+gnuplot-doc                                      install
+gnuplot-qt                                       install
+gnustep-base-runtime                             install
+gnustep-common                                   install
+gnutls-bin                                       install
+gpm                                              install
+graphviz                                         install
+grep                                             install
+groff-base                                       install
+growisofs                                        install
+gsmartcontrol                                    install
+gwenview                                         install
+gxine                                            install
+gzip                                             install
+hashdeep                                         install
+hddtemp                                          install
+hdparm                                           install
+hicolor-icon-theme                               install
+html2ps                                          install
+htop                                             install
+hunspell-de-at                                   install
+hunspell-de-ch                                   install
+hunspell-de-de                                   install
+hunspell-en-us                                   install
+hyphen-de                                        install
+hyphen-en-us                                     install
+icedove                                          install
+icoutils                                         install
+imagemagick                                      install
+imagemagick-doc                                  install
+ingerman                                         install
+inkscape                                         install
+installation-report                              install
+intltool-debian                                  install
+iproute2                                         install
+iptables                                         install
+isc-dhcp-client                                  install
+isc-dhcp-common                                  install
+iso-codes                                        install
+iw                                               install
+javascript-common                                install
+jsonlint                                         install
+k3b                                              install
+k3b-data                                         install
+k3b-i18n                                         install
+kamera                                           install
+kate                                             install
+katepart                                         install
+kdesvn                                           install
+kdiff3                                           install
+kdiff3-doc                                       install
+keyutils                                         install
+kompare                                          install
+krank                                            install
+krename                                          install
+krusader                                         install
+lame                                             install
+less                                             install
+libavcodec-extra57                               install
+libavdevice57                                    install
+libavfilter6                                     install
+libavformat57                                    install
+libavresample3                                   install
+libavutil55                                      install
+libdvdcss2                                       install
+libdvdcss2-dbgsym                                install
+libpam-mount                                     install
+libpam-ssh                                       install
+libreoffice                                      install
+libreoffice-avmedia-backend-gstreamer            install
+libreoffice-base                                 install
+libreoffice-base-core                            install
+libreoffice-base-drivers                         install
+libreoffice-calc                                 install
+libreoffice-common                               install
+libreoffice-core                                 install
+libreoffice-draw                                 install
+libreoffice-gtk2                                 install
+libreoffice-help-de                              install
+libreoffice-help-en-us                           install
+libreoffice-impress                              install
+libreoffice-java-common                          install
+libreoffice-l10n-de                              install
+libreoffice-librelogo                            install
+libreoffice-math                                 install
+libreoffice-mysql-connector                      install
+libreoffice-nlpsolver                            install
+libreoffice-ogltrans                             install
+libreoffice-pdfimport                            install
+libreoffice-report-builder                       install
+libreoffice-report-builder-bin                   install
+libreoffice-script-provider-bsh                  install
+libreoffice-script-provider-js                   install
+libreoffice-script-provider-python               install
+libreoffice-style-galaxy                         install
+libreoffice-style-tango                          install
+libreoffice-wiki-publisher                       install
+libreoffice-writer                               install
+libtool                                          install
+libwine                                          install
+libxine2                                         install
+libxine2-bin                                     install
+libxine2-doc                                     install
+libxine2-ffmpeg                                  install
+libxine2-gnome                                   install
+libxine2-misc-plugins                            install
+libxine2-plugins                                 install
+libxine2-vdr                                     install
+libxine2-x                                       install
+libxine2-xvdr                                    install
+libxineliboutput-sxfe                            install
+lightdm-gtk-greeter                              install
+lightning                                        install
+lm-sensors                                       install
+locales                                          install
+logrotate                                        install
+lsb-base                                         install
+lsb-release                                      install
+lsof                                             install
+make                                             install
+man-db                                           install
+manpages                                         install
+manpages-de                                      install
+manpages-dev                                     install
+mc                                               install
+mc-data                                          install
+md5deep                                          install
+media-player-info                                install
+meld                                             install
+mixmaster                                        install
+mjpegtools                                       install
+mjpegtools-gtk                                   install
+mlocate                                          install
+mobile-broadband-provider-info                   install
+mp3blaster                                       install
+mp3check                                         install
+mp3diags                                         install
+mp3info                                          install
+mp3info-gtk                                      install
+mp3rename                                        install
+mp4v2-utils                                      install
+mplayer                                          install
+mppenc                                           install
+multiarch-support                                install
+multitail                                        install
+munin-doc                                        install
+munin-node                                       install
+munin-plugins-core                               install
+munin-plugins-extra                              install
+mutt                                             install
+mysql-common                                     install
+nano                                             install
+ncftp                                            install
+ndiff                                            install
+net-tools                                        install
+netbase                                          install
+netcat-traditional                               install
+netpbm                                           install
+neverball                                        install
+neverball-common                                 install
+neverball-data                                   install
+neverputt                                        install
+neverputt-data                                   install
+nfs-common                                       install
+nmap                                             install
+node-depd                                        install
+nodejs                                           install
+notification-daemon                              install
+ntfs-3g                                          install
+ntp                                              install
+ntpdate                                          install
+okteta                                           install
+okular                                           install
+openclipart-libreoffice                          install
+openclipart-png                                  install
+openclipart-svg                                  install
+openssh-client                                   install
+openssh-server                                   install
+openssh-sftp-server                              install
+openssl                                          install
+owncloud-client                                  install
+owncloud-client-l10n                             install
+oxygen-icon-theme                                install
+p7zip                                            install
+p7zip-full                                       install
+parted                                           install
+patch                                            install
+pavucontrol                                      install
+pciutils                                         install
+pdepend                                          install
+perl                                             install
+phing                                            install
+php-codecoverage                                 install
+php-codesniffer                                  install
+php-common                                       install
+php-pear                                         install
+php-psr-log                                      install
+php-tcpdf                                        install
+php-cli                                          install
+php-common                                       install
+php-curl                                         install
+php-gd                                           install
+php-json                                         install
+php-mbstring                                     install
+php-mysql                                        install
+php-opcache                                      install
+php-readline                                     install
+php-recode                                       install
+php-soap                                         install
+php-sqlite3                                      install
+php-tidy                                         install
+php-xml                                          install
+php-xmlrpc                                       install
+php-xsl                                          install
+php-zip                                          install
+phpmd                                            install
+phpunit                                          install
+phpunit-dbunit                                   install
+picon-domains                                    install
+picon-misc                                       install
+picon-news                                       install
+picon-unknown                                    install
+picon-usenix                                     install
+picon-users                                      install
+picon-weather                                    install
+pkg-php-tools                                    install
+poedit                                           install
+poedit-common                                    install
+procps                                           install
+psmisc                                           install
+rar                                              install
+rename                                           install
+reportbug                                        install
+rrdtool                                          install
+rsync                                            install
+sane-utils                                       install
+screen                                           install
+screenruler                                      install
+seahorse                                         install
+sed                                              install
+shared-mime-info                                 install
+smartmontools                                    install
+smb4k                                            install
+smbc                                             install
+smbclient                                        install
+smbnetfs                                         install
+sound-theme-freedesktop                          install
+soundkonverter                                   install
+sox                                              install
+sqlitebrowser                                    install
+sshfs                                            install
+strace                                           install
+subversion                                       install
+subversion-tools                                 install
+sudo                                             install
+svn2cl                                           install
+swell-foop                                       install
+tango-icon-theme                                 install
+tar                                              install
+telnet                                           install
+thunar                                           install
+thunar-archive-plugin                            install
+thunar-data                                      install
+thunar-media-tags-plugin                         install
+thunar-volman                                    install
+thunderbird                                      install
+thunderbird-l10n-de                              install
+traceroute                                       install
+transfig                                         install
+tree                                             install
+ttf-dejavu                                       install
+ttf-dejavu-core                                  install
+ttf-dejavu-extra                                 install
+ttf-mscorefonts-installer                        install
+tumbler                                          install
+tumbler-common                                   install
+ucf                                              install
+unace                                            install
+unar                                             install
+unrar                                            install
+unzip                                            install
+update-inetd                                     install
+ure                                              install
+urlview                                          install
+usbutils                                         install
+vdr                                              install
+vdr-plugin-epgsearch                             install
+vdr-plugin-femon                                 install
+vdr-plugin-osdteletext                           install
+vdr-plugin-streamdev-client                      install
+vdr-plugin-streamdev-server                      install
+vdr-plugin-xine                                  install
+vdr-plugin-xineliboutput                         install
+vdradmin-am                                      install
+vim                                              install
+vim-addon-manager                                install
+vim-common                                       install
+vim-doc                                          install
+vim-runtime                                      install
+vim-scripts                                      install
+vim-tiny                                         install
+virtualbox-5.1                                   install
+vlc                                              install
+vlc-bin                                          install
+vlc-data                                         install
+vlc-l10n                                         install
+vlc-plugin-base                                  install
+vlc-plugin-notify                                install
+vlc-plugin-qt                                    install
+vlc-plugin-samba                                 install
+vlc-plugin-skins2                                install
+vlc-plugin-video-output                          install
+vlc-plugin-video-splitter                        install
+vlc-plugin-visualization                         install
+vorbis-tools                                     install
+vorbisgain                                       install
+w-scan                                           install
+w3m                                              install
+wav2cdr                                          install
+wavpack                                          install
+wget                                             install
+whiptail                                         install
+wine                                             install
+wine32                                           install
+wine64                                           install
+winff                                            install
+winff-gtk2                                       install
+wireless-tools                                   install
+wodim                                            install
+wpasupplicant                                    install
+x264                                             install
+x265                                             install
+xarchiver                                        install
+xfaces                                           install
+xfburn                                           install
+xfce4                                            install
+xfce4-appfinder                                  install
+xfce4-battery-plugin                             install
+xfce4-clipman                                    install
+xfce4-clipman-plugin                             install
+xfce4-cpufreq-plugin                             install
+xfce4-cpugraph-plugin                            install
+xfce4-datetime-plugin                            install
+xfce4-dict                                       install
+xfce4-diskperf-plugin                            install
+xfce4-fsguard-plugin                             install
+xfce4-genmon-plugin                              install
+xfce4-goodies                                    install
+xfce4-mailwatch-plugin                           install
+xfce4-mount-plugin                               install
+xfce4-netload-plugin                             install
+xfce4-notes                                      install
+xfce4-notes-plugin                               install
+xfce4-notifyd                                    install
+xfce4-panel                                      install
+xfce4-places-plugin                              install
+xfce4-power-manager                              install
+xfce4-power-manager-data                         install
+xfce4-power-manager-plugins                      install
+xfce4-pulseaudio-plugin                          install
+xfce4-screenshooter                              install
+xfce4-sensors-plugin                             install
+xfce4-session                                    install
+xfce4-settings                                   install
+xfce4-smartbookmark-plugin                       install
+xfce4-systemload-plugin                          install
+xfce4-taskmanager                                install
+xfce4-terminal                                   install
+xfce4-timer-plugin                               install
+xfce4-verve-plugin                               install
+xfce4-wavelan-plugin                             install
+xfce4-weather-plugin                             install
+xfce4-whiskermenu-plugin                         install
+xfce4-xkb-plugin                                 install
+xfconf                                           install
+xfdesktop4                                       install
+xfdesktop4-data                                  install
+xfig                                             install
+xfsprogs                                         install
+xfwm4                                            install
+xfwm4-themes                                     install
+xhtml2ps                                         install
+xine-ui                                          install
+xineliboutput-sxfe                               install
+xsane                                            install
+xsane-common                                     install
+xul-ext-adblock-plus                             install
+xul-ext-colorediffs                              install
+xul-ext-gnome-keyring                            install
+xul-ext-google-tasks-sync                        install
+zenmap                                           install
+zip                                              install
+zsh                                              install
+zsh-common                                       install
+zsh-doc                                          install
+bash                                             install
