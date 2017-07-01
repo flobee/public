@@ -18,10 +18,8 @@ deb http://ftp.de.debian.org/debian/ stretch-updates main contrib non-free
 deb-src http://ftp.de.debian.org/debian/ stretch-updates main contrib non-free
 
 # stretch-backports, previously on backports.debian.org
-# Line commented out by installer because it failed to verify:
-# deb http://ftp.de.debian.org/debian/ stretch-backports main contrib non-free
-# Line commented out by installer because it failed to verify:
-# deb-src http://ftp.de.debian.org/debian/ stretch-backports main contrib non-free
+deb http://ftp.de.debian.org/debian/ stretch-backports main contrib non-free
+deb-src http://ftp.de.debian.org/debian/ stretch-backports main contrib non-free
 
 # Third Parties Repos
 # Debian Multimedia
@@ -32,7 +30,7 @@ deb-src http://ftp.de.debian.org/debian/ stretch-updates main contrib non-free
 
 # Oracle VM VirtualBox
 # deb http://download.virtualbox.org/virtualbox/debian wheezy contrib non-free
-# Some third packages needs special attention. After you run the command above, run these ones: 
+# Some third packages needs special attention. After you run the command above, run these ones:
 # Oracle VM VirtualBox
 ## wget -q http://download.virtualbox.org/virtualbox/debian/oracle_vbox.asc -O- | sudo apt-key add -
 
