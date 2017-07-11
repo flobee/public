@@ -213,7 +213,6 @@ rrdtool                                          install
 rsync                                            install
 sane-utils                                       install
 screen                                           install
-screenruler                                      install
 sed                                              install
 shared-mime-info                                 install
 smartmontools                                    install
