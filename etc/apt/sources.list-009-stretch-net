@@ -28,8 +28,8 @@ deb-src http://ftp.de.debian.org/debian/ stretch-backports main contrib non-free
 # deb-multimedia.org
 # deb http://www.deb-multimedia.org jessie main non-free
 
-# Oracle VM VirtualBox
-# deb http://download.virtualbox.org/virtualbox/debian wheezy contrib non-free
+# Oracle VM VirtualBox @see source-list.d/ path
+# deb http://download.virtualbox.org/virtualbox/debian stretch contrib non-free
 # Some third packages needs special attention. After you run the command above, run these ones:
 # Oracle VM VirtualBox
 ## wget -q http://download.virtualbox.org/virtualbox/debian/oracle_vbox.asc -O- | sudo apt-key add -
