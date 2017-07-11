@@ -15,6 +15,8 @@
 # > sudo apt-get dselect-upgrade
 #
 # dpkg --set-selections < <this file>
+# but: use sync-available of dctrl-tools pkg befor you use dpkg --set-selections to update to db
+
 anacron                                          install
 apache2-utils                                    install
 apt                                              install
@@ -144,7 +146,6 @@ mp3blaster                                       install
 mp3check                                         install
 mp3diags                                         install
 mp3info                                          install
-mp3info-gtk                                      install
 mp3rename                                        install
 mp4v2-utils                                      install
 mplayer                                          install
@@ -260,7 +261,6 @@ wavpack                                          install
 wget                                             install
 wine                                             install
 winff                                            install
-winff-gtk2                                       install
 wireless-tools                                   install
 wodim                                            install
 wpasupplicant                                    install
