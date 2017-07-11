@@ -15,7 +15,6 @@
 # > sudo apt-get dselect-upgrade
 #
 # dpkg --set-selections < <this file>
-
 anacron                                          install
 apache2-utils                                    install
 apt                                              install
