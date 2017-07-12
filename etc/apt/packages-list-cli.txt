@@ -83,11 +83,9 @@ gettext-base                                     install
 gettext-doc                                      install
 git                                              install
 git-extras                                       install
-git-gui                                          install
 git-man                                          install
 git-svn                                          install
 github-backup                                    install
-gitk                                             install
 gitstats                                         install
 gpm                                              install
 grep                                             install
