@@ -86,7 +86,6 @@ git-extras                                       install
 git-gui                                          install
 git-man                                          install
 git-svn                                          install
-gitg                                             install
 github-backup                                    install
 gitk                                             install
 gitstats                                         install
