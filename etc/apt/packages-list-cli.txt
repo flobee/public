@@ -16,6 +16,7 @@
 #
 # dpkg --set-selections < <this file>
 # but: use sync-available of dctrl-tools pkg befor you use dpkg --set-selections to update to db
+
 alsa-utils                                       install
 anacron                                          install
 apache2-utils                                    install
@@ -117,8 +118,6 @@ libavfilter6                                     install
 libavformat57                                    install
 libavresample3                                   install
 libavutil55                                      install
-# libdvdcss2                                       install
-# libdvdcss2-dbgsym                                install
 libpam-mount                                     install
 libpam-ssh                                       install
 libtool                                          install
@@ -140,7 +139,6 @@ md5deep                                          install
 mlocate                                          install
 mp3blaster                                       install
 mp3check                                         install
-# mp3diags                                         install
 mp3info                                          install
 mp3rename                                        install
 mp4v2-utils                                      install
@@ -158,7 +156,6 @@ netcat-traditional                               install
 netpbm                                           install
 nfs-common                                       install
 nmap                                             install
-# notification-daemon                              install
 ntfs-3g                                          install
 ntp                                              install
 ntpdate                                          install
@@ -166,12 +163,9 @@ openssh-client                                   install
 openssh-server                                   install
 openssh-sftp-server                              install
 openssl                                          install
-# owncloud-client                                  install
-# owncloud-client-l10n                             install
 parted                                           install
 parted-doc                                           install
 patch                                            install
-# pavucontrol                                      install
 pdepend                                          install
 perl                                             install
 phing                                            install
@@ -188,7 +182,7 @@ php-gd                                           install
 php-json                                         install
 php-mbstring                                     install
 php-mysql                                        install
-# php-opcache                                      install
+php-opcache                                      install
 php-readline                                     install
 php-recode                                       install
 php-soap                                         install
@@ -196,7 +190,7 @@ php-sqlite3                                      install
 php-tidy                                         install
 php-xml                                          install
 php-xmlrpc                                       install
-# php-xsl                                          install
+php-xsl                                          install
 php-zip                                          install
 phpmd                                            install
 phpunit                                          install
@@ -209,12 +203,10 @@ rename                                           install
 reportbug                                        install
 rrdtool                                          install
 rsync                                            install
-# sane-utils                                       install
 screen                                           install
 sed                                              install
 shared-mime-info                                 install
 smartmontools                                    install
-# smb4k                                            install
 smbc                                             install
 smbclient                                        install
 smbnetfs                                         install
@@ -239,7 +231,6 @@ unace                                            install
 unar                                             install
 unrar                                            install
 unzip                                            install
-# ure                                              install
 urlview                                          install
 usbutils                                         install
 vim                                              install
@@ -270,4 +261,3 @@ zsh                                              install
 zsh-common                                       install
 zsh-doc                                          install
 bash                                             install
-fonts-wine                                       install
