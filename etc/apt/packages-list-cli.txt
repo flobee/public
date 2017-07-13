@@ -89,6 +89,7 @@ git-man                                          install
 git-svn                                          install
 github-backup                                    install
 gitstats                                         install
+ghostscript                                      install
 gpm                                              install
 grep                                             install
 groff-base                                       install
