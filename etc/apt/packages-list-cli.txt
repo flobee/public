@@ -52,7 +52,8 @@ cups-common                                      install
 curl                                             install
 dash                                             install
 davfs2                                           install
-ddrescueview                                     install
+# ddrescueview                                     install
+gddrescue                                        install
 debianutils                                      install
 default-jre                                      install
 default-jre-headless                             install
@@ -70,6 +71,7 @@ e2fsprogs                                        install
 ethtool                                          install
 faad                                             install
 fakeroot                                         install
+fancontrol                                       install
 ffmpeg                                           install
 ffmpeg-doc                                       install
 findutils                                        install
@@ -141,11 +143,11 @@ md5deep                                          install
 mlocate                                          install
 mp3blaster                                       install
 mp3check                                         install
-mp3diags                                         install
+# mp3diags                                         install
 mp3info                                          install
 mp3rename                                        install
 mp4v2-utils                                      install
-mplayer                                          install
+# mplayer                                          install
 mppenc                                           install
 multitail                                        install
 mutt                                             install
@@ -159,7 +161,7 @@ netcat-traditional                               install
 netpbm                                           install
 nfs-common                                       install
 nmap                                             install
-notification-daemon                              install
+# notification-daemon                              install
 ntfs-3g                                          install
 ntp                                              install
 ntpdate                                          install
@@ -167,11 +169,11 @@ openssh-client                                   install
 openssh-server                                   install
 openssh-sftp-server                              install
 openssl                                          install
-owncloud-client                                  install
-owncloud-client-l10n                             install
+# owncloud-client                                  install
+# owncloud-client-l10n                             install
 parted                                           install
 patch                                            install
-pavucontrol                                      install
+# pavucontrol                                      install
 pdepend                                          install
 perl                                             install
 phing                                            install
@@ -209,7 +211,7 @@ rename                                           install
 reportbug                                        install
 rrdtool                                          install
 rsync                                            install
-sane-utils                                       install
+# sane-utils                                       install
 screen                                           install
 sed                                              install
 # shared-mime-info                                 install
@@ -239,7 +241,7 @@ unace                                            install
 unar                                             install
 unrar                                            install
 unzip                                            install
-ure                                              install
+# ure                                              install
 urlview                                          install
 usbutils                                         install
 vim                                              install
