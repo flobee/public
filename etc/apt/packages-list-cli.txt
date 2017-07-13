@@ -188,7 +188,7 @@ php-gd                                           install
 php-json                                         install
 php-mbstring                                     install
 php-mysql                                        install
-php-opcache                                      install
+# php-opcache                                      install
 php-readline                                     install
 php-recode                                       install
 php-soap                                         install
@@ -196,7 +196,7 @@ php-sqlite3                                      install
 php-tidy                                         install
 php-xml                                          install
 php-xmlrpc                                       install
-php-xsl                                          install
+# php-xsl                                          install
 php-zip                                          install
 phpmd                                            install
 phpunit                                          install
