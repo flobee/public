@@ -142,7 +142,6 @@ mp3check                                         install
 mp3info                                          install
 mp3rename                                        install
 mp4v2-utils                                      install
-# mplayer                                          install
 mppenc                                           install
 multitail                                        install
 mutt                                             install
