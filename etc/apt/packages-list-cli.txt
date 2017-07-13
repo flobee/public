@@ -65,7 +65,7 @@ dmsetup                                          install
 dosfstools                                       install
 dpkg                                             install
 dpkg-dev                                         install
-dvd+rw-tools                                     install
+# dvd+rw-tools                                     install
 e2fsprogs                                        install
 ethtool                                          install
 faad                                             install
@@ -118,8 +118,8 @@ libavfilter6                                     install
 libavformat57                                    install
 libavresample3                                   install
 libavutil55                                      install
-libdvdcss2                                       install
-libdvdcss2-dbgsym                                install
+# libdvdcss2                                       install
+# libdvdcss2-dbgsym                                install
 libpam-mount                                     install
 libpam-ssh                                       install
 libtool                                          install
