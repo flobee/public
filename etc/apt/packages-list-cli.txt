@@ -48,7 +48,7 @@ cryptsetup                                       install
 cryptsetup-bin                                   install
 cups-client                                      install
 cups-common                                      install
-cups-pk-helper                                   install
+# cups-pk-helper                                   install
 curl                                             install
 dash                                             install
 davfs2                                           install
@@ -212,9 +212,9 @@ rsync                                            install
 sane-utils                                       install
 screen                                           install
 sed                                              install
-shared-mime-info                                 install
+# shared-mime-info                                 install
 smartmontools                                    install
-smb4k                                            install
+# smb4k                                            install
 smbc                                             install
 smbclient                                        install
 smbnetfs                                         install
