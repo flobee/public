@@ -55,7 +55,6 @@ davfs2                                           install
 # ddrescueview                                     install
 gddrescue                                        install
 debianutils                                      install
-default-jre                                      install
 default-jre-headless                             install
 dh-autoreconf                                    install
 dh-make                                          install
