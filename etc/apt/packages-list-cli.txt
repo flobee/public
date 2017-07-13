@@ -48,11 +48,9 @@ cryptsetup                                       install
 cryptsetup-bin                                   install
 cups-client                                      install
 cups-common                                      install
-# cups-pk-helper                                   install
 curl                                             install
 dash                                             install
 davfs2                                           install
-# ddrescueview                                     install
 gddrescue                                        install
 debianutils                                      install
 default-jre-headless                             install
@@ -65,7 +63,6 @@ dmsetup                                          install
 dosfstools                                       install
 dpkg                                             install
 dpkg-dev                                         install
-# dvd+rw-tools                                     install
 e2fsprogs                                        install
 ethtool                                          install
 faad                                             install
