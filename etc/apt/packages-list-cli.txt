@@ -152,7 +152,8 @@ ncftp                                            install
 ndiff                                            install
 net-tools                                        install
 netbase                                          install
-netcat-traditional                               install
+netcat                                           install
+netcat-openbsd                                   install
 netpbm                                           install
 nfs-common                                       install
 nmap                                             install
