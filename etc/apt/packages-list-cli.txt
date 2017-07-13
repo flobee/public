@@ -191,6 +191,7 @@ php-tidy                                         install
 php-xml                                          install
 php-xmlrpc                                       install
 php-xsl                                          install
+php-xdebug                                       install
 php-zip                                          install
 phpmd                                            install
 phpunit                                          install
