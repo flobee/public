@@ -46,14 +46,14 @@ function gitaliases($test)
             // adds aliases to $(prefix)/etc/gitconfig (probably only root can do this)
             // if you see some here and you are not the first user, they are already available for you :-)
             'system' => array(
-/*                'co' => 'checkout',
+                'co' => 'checkout',
                 'ci' => 'commit',
                 'st' => 'status -sb',
                 'stat' => 'status',
                 'br' => 'branch',
                 'alias' => '!git config -l | grep alias | cut -c 7-',
                 'df' => 'diff',
-*/
+
             ),
 
             // adds aliases to $HOME/.gitconfig
@@ -74,6 +74,7 @@ function gitaliases($test)
                 'alias' => '!git config --list | grep alias | cut -c 7-',
                 // push and pull all
                 'pa' => '!git push --all && git pull --all',
+                'aa' => '!git add -A',
                 #'pl' => 'pull',
                 #'ps' => 'push',
                 #'all' => '!git add . && git commit',
