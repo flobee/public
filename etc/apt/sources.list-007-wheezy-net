@@ -24,3 +24,19 @@ deb-src http://security.debian.org/ wheezy/updates main
 # deb http://packages.tine20.org/debian squeeze stable
 # Import the key (as root or with sudo):
 ##apt-key adv --recv-keys --keyserver gpg-keyserver.de 7F6F6895
+
+######################
+### fun and extras ###
+######################
+### syscp ###
+# deb http://gig:9999/debian-syscp squeeze/
+
+# deb http://www.debian-multimedia.org sarge main
+#deb http://gig:9999/debian-multimedia lenny main
+#deb http://gig:9999/debian-multimedia squeeze main
+
+# Tine20 for Debian Squeeze:
+# deb http://packages.tine20.org/debian squeeze stable
+# Import the key (as root or with sudo):
+# apt-key adv --recv-keys --keyserver gpg-keyserver.de 7F6F6895
+

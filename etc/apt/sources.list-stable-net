@@ -1,69 +1,16 @@
-# deb http://ftp.de.debian.org/debian stable main contrib non-free
-# deb http://ftp.debian.org/debian/ stable-updates main contrib non-free
-# deb http://security.debian.org/ stable/updates main contrib non-free
+deb http://ftp1.de.debian.org/debian/ stable main non-free contrib
+deb-src http://ftp1.de.debian.org/debian/ stable main non-free contrib
 
-#############
-# old wheezy net
-deb http://http.debian.net/debian wheezy main
-deb-src http://http.debian.net/debian wheezy main
+deb http://ftp.de.debian.org/debian/ stable main non-free contrib
+deb-src http://ftp.de.debian.org/debian/ stable main non-free contrib
 
-deb http://http.debian.net/debian wheezy-updates main
-deb-src http://http.debian.net/debian wheezy-updates main
+deb http://security.debian.org/ stable/updates main contrib non-free
+deb-src http://security.debian.org/ stable/updates main contrib non-free
 
-deb http://security.debian.org/ wheezy/updates main
-deb-src http://security.debian.org/ wheezy/updates main
+# stable-updates, previously known as 'volatile'
+deb http://ftp.de.debian.org/debian stable-updates main contrib non-free
+deb-src http://ftp.de.debian.org/debian stable-updates main contrib non-free
 
-
-#############
-# jessie net
-deb http://http.debian.net/debian jessie main
-deb-src http://http.debian.net/debian jessie main
-
-deb http://http.debian.net/debian jessie-updates main
-deb-src http://http.debian.net/debian jessie-updates main
-
-deb http://security.debian.org/ jessie/updates main
-deb-src http://security.debian.org/ jessie/updates main
-
-
-###
-# www.deb-multimedia.org
-# deb http://www.deb-multimedia.org jessie main non-free
-# deb http://gig:9999/debian-multimedia jessie main non-free
-
-
-
-
-
-
-# Third Parties Repos
-# Debian Mozilla team
-# deb http://backports.debian.org/debian-backports squeeze-backports main
-
-# The Opera .deb Repository
-# http://deb.opera.com/opera/ stable non-free
-
-# Universidade Federal do Paraná - UFPR
-# ftp://debian.c3sl.ufpr.br/debian/dists/squeeze/contrib/
-
-# deb-multimedia.org
-# deb http://www.deb-multimedia.org stable main non-free
-
-	
-# Some third packages needs special attention. After you run the command above, run these ones:
-#an Mozilla team
-#wget http://mozilla.debian.net/pkg-mozilla-archive-keyring_1.0_all.deb;
-#dpkg --install pkg-mozilla-archive-keyring_1.0_all.deb
-#
-##Ajenti
-#wget http://repo.ajenti.org/debian/key -O- | apt-key add -
-#
-##The Opera .deb Repository
-#wget -O - http://deb.opera.com/archive.key | sudo apt-key add -
-#
-
-##Bumblebee Debian repository
-#wget -O - http://suwako.nomanga.net/suwako.asc | apt-key add -
-#
-##Remastersys
-#wget -O - http://www.remastersys.com/ubuntu/remastersys.gpg.key 
+# jessie-backports, previously on backports.debian.org
+# deb http://ftp.de.debian.org/debian/ jessie-backports main contrib non-free
+# deb-src http://ftp.de.debian.org/debian/ jessie-backports main contrib non-free
