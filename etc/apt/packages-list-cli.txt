@@ -148,6 +148,7 @@ mutt                                             install
 mysql-common                                     install
 nano                                             install
 ncftp                                            install
+ncdu                                             install
 ndiff                                            install
 net-tools                                        install
 netbase                                          install
@@ -164,7 +165,7 @@ openssh-server                                   install
 openssh-sftp-server                              install
 openssl                                          install
 parted                                           install
-parted-doc                                           install
+parted-doc                                       install
 patch                                            install
 pdepend                                          install
 perl                                             install
