@@ -221,6 +221,7 @@ sudo                                             install
 svn2cl                                           install
 tar                                              install
 telnet                                           install
+tshark                                           install
 traceroute                                       install
 transfig                                         install
 tree                                             install
