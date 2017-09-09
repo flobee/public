@@ -1,0 +1,4 @@
+## Add this line for Opera browser
+## use "stable" instead of distribution name
+deb http://deb.opera.com/opera-stable/ stable non-free
+
