@@ -13,8 +13,8 @@ deb http://ftp.de.debian.org/debian/ stretch-updates main contrib non-free
 deb-src http://ftp.de.debian.org/debian/ stretch-updates main contrib non-free
 
 # stretch-backports, previously on backports.debian.org
-deb http://ftp.de.debian.org/debian/ stretch-backports main contrib non-free
-deb-src http://ftp.de.debian.org/debian/ stretch-backports main contrib non-free
+# deb http://ftp.de.debian.org/debian/ stretch-backports main contrib non-free
+# deb-src http://ftp.de.debian.org/debian/ stretch-backports main contrib non-free
 
 # Third Parties Repos
 # Debian Multimedia
