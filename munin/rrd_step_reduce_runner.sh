@@ -19,8 +19,13 @@ fi
 
 find $PATH_RRD -type f -iname "*.rrd" -print0 | while IFS= read -r -d $'\0' filename; do
 	echo $filename
+
 	rrdtool dump $filename > temp.$oldInterval.xml
-	./rrd_step_reduce.py temp.$oldInterval.xml $oldInterval > temp.$newInterval.xml
-	rm $filename
-	rrdtool restore temp.$newInterval.xml $filename
+
+	./rrd_step_reduce.py temp.$oldInterval.xml $oldInterval > ./temp.$newInterval.xml
+
+#	rm $filename
+#	rrdtool restore temp.$newInterval.xml $filename
+    echo 'sleep 10';
+    sleep 10;
 done
