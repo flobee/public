@@ -48,7 +48,8 @@ def main(dumpfile, factor):
     step = root.find("step")
     assert(step!=None)
     old_step = int(step.text)
-    new_step = old_step/factor
+    # new_step = old_step/factor
+    new_step = old_step * factor
     step.text = str(new_step)
 
     database = root.findall("rra/database")
@@ -71,3 +72,5 @@ if __name__ == "__main__":
 
     # call main
     main(sys.argv[1], int(sys.argv[2]))
+
+
