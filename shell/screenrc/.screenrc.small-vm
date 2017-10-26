@@ -88,7 +88,7 @@ hardstatus alwayslastline
 # demo: hardstatus string '%{= kG}%-Lw%{= kW}%50> %n*%f %t%{= kG}%+Lw%< %{= kG}%-=%D %m/%d/%y | %C:%s %A | %1`%{-} %2`%{-} '
 #hardstatus alwayslastline "%{Gb}%c:%s | %d %M | %-Lw%{= BG} %50>%n%f+ %t %{-}%+Lw  %= |Host: %H%? |LAvg: %l%?"
 # hardstatus string '%{Gb}%c:%s | %d %M | %-Lw%{= BG} %50>%n%f+ %t %{-}%+Lw  %= |Host:%H%? |LAvg:%l%? |Cpu:%3`%{-}?'
-hardstatus string "%{Gb} %-Lw%{= Gb} %40>%n%f+ %t %{-}%+Lw %= |%l%?|%{Gb}MB|$USER@%H%?|%d%M|%{Gb}%c:%s"
+hardstatus string "%{Gb} %-Lw%{= Gb} %40>%n%f+ %t %{-}%+Lw %= |%l%?|$USER@%H%?|%{Gb}%c:%s"
 
 
 # Set the hardstatus prop on gui terms to set the titlebar/icon title
