@@ -15,7 +15,7 @@
 # > sudo apt-get dselect-upgrade
 #
 # dpkg --set-selections < <this file>
-# but: use sync-available of dctrl-tools pkg befor you use dpkg --set-selections to update to db
+# but: use sync-available of dctrl-tools pkg befor you use dpkg --set-selections to update the db
 
 alsa-utils                                       install
 anacron                                          install
