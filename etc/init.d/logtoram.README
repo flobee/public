@@ -10,7 +10,7 @@ echo 'none        /var/log        tmpfs   size=30M,noatime         0 0' >> /etc/
 # Runlevels:
 
 # chmod a+x /etc/init.d/logtoram
-# update-rc.d logtoram default 9 99
+# update-rc.d logtoram defaults 9 99
 
 # possible problems to be checked:
 # - logfs/ttmpfs must be mounted: OK
