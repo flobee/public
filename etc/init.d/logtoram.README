@@ -9,6 +9,7 @@
 
 ## Runlevels:
 
+
     # chmod a+x /etc/init.d/logtoram
     # update-rc.d logtoram defaults 9 99
 
