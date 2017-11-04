@@ -1,3 +1,5 @@
+# for small enviroment (virtual machines)
+
 # dpkg -l; Shows all packages.
 # This list is very limited and shows some or more i often forget :)
 # You may check for help handling packages for other CPUs:
@@ -17,7 +19,6 @@
 # dpkg --set-selections < <this file>
 # but: use sync-available of dctrl-tools pkg befor you use dpkg --set-selections to update the db
 
-alsa-utils                                       install
 anacron                                          install
 apache2-utils                                    install
 apt                                              install
@@ -45,60 +46,27 @@ cpp                                              install
 cpulimit                                         install
 crda                                             install
 cron                                             install
-cryptsetup                                       install
-cryptsetup-bin                                   install
-cups-client                                      install
-cups-common                                      install
 curl                                             install
 dash                                             install
 davfs2                                           install
-gddrescue                                        install
 debianutils                                      install
-default-jre-headless                             install
-dh-autoreconf                                    install
-dh-make                                          install
-dh-php                                           install
-dh-python                                        install
-dh-strip-nondeterminism                          install
-dmsetup                                          install
 dosfstools                                       install
 dpkg                                             install
 dpkg-dev                                         install
 e2fsprogs                                        install
 ethtool                                          install
-faad                                             install
-fakeroot                                         install
-fancontrol                                       install
-ffmpeg                                           install
-ffmpeg-doc                                       install
 findutils                                        install
-flac                                             install
 fuse                                             install
-gdisk                                            install
-genisoimage                                      install
-geoip-database                                   install
-gettext                                          install
-gettext-base                                     install
-gettext-doc                                      install
 git                                              install
 git-extras                                       install
 git-man                                          install
 git-svn                                          install
 github-backup                                    install
 gitstats                                         install
-ghostscript                                      install
-gpm                                              install
 grep                                             install
-groff-base                                       install
-growisofs                                        install
 gzip                                             install
 hashdeep                                         install
-hddtemp                                          install
-hdparm                                           install
-html2ps                                          install
 htop                                             install
-imagemagick                                      install
-imagemagick-doc                                  install
 installation-report                              install
 intltool-debian                                  install
 iproute2                                         install
@@ -107,23 +75,11 @@ isc-dhcp-client                                  install
 isc-dhcp-common                                  install
 iso-codes                                        install
 iw                                               install
-javascript-common                                install
-jsonlint                                         install
 keyutils                                         install
-lame                                             install
 less                                             install
-libavcodec-extra57                               install
-libavdevice57                                    install
-libavfilter6                                     install
-libavformat57                                    install
-libavresample3                                   install
-libavutil55                                      install
 libpam-mount                                     install
 libpam-ssh                                       install
 libtool                                          install
-libwine                                          install
-lm-sensors                                       install
-locales                                          install
 logrotate                                        install
 lsb-base                                         install
 lsb-release                                      install
@@ -137,12 +93,6 @@ mc                                               install
 mc-data                                          install
 md5deep                                          install
 mlocate                                          install
-mp3blaster                                       install
-mp3check                                         install
-mp3info                                          install
-mp3rename                                        install
-mp4v2-utils                                      install
-mppenc                                           install
 multitail                                        install
 mutt                                             install
 mysql-common                                     install
@@ -164,8 +114,6 @@ openssh-client                                   install
 openssh-server                                   install
 openssh-sftp-server                              install
 openssl                                          install
-parted                                           install
-parted-doc                                       install
 patch                                            install
 pdepend                                          install
 perl                                             install
@@ -212,7 +160,6 @@ smartmontools                                    install
 smbc                                             install
 smbclient                                        install
 smbnetfs                                         install
-sox                                              install
 sshfs                                            install
 strace                                           install
 subversion                                       install
@@ -221,14 +168,7 @@ sudo                                             install
 svn2cl                                           install
 tar                                              install
 telnet                                           install
-tshark                                           install
-traceroute                                       install
-transfig                                         install
 tree                                             install
-ttf-dejavu                                       install
-ttf-dejavu-core                                  install
-ttf-dejavu-extra                                 install
-ttf-mscorefonts-installer                        install
 ucf                                              install
 unace                                            install
 unar                                             install
@@ -243,21 +183,8 @@ vim-doc                                          install
 vim-runtime                                      install
 vim-scripts                                      install
 vim-tiny                                         install
-vorbis-tools                                     install
-vorbisgain                                       install
-w-scan                                           install
 w3m                                              install
-wav2cdr                                          install
-wavpack                                          install
 wget                                             install
-wine                                             install
-winff                                            install
-wireless-tools                                   install
-wodim                                            install
-wpasupplicant                                    install
-x264                                             install
-x265                                             install
-xfsprogs                                         install
 zenmap                                           install
 zip                                              install
 zsh                                              install
