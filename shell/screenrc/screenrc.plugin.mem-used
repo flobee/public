@@ -1,3 +1,0 @@
-#!/bin/sh
-free -m | grep -i mem | awk '{print $3}'
-

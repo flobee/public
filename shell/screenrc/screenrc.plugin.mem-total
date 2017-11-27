@@ -1,3 +1,0 @@
-#!/bin/bash
-echo $(/usr/bin/free -m | /usr/bin/awk '$1 == "Mem:" { print $2 }')
-
