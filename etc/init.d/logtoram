@@ -34,7 +34,7 @@ case $1 in
         ;;
     stop)
         echo "stop, sync ramfs to log backup.."
-        $LOG_to_HDD
+        $LOG_to_BAK
         echo "done."
         ;;
     *)
