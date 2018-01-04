@@ -9,7 +9,6 @@
 
 ## Runlevels:
 
-
     # chmod a+x /etc/init.d/logtoram
     # update-rc.d logtoram defaults 9 99
 
@@ -32,4 +31,8 @@ if rsyslog is in use: update the init script:
     # save & close
     # update-rc.d rsyslog defaults
     # reboot
+    #
+    # NOTE: If services fail: check if the log dirs still exists. befor a reboot run
+    # /etc/init.d/logtoram sync
+    # and compare after a reboot
 
