@@ -1,4 +1,4 @@
-#!/usr/bin/env php 
+#!/usr/bin/env php
 <?php
 
 # Git alias generator
@@ -13,40 +13,37 @@
 
 function gitaliases($test)
 {
-    // workflow: cleanup/purge -> or drop/ remove -> add aliases
+    // workflow: cleanup -> or drop/ remove -> add aliases
     $aliases = array(
         'cleanup' => array(
-            // removes all aliases from the current project .git/config
-            'local' => false,
-            // removes all aliases from $HOME/.gitconfig
-            'global' => false,
-
             // removes all aliases from $(prefix)/etc/gitconfig
             'system' => false,
+            // removes all aliases from $HOME/.gitconfig
+            'global' => false,
+            // removes all aliases from the current project .git/config
+            'local' => false,
         ),
+
         'drop' => array(
-            // removes aliases from the current project .git/config
-            'local' => array(
+            // removes aliases from $(prefix)/etc/gitconfig (probably only for
+            // root user)
+            'system' => array(
             ),
             // removes aliases from $HOME/.gitconfig
             'global' => array(
-                'last' => true, // set to true to drop or delete this line!
+                'last' => true, // set to true to delete this line!
                 'll' => true,
                 'l' => true,
                 'llog' => true,
                 'verbose' => true,
             ),
-            // removes aliases from $(prefix)/etc/gitconfig (probably only for 
-            // root)
-            'system' => array(
-            ),
-        ),
-        'add' => array(
-            // adds aliases to the current project .git/config
+            // removes aliases from the current project .git/config
             'local' => array(),
+        ),
 
-            // adds aliases to $(prefix)/etc/gitconfig (probably only root can 
-            // do this) if you see some here and you are not the first user, 
+        'add' => array(
+            // adds aliases to $(prefix)/etc/gitconfig (probably only root can
+            // do this) if you see some here and you are not the first user,
             // they are already available for you :-)
             'system' => array(
 /*                'co' => 'checkout',
@@ -148,6 +145,11 @@ function gitaliases($test)
 
                 #git sm-push will ask to push also submodules
                 'sm-push' => 'push --recurse-submodules=on-demand',
+            ),
+
+            // adds aliases to the current project .git/config
+            'local' => array(
+
             ),
          ),
     );
