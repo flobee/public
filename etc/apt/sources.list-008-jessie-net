@@ -1,16 +1,27 @@
 #############
 # jessie net
-deb http://http.debian.net/debian jessie main
-deb-src http://http.debian.net/debian jessie main
+deb http://ftp.de.debian.org/debian jessie main contrib non-free
+deb-src http://ftp.de.debian.org/debian jessie main contrib non-free
 
-deb http://http.debian.net/debian jessie-updates main
-deb-src http://http.debian.net/debian jessie-updates main
+deb http://ftp.debian.org/debian/ jessie-updates main contrib non-free
 
-deb http://security.debian.org/ jessie/updates main
-deb-src http://security.debian.org/ jessie/updates main
+deb http://security.debian.org/ jessie/updates main contrib non-free
 
 # www.deb-multimedia.org
 # deb http://www.deb-multimedia.org jessie main non-free
 # deb http://gig:9999/debian-multimedia jessie main non-free
 
+# deb-multimedia.org
+# deb http://www.deb-multimedia.org squeeze main non-free
+deb http://www.deb-multimedia.org jessie main non-free
+
+# Oracle VM VirtualBox
+# deb http://download.virtualbox.org/virtualbox/debian wheezy contrib non-free
+# Some third packages needs special attention. After you run the command above, run these ones: 
+# Oracle VM VirtualBox
+## wget -q http://download.virtualbox.org/virtualbox/debian/oracle_vbox.asc -O- | sudo apt-key add -
+
+# Debian Backports
+# deb http://backports.debian.org/debian-backports squeeze-backports main
+	
 

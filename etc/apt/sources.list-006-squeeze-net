@@ -21,9 +21,13 @@ deb-src http://ftp.debian.org/debian squeeze main contrib non-free
 ### syscp ###
 # deb http://tv:9999/debian-syscp testing/
 
-# deb http://www.deb-multimedia.org testing main
+deb http://www.deb-multimedia.org testing main
+# deb http://tv:9999/debian-multimedia testing main
 
 # Tine20 for Debian Squeeze:
 # deb http://packages.tine20.org/debian squeeze stable
 # Import the key (as root or with sudo):
 # apt-key adv --recv-keys --keyserver gpg-keyserver.de 7F6F6895
+
+
+deb http://security.debian.org/ squeeze/updates contrib non-free main
