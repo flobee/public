@@ -133,7 +133,7 @@ let g:syntastic_php_phpcs_args = "--standard=misc/coding/Mumsys2"
 " to enable manually: :NERDTree [/path|.]
 
 "autocmd vimenter * NERDTree
-"autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 " }}}
 
