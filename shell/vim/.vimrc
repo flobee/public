@@ -20,7 +20,7 @@
 set expandtab
 
 " Use filetype plugins, e.g. for PHP
-filetype plugin on
+filetype plugin indent on
 
 " Show nice info in ruler
 set ruler
@@ -60,6 +60,7 @@ set modeline
 
 " }}}
 
+
 " # Features
 
 " {{{ ## general
@@ -82,12 +83,13 @@ autocmd InsertLeave * se nocul
 autocmd InsertEnter * se cul
 " }}}
 
+
 " {{{ ## for php
 "
 " Reads the skeleton php file
 " Note: The normal command afterwards deletes an ugly pending line and moves
 " the cursor to the middle of the file.
-autocmd BufNewFile *.php 0r ~/.vim/skeleton.php | normal normal Gdd^[OA^[OA
+autocmd BufNewFile *.php :0r ~/.vim/templates/skeleton.php
 
 " .phps files handled like .php
 
