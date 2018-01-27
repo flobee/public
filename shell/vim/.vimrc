@@ -96,4 +96,6 @@ au BufRead,BufNewFile *.phps        set filetype=php
 " }}}
 
 
+" # read, install: https://github.com/tpope/vim-pathogen
+execute pathogen#infect()
 
