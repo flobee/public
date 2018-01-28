@@ -9,6 +9,7 @@
 " https://github.com/scrooloose/nerdtree (left dir/file browser)
 " https://github.com/Xuyuanp/nerdtree-git-plugin (status of files in the tree)
 " https://github.com/tpope/vim-fugitive (cool git integration)
+" https://andrew.stwrt.ca/posts/project-specific-vimrc/
 " For PHP:
 " http://blog.joncairns.com/2012/05/using-vim-as-a-php-ide/
 " http://www.vim.org/scripts/script.php?script_id=3125 (old, 2005)
@@ -64,14 +65,6 @@ set backspace=start,eol,indent
 " Allow file inline modelines to provide settings
 set modeline
 
-
-" }}}
-
-
-" # Features
-
-" {{{ ## general
-
 " show matching brackets/parenthesis
 set showmatch
 
@@ -81,6 +74,17 @@ set hlsearch
 " History (default is 20)
 set history=1000
 
+" }}}
+
+
+
+" # Features
+
+" {{{ ## general
+
+" allow custom vimrc on top of default vimrc
+set exrc
+
 " Set new grep command, which ignores SVN!
 " TODO: Add this to SVN
 "set grepprg=/usr/bin/vimgrep\ $*\ /dev/null
@@ -88,7 +92,9 @@ set history=1000
 " Highlight current line in insert mode.
 autocmd InsertLeave * se nocul
 autocmd InsertEnter * se cul
+
 " }}}
+
 
 
 " {{{ ## for php
@@ -123,8 +129,9 @@ let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 
+
 "# let g:syntastic_php_phpcs_args = "--standard=Zend --tab-width=0"
-let g:syntastic_php_phpcs_args = "--standard=misc/coding/Mumsys2"
+"let g:syntastic_php_phpcs_args = "--standard=misc/coding/Mumsys2"
 
 " }}}
 
