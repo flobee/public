@@ -6,10 +6,6 @@
 	path = shell/vim/.vim/bundle/syntastic
 	url = https://github.com/vim-syntastic/syntastic.git
 
-[submodule "shell/vim/.vim/bundle/nerdtree-git-plugin"]
-	path = shell/vim/.vim/bundle/nerdtree-git-plugin
-	url = https://github.com/Xuyuanp/nerdtree-git-plugin.git
-
 [submodule "shell/vim/.vim/bundle/nerdtree"]
 	path = shell/vim/.vim/bundle/nerdtree
 	url = https://github.com/scrooloose/nerdtree.git
