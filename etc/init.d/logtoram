@@ -1,0 +1,48 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:             varlogs
+# Required-Start:
+# Required-Stop:
+# Default-Start:        2 3 5
+# Default-Stop:         0 1 6
+# Short-Description:    /var/log
+# Description:          FS 2 RAM (boot)
+#                       RAM 2 FS (sync)
+#                       RAM 2 FS (shutdown / reboot)
+### END INIT INFO
+
+
+RSYNC="/usr/bin/rsync"
+RSYNCCONF="--recursive --links --checksum --perms --partial --times --group --owner --devices --specials"
+
+DIR_LOG="/var/log/"
+DIR_BAK="/var/log_bak/"
+
+BAK_to_RAM="$RSYNC $RSYNCCONF $DIR_BAK $DIR_LOG"
+LOG_to_BAK="$RSYNC $RSYNCCONF $DIR_LOG $DIR_BAK"
+
+case $1 in
+    start)
+        echo "start, sync log backup to ramfs.."
+        $BAK_to_RAM
+        echo "done."
+        ;;
+    sync)
+        echo "sync ramfs to log backup.."
+        $LOG_to_BAK
+        echo "done."
+        ;;
+    stop)
+        echo "stop, sync ramfs to log backup.."
+        $LOG_to_BAK
+        echo "done."
+        ;;
+    *)
+        echo $"usage: $0 {start|sync|stop}"
+        exit 1
+        ;;
+
+esac
+
+exit 0
+

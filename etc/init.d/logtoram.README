@@ -1,0 +1,38 @@
+# Logs to RAM
+(E.g. for the raspberry to reduce writes/ bring up SD Card health)
+
+    mkdir /var/log_bak
+
+    echo '# log to RAM'  >> /etc/fstab
+    echo 'none        /var/log        tmpfs   size=30M,noatime         0 0' >> /etc/fstab
+
+
+## Runlevels:
+
+    # chmod a+x /etc/init.d/logtoram
+    # update-rc.d logtoram defaults 9 99
+
+
+possible problems to be checked:
+ - logfs/ttmpfs must be mounted: OK
+ - logtoram init script must be started befor services (e.g. rsyslog) using it: to be checked!
+ - perms of logs must be verified, otherwise services can fail.
+   eg. if "logtoram stop" fails after an important update or crash
+   after installing new services you may run "/etc/init.d/logtoram sync" by hand to be sure all
+   new logs und their perms will be reseted after a reboot
+
+
+if rsyslog is in use: update the init script:
+
+    # vi /etc/init.d/rsyslog
+    # add logtoram to the start and stop action:
+    #       # Required-Start:    $remote_fs $time logtoram
+    #       # Required-Stop:     umountnfs $time logtoram
+    # save & close
+    # update-rc.d rsyslog defaults
+    # reboot
+    #
+    # NOTE: If services fail: check if the log dirs still exists. befor a reboot run
+    # /etc/init.d/logtoram sync
+    # and compare after a reboot
+

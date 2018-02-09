@@ -1,0 +1,193 @@
+# for small enviroment (virtual machines)
+
+# dpkg -l; Shows all packages.
+# This list is very limited and shows some or more i often forget :)
+# You may check for help handling packages for other CPUs:
+# https://askubuntu.com/questions/17823/how-to-list-all-installed-packages/496042#496042
+#
+# You may try this:
+# Create a backup of what packages are currently installed:
+# > dpkg --get-selections > list.txt
+# Then (on another system) restore installations from that list:
+# > dpkg --clear-selections
+# > sudo dpkg --set-selections < list.txt
+# To get rid of stale packages:
+# > sudo apt-get autoremove
+# To get installed like at backup time (i.e. to install packages set by dpkg --set-selections):
+# > sudo apt-get dselect-upgrade
+#
+# dpkg --set-selections < <this file>
+# but: use sync-available of dctrl-tools pkg befor you use dpkg --set-selections to update the db
+
+anacron                                          install
+apache2-utils                                    install
+apt                                              install
+apt-listchanges                                  install
+apt-transport-https                              install
+apt-utils                                        install
+aptitude                                         install
+aptitude-common                                  install
+at                                               install
+binutils                                         install
+bsdmainutils                                     install
+bsdutils                                         install
+build-essential                                  install
+busybox                                          install
+bzip2                                            install
+ca-certificates                                  install
+ca-certificates-java                             install
+cabextract                                       install
+cifs-utils                                       install
+composer                                         install
+console-setup                                    install
+console-setup-linux                              install
+coreutils                                        install
+cpp                                              install
+cpulimit                                         install
+crda                                             install
+cron                                             install
+curl                                             install
+dash                                             install
+davfs2                                           install
+debianutils                                      install
+dosfstools                                       install
+dpkg                                             install
+dpkg-dev                                         install
+e2fsprogs                                        install
+ethtool                                          install
+findutils                                        install
+fuse                                             install
+git                                              install
+git-extras                                       install
+git-man                                          install
+git-svn                                          install
+github-backup                                    install
+gitstats                                         install
+grep                                             install
+gzip                                             install
+hashdeep                                         install
+htop                                             install
+installation-report                              install
+intltool-debian                                  install
+iproute2                                         install
+iptables                                         install
+isc-dhcp-client                                  install
+isc-dhcp-common                                  install
+iso-codes                                        install
+iw                                               install
+keyutils                                         install
+less                                             install
+libpam-mount                                     install
+libpam-ssh                                       install
+libtool                                          install
+logrotate                                        install
+lsb-base                                         install
+lsb-release                                      install
+lsof                                             install
+make                                             install
+man-db                                           install
+manpages                                         install
+manpages-de                                      install
+manpages-dev                                     install
+mc                                               install
+mc-data                                          install
+md5deep                                          install
+mlocate                                          install
+multitail                                        install
+mutt                                             install
+mysql-common                                     install
+nano                                             install
+ncftp                                            install
+ncdu                                             install
+ndiff                                            install
+net-tools                                        install
+netbase                                          install
+netcat                                           install
+netcat-openbsd                                   install
+netpbm                                           install
+nfs-common                                       install
+nmap                                             install
+ntfs-3g                                          install
+ntp                                              install
+ntpdate                                          install
+openssh-client                                   install
+openssh-server                                   install
+openssh-sftp-server                              install
+openssl                                          install
+patch                                            install
+pdepend                                          install
+perl                                             install
+phing                                            install
+php-codecoverage                                 install
+php-codesniffer                                  install
+php-common                                       install
+php-pear                                         install
+php-psr-log                                      install
+php-tcpdf                                        install
+php-cli                                          install
+php-common                                       install
+php-curl                                         install
+php-gd                                           install
+php-json                                         install
+php-mbstring                                     install
+php-mysql                                        install
+php-opcache                                      install
+php-readline                                     install
+php-recode                                       install
+php-soap                                         install
+php-sqlite3                                      install
+php-tidy                                         install
+php-xml                                          install
+php-xmlrpc                                       install
+php-xsl                                          install
+php-xdebug                                       install
+php-zip                                          install
+phpmd                                            install
+phpunit                                          install
+phpunit-dbunit                                   install
+pkg-php-tools                                    install
+procps                                           install
+psmisc                                           install
+rar                                              install
+rename                                           install
+reportbug                                        install
+rrdtool                                          install
+rsync                                            install
+screen                                           install
+sed                                              install
+shared-mime-info                                 install
+smartmontools                                    install
+smbc                                             install
+smbclient                                        install
+smbnetfs                                         install
+sshfs                                            install
+strace                                           install
+subversion                                       install
+subversion-tools                                 install
+sudo                                             install
+svn2cl                                           install
+tar                                              install
+telnet                                           install
+tree                                             install
+ucf                                              install
+unace                                            install
+unar                                             install
+unrar                                            install
+unzip                                            install
+urlview                                          install
+usbutils                                         install
+vim                                              install
+vim-addon-manager                                install
+vim-common                                       install
+vim-doc                                          install
+vim-runtime                                      install
+vim-scripts                                      install
+vim-tiny                                         install
+w3m                                              install
+wget                                             install
+zenmap                                           install
+zip                                              install
+zsh                                              install
+zsh-common                                       install
+zsh-doc                                          install
+bash                                             install

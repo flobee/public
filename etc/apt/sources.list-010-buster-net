@@ -1,0 +1,49 @@
+# stretch deb 9
+# deb http://ftp.de.debian.org/debian/ stretch main contrib non-free
+# deb-src http://ftp.de.debian.org/debian/ stretch main contrib non-free
+# deb http://ftp.debian.org/debian/ stretch-updates main contrib non-free
+
+# deb http://security.debian.org/ stretch/updates main contrib non-free
+# deb http://security.debian.org/debian-security stretch/updates main contrib non-free
+# deb-src http://security.debian.org/debian-security stretch/updates main contrib non-free
+
+
+# buster debian 10
+deb http://ftp.de.debian.org/debian/ buster main contrib non-free
+deb-src http://ftp.de.debian.org/debian/ buster main contrib non-free
+deb http://ftp.debian.org/debian/ buster-updates main contrib non-free
+
+deb http://security.debian.org/ security/updates main contrib non-free
+deb http://security.debian.org/debian-security buster/updates main contrib non-free
+deb-src http://security.debian.org/debian-security buster/updates main contrib non-free
+# buster-updates, previously known as 'volatile'
+deb http://ftp.de.debian.org/debian/ buster-updates main contrib non-free
+deb-src http://ftp.de.debian.org/debian/ buster-updates main contrib non-free
+
+# buster-backports, previously on backports.debian.org
+deb http://ftp.de.debian.org/debian/ buster-backports main contrib non-free
+deb-src http://ftp.de.debian.org/debian/ buster-backports main contrib non-free
+
+
+
+# Third Parties Repos
+# Debian Multimedia
+# deb http://www.las.ic.unicamp.br/pub/debian-multimedia/ buster main
+
+# deb-multimedia.org
+# deb http://www.deb-multimedia.org buster main non-free
+
+# Oracle VM VirtualBox
+# deb http://download.virtualbox.org/virtualbox/debian buster contrib non-free
+# Some third packages needs special attention. After you run the command above, run these ones:
+# Oracle VM VirtualBox
+## wget -q http://download.virtualbox.org/virtualbox/debian/oracle_vbox.asc -O- | sudo apt-key add -
+
+# Debian Backports
+# deb http://backports.debian.org/debian-backports buster-backports main
+
+# eTobi VDR
+# deb http://e-tobi.net/vdr-experimental buster vdr-multipatch base
+# deb-src http://e-tobi.net/vdr-experimental buster vdr-multipatch base
+
+
