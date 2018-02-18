@@ -13,6 +13,7 @@ ini_set('memory_limit', '8M');
 
 
 $config = require_once __FILE__ .'.cfg.php';
+
 /**
  * A file (csv) containing vdr unix timestamps: start;stop
  */
@@ -74,8 +75,8 @@ $records = array(
 );
 
 $i = $j = 0;
-while(list(,$line) = each($stats) )
-{
+//while(list(,$line) = each($stats) )
+foreach ( $stats as $line ) {
     $rec = explode(';', $line);
     
     if (empty($rec[1])) {
