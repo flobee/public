@@ -124,8 +124,10 @@ termcapinfo xterm 'is=\E[r\E[m\E[2J\E[H\E[?7h\E[?1;4;6l'
 #
 # screen -t monkey ssh monkey
 #screen -t prozesse 11 top
-screen -t syslog 9 tail -f -n300 /var/log/syslog
+#screen -t syslog 9 tail -f -n300 /var/log/syslog
 # screen -t mail 10 mutt
 # this screen we i want to see frist when i start the screen cmd, so this goes to the last line
-screen -t zsh 0 zsh
+#screen -t zsh 0 zsh
+
+source ~/.screenrc.local
 
