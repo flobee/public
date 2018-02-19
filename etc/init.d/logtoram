@@ -13,13 +13,14 @@
 
 
 RSYNC="/usr/bin/rsync"
-RSYNCCONF="--recursive --links --checksum --perms --partial --times --group --owner --devices --specials"
+RSYNCCONF_TO_RAM="--recursive --links --checksum --perms --partial --times --group --owner --devices --specials --exclude='*.gz'"
+RSYNCCONF_TO_BAK="--recursive --links --checksum --perms --partial --times --group --owner --devices --specials"
 
 DIR_LOG="/var/log/"
 DIR_BAK="/var/log_bak/"
 
-BAK_to_RAM="$RSYNC $RSYNCCONF $DIR_BAK $DIR_LOG"
-LOG_to_BAK="$RSYNC $RSYNCCONF $DIR_LOG $DIR_BAK"
+BAK_to_RAM="$RSYNC $RSYNCCONF_TO_RAM $DIR_BAK $DIR_LOG"
+LOG_to_BAK="$RSYNC $RSYNCCONF_TO_BAK $DIR_LOG $DIR_BAK"
 
 case $1 in
     start)
