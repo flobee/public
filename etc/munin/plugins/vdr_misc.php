@@ -27,7 +27,7 @@ switch($arg1)
         break;
     
     case 'config':
-        echo 'graph_title VDR sleep/wake time' . PHP_EOL;
+        echo 'graph_title VDR Timers' . PHP_EOL;
         echo 'graph_args -l 0 --base 1000' . PHP_EOL;
         echo 'graph_vlabel VDR Uptime (+) / VDR Downtime (-) in min.' . PHP_EOL;
         echo 'graph_category vdr' . PHP_EOL;
