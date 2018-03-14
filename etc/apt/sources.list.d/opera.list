@@ -3,4 +3,4 @@
 ## wget -O - http://deb.opera.com/archive.key | apt-key add -
 #
 deb http://deb.opera.com/opera-stable/ stable non-free
-
+#deb https://deb.opera.com/opera-developer/ stable non-free #Opera Browser (final releases)

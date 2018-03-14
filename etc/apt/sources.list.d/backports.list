@@ -1,4 +1,4 @@
 # Debian Backports
 deb http://ftp.de.debian.org/debian/ stretch-backports main contrib
-deb-src http://ftp.de.debian.org/debian/ stretch-backports main contrib
+# deb-src http://ftp.de.debian.org/debian/ stretch-backports main contrib
 

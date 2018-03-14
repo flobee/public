@@ -1,0 +1,19 @@
+# Debian GNU/Linux:
+# Installation durch sudo apt-get install gajim
+# Außerdem ist das Debian-Paket von 1.0.0-beta2 in unserem Debian-Repository 
+# verfügbar. Folgen Sie den unten beschriebenen Schritten und installieren Sie
+# Gajim danach durch sudo apt-get install gajim
+# Außerdem wird täglich ein Paket aus dem Git-Repository erstellt. Um die 
+# Git-Version zu nutzen, gehen Sie wiel folgt vor:
+# Gajim entfernen:
+# sudo apt-get remove gajim
+# Den GPG-Key hinzufügen:
+# wget -q https://gajim.org/gajim.key -O - | apt-key add -
+# Das Repository hinzufügen:
+# sudo sh -c "echo deb ftp://ftp.gajim.org/debian unstable main > /etc/apt/sources.list.d/gajim.list"
+# Das Repository aktualisieren:
+# sudo apt-get update
+# Anschließend erfolgt die Installation von Gajim durch:
+# sudo apt-get install gajim-nightly 
+
+deb https://ftp.gajim.org/debian unstable main
