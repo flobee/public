@@ -21,7 +21,7 @@ echo "options hid_apple fnmode=2" > /etc/modprobe.d/hid_apple.conf
 
 
 echo 'Update initramfs';
-sudo update-initramfs -u -k all;
+update-initramfs -u -k all;
 
 
 echo 'Done.';
