@@ -17,7 +17,8 @@
 #
 
 
-# pipe individual setups to the script for cron jobs
+# pipe individual setups to the script for cron jobs (if a config file, else 
+# used as datadir)
 CONFFILE=$1
 
 if [ -d "$CONFFILE" -o "$CONFFILE" = "" ]; then
