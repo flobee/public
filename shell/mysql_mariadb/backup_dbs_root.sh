@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# backup each database in a seperated directory
+# Backup each database in a seperated directory of a MySql/MariaDB server
 #
 # Install "mydumper" (apt-get install mydumper)
 # use "myloader" to restore stuff, eg:
@@ -9,14 +9,15 @@
 #   --database ${DBNAME}  --directory "${OUTDIR}/${DBNAME}"
 #
 #
-# first parameter as directory or as config file prefix.
+# First parameter as directory or as config file prefix.
 # As, with given directory (manual backup), will create:
 # eg: "<script> /tmp/somepath" will result in:
-# /tmp/somepath/<database-name>/<sql files of tables and schemas>
+# /tmp/somepath/<database-name>/<sql files of tables and schemas> and you will 
+# be ask for settings.
 # or, otherwise location to an individual config including the parameters:
 #   MYSQL_USER, MYSQL_PASS, MYSQL_PORT, MYSQL_HOST, OUTDIR
 # to be run as cron job.
-# if you only want to run this script in cron you can alter the shebang to (a)sh
+# If you only want to run this script in cron you can alter the shebang to (a)sh
 # or dash
 #
 # SECURITY WARNING: Use this script only in you private hood e.g. using remote 
@@ -66,12 +67,13 @@ else
     fi
 fi
 
+# pre setup the connections
 MYSQL_CONN="-u${MYSQL_USER} -p${MYSQL_PASS} -h${MYSQL_HOST} --port=${MYSQL_PORT} ${MYSQL_SOCK}"
 MYDUMPER_CONN="-u ${MYSQL_USER} -p ${MYSQL_PASS} -h ${MYSQL_HOST} --port=${MYSQL_PORT} ${MYSQL_SOCK}"
 
 
-# Collect all database names except for
-# mysql, information_schema, performance_schema and phpmyadmin
+# Collect all database names except for mysql, information_schema,
+# performance_schema and phpmyadmin
 SQL="SELECT schema_name FROM information_schema.schemata WHERE schema_name NOT IN"
 SQL="${SQL} ('mysql','information_schema','performance_schema', 'phpmyadmin')"
 
@@ -89,7 +91,7 @@ done
 echo "Backup goes to: '${OUTDIR}/<database-name>/<sql-files>.sql'";
 echo "List of DBs to backup: ${DBLIST}";
 echo
-echo "job starts in 3 sec... to abort press CTRL + C";
+echo "Job starts in 3 sec... to abort press CTRL + C";
 sleep 3;
 
 MYSQLDUMP_OPTIONS="--routines --triggers --events --lock-all-tables --rows 1000000 --statement-size 100000"
