@@ -6,4 +6,9 @@
 # base layout you start on (loads xmodmap.gb4de.cfg file).
 lc='gb4de';
 
+mypath=`dirname "$0"`;
+
+cd $mypath;
+
 . ./run-current-user-base.sh
+

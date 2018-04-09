@@ -20,6 +20,8 @@ possible problems to be checked:
    eg. if "logtoram stop" fails after an important update or crash
    after installing new services you may run "/etc/init.d/logtoram sync" by hand to be sure all
    new logs und their perms will be reseted after a reboot
+ - logrotate may leave old gz files which are not really nessesary. update rsync
+   cmd of log to ram or limit logrotate configuration
 
 
 if rsyslog is in use: update the init script:
@@ -34,5 +36,5 @@ if rsyslog is in use: update the init script:
     #
     # NOTE: If services fail: check if the log dirs still exists. befor a reboot run
     # /etc/init.d/logtoram sync
-    # and compare after a reboot
-
+    # and compare after a reboot eg.:
+    # diff -rq /var/log /var/log_bak
