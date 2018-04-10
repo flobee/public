@@ -78,9 +78,9 @@ MYDUMPER_CONN="-u ${MYSQL_USER} -p ${MYSQL_PASS} -h ${MYSQL_HOST} --port=${MYSQL
 SQL="SELECT schema_name FROM information_schema.schemata WHERE schema_name NOT IN"
 SQL="${SQL} ('mysql','information_schema','performance_schema', 'phpmyadmin')"
 
-HASH=`date +"%Y%m%d%_H%M%S"`;
-DBLISTFILE=/tmp/${HASH}DatabasesToDump.txt
-mysql ${MYSQL_CONN} -ANe"${SQL}" > ${DBLISTFILE}
+HASH=`date +"%Y%m%d%H%M%S"`;
+DBLISTFILE="/tmp/${HASH}DatabasesToDump.txt"
+mysql ${MYSQL_CONN} -ANe"${SQL}" > "${DBLISTFILE}"
 
 DBLIST=""
 for DB in `cat ${DBLISTFILE}` ; 
