@@ -23,6 +23,9 @@
 # SECURITY WARNING: Use this script only in you private hood e.g. using remote 
 # connections/ private network. Otherwise your users can see your credentials 
 # eg. via process list! I opened a ticket for this issue already.
+# To be checked: 
+# https://gist.github.com/scy/6781836
+# https://stackoverflow.com/questions/2241063/bash-script-to-setup-a-temporary-ssh-tunnel/15198031#15198031
 
 
 # pipe individual setups to the script for cron jobs (if a config file, else 
