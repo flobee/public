@@ -1,0 +1,10 @@
+# dbs backup, restore dummy/ demo config
+MYSQL_USER='adminuser'
+MYSQL_PASS='adminpass'
+MYSQL_PORT='3306'
+MYSQL_HOST='localhost'
+#MYSQL_SOCK=''
+#
+# used by the backup script
+OUTDIR=/path/to/store/databases
+
