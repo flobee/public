@@ -12,17 +12,27 @@
 # we need the root path of all backup'ed databases, eg:
 # /nfs/backup/dbs/myhost/ (which contains a list of directorys created by mydumper)
 # if there if something special, e.g a backup file this script will exit! so 
-# take care when modify/copy stuff manually a leave it without 
+# take care when modify/copy stuff manually. Keep the directorys untouched
 #
 
-if [ ! -d $1 ]; then
+
+if [ ! -d "$2" ]; then
+    echo 'Usage: <script> <config> <dbs directory> [opt flag: show only commands, dont execute]';
     echo 'No database root directory given';
     exit 1;
 fi
 
-DBDIR=$1;
-DBNAME='someDBname';
+if [ -f "$1" ]; then
+    source $1;
+else
+    echo 'Usage: <script> <config> <dbs directory> [opt flag: show only commands, dont execute]';
 
+    source $(dirname $0)"/dbs_request_credentials.sh";
+fi
+
+MYDUMPER_CONN="-u ${MYSQL_USER} -p ${MYSQL_PASS} -h ${MYSQL_HOST} --port=${MYSQL_PORT}"
+
+DBDIR=$2;
 
 DBLIST=`ls ${DBDIR}`
 
@@ -33,7 +43,11 @@ do
         exit 1;
     fi
 
-    echo "Restore: '${DBNAME}'";
-    echo "myloader --overwrite-tables --database "${DBNAME}" --directory "${DBDIR}/${DBNAME}" ";
-    
+    if [ "$3" = "" ]; then 
+        echo "Restore: '${DBNAME}'"
+        myloader ${MYDUMPER_CONN} --overwrite-tables --database "${DBNAME}" --directory "${DBDIR}/${DBNAME}"
+    else 
+        echo "myloader ${MYDUMPER_CONN} --overwrite-tables --database "${DBNAME}" --directory "${DBDIR}/${DBNAME}" "
+    fi
+
 done
