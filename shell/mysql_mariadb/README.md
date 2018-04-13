@@ -1,3 +1,8 @@
+# About
+
+Helper scripts for the "[mydumper](https://github.com/maxbube/mydumper)" project
+(apt-get install mydumper)
+
 # Usage for admins
  
 Download the files or checkout to hole repo.
