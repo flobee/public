@@ -58,5 +58,13 @@ Demo commands:
     /to/dbs_restore.sh none /mnt/backups/host/dbs true
 
 
+## SECURITY WARNING
+
+Use this script only in you private hood.
+E.g. Only use remote connections or in your private network. Otherwise your users
+can see your credentials when scanning the process lists.
+I opened a ticket for this issue already. As good a i tested: The .my.cnf wasn't 
+sourced in any way yet :(
+
 
 Happy backuping and restoring :)
