@@ -14,6 +14,12 @@
 # if there if something special, e.g a backup file this script will exit! so 
 # take care when modify/copy stuff manually. Keep the directorys untouched
 #
+# SECURITY WARNING: Use this script only in you private hood e.g. using remote 
+# connections/ private network. Otherwise your users can see your credentials 
+# eg. via the process list! I opened a ticket for this issue already.
+# To be checked: 
+# https://gist.github.com/scy/6781836
+# https://stackoverflow.com/questions/2241063/bash-script-to-setup-a-temporary-ssh-tunnel/15198031#15198031
 
 
 if [ ! -d "$2" ]; then
@@ -47,7 +53,7 @@ do
         echo "Restore: '${DBNAME}'"
         myloader ${MYDUMPER_CONN} --overwrite-tables --database "${DBNAME}" --directory "${DBDIR}/${DBNAME}"
     else 
-        echo "myloader ${MYDUMPER_CONN} --overwrite-tables --database "${DBNAME}" --directory "${DBDIR}/${DBNAME}" "
+        echo "myloader ${MYDUMPER_CONN} --overwrite-tables --threads 8 --database "${DBNAME}" --directory "${DBDIR}/${DBNAME}" "
     fi
 
 done

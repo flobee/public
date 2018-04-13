@@ -22,7 +22,7 @@
 #
 # SECURITY WARNING: Use this script only in you private hood e.g. using remote 
 # connections/ private network. Otherwise your users can see your credentials 
-# eg. via process list! I opened a ticket for this issue already.
+# eg. via the process list! I opened a ticket for this issue already.
 # To be checked: 
 # https://gist.github.com/scy/6781836
 # https://stackoverflow.com/questions/2241063/bash-script-to-setup-a-temporary-ssh-tunnel/15198031#15198031
@@ -75,7 +75,11 @@ echo
 echo "Job starts in 3 sec... to abort press CTRL + C";
 sleep 3;
 
-MYSQLDUMP_OPTIONS="--routines --triggers --events --lock-all-tables --rows 1000000 --statement-size 100000"
+# Depending on you backup strategy you may want improved speed or less backup size.
+# For speed play with the number of threads (def: 4) statement-size and rows size,
+# For limited file sizes you may use "--compress" but in limited backup time intervals
+MYSQLDUMP_OPTIONS="--routines --triggers --events --threads 8 --compress --lock-all-tables --rows
+3000000 --statement-size 100000"
 # mysqldump ${MYSQL_CONN} ${MYSQLDUMP_OPTIONS} --databases ${DBLIST} --no-data > "${OUTDIR}.schema.sql"
 # mysqldump ${MYSQL_CONN} ${MYSQLDUMP_OPTIONS} --no-create-info --databases ${DBLIST} > "${OUTDIR}.data.sql"
 
