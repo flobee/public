@@ -5,6 +5,13 @@ MYSQL_PORT='3306'
 MYSQL_HOST='localhost'
 #MYSQL_SOCK=''
 #
-# used by the backup script
-OUTDIR=/path/to/store/databases
+# backup options
+OUTDIR=/path/to/store/databases/localhost
 
+# restore options
+#
+# restore databases from this directory
+RST_OPT_DIR=''; #eg: /path/to/get/master/databases
+#
+# Drop each database befor restoring it (true|false), set to true if exists
+RST_OPT_DROP=false
