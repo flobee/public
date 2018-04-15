@@ -4,10 +4,13 @@ _MYSQL_PASS='';
 _MYSQL_PORT='3306';
 _MYSQL_HOST='localhost';
 # depending on your setup, eg. synology mariadb5 and 10 need a socket or you
-# get only v5 even if the port if different
+# get only v5 connections even if the port is different
 # set to '' to not use sockets
 _MYSQL_SOCK=''; #'-S /run/mysqld/mysqld10.sock';
-
+#
+# requesting credentials to your databases.
+# requrires at best a root account with grant options
+#
 read -p "Enter MYSQL USER (default: '$_MYSQL_USER'): " MYSQL_USER
 MYSQL_USER=${MYSQL_USER:-$_MYSQL_USER}
 
