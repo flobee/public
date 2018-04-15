@@ -29,8 +29,8 @@ Usage:
 
     /to/dbs_backup.sh [cfg-file or backup-dir or no-parameter]
 
-If no parameters or just a backup path was given you will be ask for all missing
-values: backup path and db user/password...
+If no parameters or just a backup directory was given you will be ask for all
+missing values: backup dir, user, password...
 
     /to/dbs_backup.sh
     # or
@@ -43,11 +43,12 @@ values: backup path and db user/password...
 
 Usage:
 
-    /to/dbs_restore.sh <config|none> <dbs directory> [opt flag: show only commands, dont execute]
+    /to/dbs_restore.sh <config-file|'none'> [dbs directory] [opt flag: show only commands, dont execute]
 
 Demo commands:
 
-    # you will be ask for credentials
+    # you will be ask for missing options like credentials or feature options:
+    /to/dbs_restore.sh
     /to/dbs_restore.sh none /mnt/backups/host/dbs
     
     # no futher requests
