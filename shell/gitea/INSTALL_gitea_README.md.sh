@@ -145,8 +145,8 @@ After installation is done it is recommended to set rights to read-only to keep
 the config secure. Please run:
 
     chmod 750 /home/git/tea/custom/conf/
-    chmod 644 /home/git/tea/custom/conf/app.ini
-    chown -R root:staff /home/git/tea/custom/conf/
+    chmod 640 /home/git/tea/custom/conf/app.ini
+    chown -R root:git /home/git/tea/custom/conf/
 
 To check if the service is runing:
     systemctl status gitea.service
