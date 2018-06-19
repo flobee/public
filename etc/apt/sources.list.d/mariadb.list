@@ -5,3 +5,8 @@
 deb [arch=amd64] http://mirror2.hs-esslingen.de/mariadb/repo/10.2/debian stretch main
 deb-src http://mirror2.hs-esslingen.de/mariadb/repo/10.2/debian stretch main
 
+# MariaDB 10.3 repository list - created 2018-06-19 17:51 UTC
+# http://downloads.mariadb.org/mariadb/repositories/
+deb [arch=amd64,i386] http://mirror2.hs-esslingen.de/mariadb/repo/10.3/debian stretch main
+deb-src http://mirror2.hs-esslingen.de/mariadb/repo/10.3/debian stretch main
+
