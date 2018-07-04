@@ -216,7 +216,8 @@ function gitaliases($test)
 $test = true;
 if (@$_SERVER['argv'][1] == 'run') {
     $test = false;
-    //echo 'Will execute commands...' . PHP_EOL;
+} else {
+    echo '# Execute commands run ' . basename(__FILE__) .' run ' . PHP_EOL;
 }
 
 gitaliases($test);
