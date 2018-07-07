@@ -22,8 +22,8 @@
 #
 # Now you will find the list of commands you may execute by hand or running this 
 # script. 
-# It will guide you a little. First read all infomations on the output befor you 
-# go on to avoid ploblems.
+# It will guide you a little. First read all infomations of the output befor you 
+# go on to avoid problems.
 #
 # It should be run under root and will setup needed path and rights and switch 
 # the user when needed for setup/configure the frontend with furhter details.
@@ -118,6 +118,10 @@ echo 'Copy the following infomations because after starting the gitea server';
 echo 'it will output an lot and then execute now to start the gitea server: ';
 echo "    cd $PATH_HOME/tea";
 echo "    ./gitea web -p $PORT"
+echo
+echo "If you just upgrade the binary: "
+echo "Make sure the conf/app.ini is writable for the user '$USER'!";
+echo
 echo "Now open your browser to http://<server>:$PORT and follow the instructions";
 echo '';
 echo '    To help you a little (simple install):';
