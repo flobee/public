@@ -32,7 +32,9 @@ adduser --system \
 mkdir -p /home/git/repositories
 chown git:git /home/git/repositories
 
-
+mkdir -p /home/git/.ssh
+chown git:git /home/git/.ssh
+chmod 700 /home/git/.ssh
 touch /home/git/.ssh/authorized_keys
 chown git:git /home/git/.ssh/authorized_keys
 chmod 600 /home/git/.ssh/authorized_keys

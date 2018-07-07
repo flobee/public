@@ -95,7 +95,9 @@ function gitaliases($test)
                 #'continue' => '!git add . && git rebase --continue',
                 #'url' => 'config --local --get-regexp remote\\.\\.\\*\\.url',
 
-                #'amend' => 'commit --amend',
+                'amend' => 'commit --amend',
+                // git drymerge <branch>
+                'drymerge' => '!git merge --no-commit --squash ',
 
                 'svnupdate' => '!git svn fetch && git svn rebase',
                 'svncommit' => '!git svn dcommit',
@@ -216,7 +218,8 @@ function gitaliases($test)
 $test = true;
 if (@$_SERVER['argv'][1] == 'run') {
     $test = false;
-    //echo 'Will execute commands...' . PHP_EOL;
+} else {
+    echo '# Execute commands run ' . basename(__FILE__) .' run ' . PHP_EOL;
 }
 
 gitaliases($test);
