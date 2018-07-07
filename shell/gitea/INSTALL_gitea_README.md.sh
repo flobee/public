@@ -118,7 +118,7 @@ echo 'Copy the following infomations because after starting the gitea server';
 echo 'it will output an lot and then execute now to start the gitea server: ';
 echo "    cd $PATH_HOME/tea";
 echo "    ./gitea web -p $PORT"
-echo "Now open your browser to http://<server>:$PORT and follow the instructions';
+echo "Now open your browser to http://<server>:$PORT and follow the instructions";
 echo '';
 echo '    To help you a little (simple install):';
 echo '    DB  : sqlite';   
