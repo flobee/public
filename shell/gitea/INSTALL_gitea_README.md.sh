@@ -1,66 +1,79 @@
 #!/bin/bash
 #
-# List of command to get gitea run.
-# 
-# I had a lot of issues at the very first day and was not able to get gitea run. 
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE 
+# FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL 
+# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR 
+# SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
+# CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, 
+# OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
+# Install script for gitea under debian stretch
+#
+# I had some issues at the very first day and was not able to get gitea run. 
 # Basicly and then when using it as a service.
+# The documentation is currently not good enough for me so this may help you 
+# also.
 #
-# The documentation is not good enough for none real admins.
+# Install gitea under user "git" ? Read ahead :)
 #
-# Install under user "git" in /home/git ? Read ahead :)
+# Now you will find the list of commands you may execute by hand or running this 
+# script. 
+# It will guide you a little. First read all infomations on the output befor you 
+# go on to avoid ploblems.
 #
-# Now you will find the list of commands you may execute which should work on a 
-# debian strech os.
-# 
 # It should be run under root and will setup needed path and rights and switch 
 # the user when needed for setup/configure the frontend with furhter details.
-# 
-# hints: 
+#
+# Hints: 
 # forget your /home/git/.ssh/authorized_keys
-# gitea will do! bring it to zero bytes and you will have less issues
-
+# Gitea will do! bring it to zero bytes if alreayd exists and you will have 
+# less issues :)
+#
+# --- Paths you may want to change: --------------------------------------------
+PATH_HOME=/home/git
+USER=git
+PORT=3001
+GITEA_BIN_URL=https://dl.gitea.io/gitea/master/gitea-master-linux-amd64
+# ------------------------------------------------------------------------------
 
 adduser --system \
     --shell /bin/bash \
     --gecos 'Git Version Control' \
     --group --disabled-password \
-    --home /home/git \
-    git
+    --home $PATH_HOME \
+    $USER
 
 
-mkdir -p /home/git/repositories
-chown git:git /home/git/repositories
+mkdir -p $PATH_HOME/repositories
+chown $USER:$USER $PATH_HOME/repositories
 
-mkdir -p /home/git/.ssh
-chown git:git /home/git/.ssh
-chmod 700 /home/git/.ssh
-touch /home/git/.ssh/authorized_keys
-chown git:git /home/git/.ssh/authorized_keys
-chmod 600 /home/git/.ssh/authorized_keys
+mkdir -p $PATH_HOME/.ssh
+chown $USER:$USER $PATH_HOME/.ssh
+chmod 700 $PATH_HOME/.ssh
+touch $PATH_HOME/.ssh/authorized_keys
+chown $USER:$USER $PATH_HOME/.ssh/authorized_keys
+chmod 600 $PATH_HOME/.ssh/authorized_keys
 
 
-mkdir -p /home/git/tea
-chown git:git /home/git/tea
-# chmod 750 /home/git/tea/{data,indexers,log}
-# mkdir /etc/gitea
-# chown root:git /etc/gitea
-# chmod 770 /etc/gitea
+mkdir -p $PATH_HOME/tea
+chown $USER:$USER $PATH_HOME/tea
+
 
 # latest:
 # https://dl.gitea.io/gitea/master/gitea-master-linux-amd64
 # v1.4.2
 # wget -O /tmp/gitea https://dl.gitea.io/gitea/1.4.2/gitea-1.4.2-linux-amd64
-wget -O /tmp/gitea https://dl.gitea.io/gitea/master/gitea-master-linux-amd64
-mv /tmp/gitea /home/git/tea
-chmod +x /home/git/tea/gitea
+wget -O /tmp/gitea $GITEA_BIN_URL
+mv /tmp/gitea $PATH_HOME/tea
+chmod +x $PATH_HOME/tea/gitea
 
-
-# cd /usr/local/bin
-# ln -s /home/git/tea/bin/gitea .
 
 #
-# prepare init service script
+# preparing init service script
 #
 cat >/etc/systemd/system/gitea.service <<EOTEXT 
 [Unit]
@@ -81,12 +94,12 @@ After=network.target
 #LimitNOFILE=65535
 RestartSec=2s
 Type=simple
-User=git
-Group=git
-WorkingDirectory=/home/git/tea/
-ExecStart=/home/git/tea/gitea web -c /home/git/tea/custom/conf/app.ini
+User=$USER
+Group=$USER
+WorkingDirectory=$PATH_HOME/tea/
+ExecStart=$PATH_HOME/tea/gitea web -c $PATH_HOME/tea/custom/conf/app.ini
 Restart=always
-Environment=USER=git HOME=/home/git GITEA_WORK_DIR=/home/git/tea
+Environment=USER=$USER HOME=$PATH_HOME GITEA_WORK_DIR=$PATH_HOME/tea
 # If you want to bind Gitea to a port below 1024 uncomment
 # the two values below
 ###
@@ -100,22 +113,18 @@ EOTEXT
 
 
 echo '---------------------------------------------------------------------';
-echo 'You should be in as user "git" now! verify with eg: $> id';
+echo "You should be in as user '$USER' now! verify with eg: $: id";
 echo 'Copy the following infomations because after starting the gitea server';
 echo 'it will output an lot and then execute now to start the gitea server: ';
-# run gitea under git user and setup using the browser
-# git@server:~/tea$ ./gitea web -p 3001
-# cd /home/git/tea
-# ./gitea web -p 3001
-echo '    cd /home/git/tea';
-echo '    ./gitea web -p 3001'
-echo 'Now open your browser to http://<server>:3001 and follow the instructions';
+echo "    cd $PATH_HOME/tea";
+echo "    ./gitea web -p $PORT"
+echo "Now open your browser to http://<server>:$PORT and follow the instructions';
 echo '';
 echo '    To help you a little (simple install):';
 echo '    DB  : sqlite';   
-echo '    Path: /home/git/tea/data/gitea.db';
-echo '    Path repos: /home/git/repositories';
-echo '    LFS: /home/git/tea/data/lfs ';
+echo "    Path: $PATH_HOME/tea/data/gitea.db";
+echo "    Path repos: $PATH_HOME/repositories";
+echo "    LFS: $PATH_HOME/tea/data/lfs ";
 echo '';
 echo ' Mail setup: Ask your admins!';
 echo '---------------------------------------------------------------------';
@@ -123,8 +132,8 @@ echo 'After it, close the session CRTL + C (stop gitea) then CRTL + D (out
 of user git) to go ahead with this script';
 echo '---------------------------------------------------------------------';
 
-# first run of git tea should be under user git
-su - git
+# first run of gittea should be under user $USER
+su - $USER
 
 
 # remove existing
@@ -138,21 +147,20 @@ systemctl start gitea
 
 
 echo '---------------------------------------------------------------------';
-echo 'If you dont see any erros.. the service was removed, re-added and gitea 
+echo "If you dont see any erros.. the service was removed, re-added and gitea 
 was started again. (If you run this script e.g for updates)
 
-NOTE: gitea app.ini is temporary set with write rights for user git so that the
-Web installer could write the configuration file. 
+NOTE: gitea app.ini is temporary set with write rights for user $USER so that the
+Web installer could write the configuration file.
 After installation is done it is recommended to set rights to read-only to keep 
 the config secure. Please run:
 
-    chmod 750 /home/git/tea/custom/conf/
-    chmod 640 /home/git/tea/custom/conf/app.ini
-    chown -R root:git /home/git/tea/custom/conf/
+    chmod 750 $PATH_HOME/tea/custom/conf/
+    chmod 640 $PATH_HOME/tea/custom/conf/app.ini
+    chown -R root:$USER $PATH_HOME/tea/custom/conf/
 
 To check if the service is runing:
     systemctl status gitea.service
     
 Happy git + tea :)
-';
-
+";
