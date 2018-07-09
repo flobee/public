@@ -92,7 +92,7 @@ After=network.target
 ###
 #LimitMEMLOCK=infinity
 #LimitNOFILE=65535
-RestartSec=2s
+RestartSec=10s
 Type=simple
 User=$USER
 Group=$USER
