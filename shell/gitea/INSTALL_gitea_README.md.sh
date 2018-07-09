@@ -96,8 +96,8 @@ RestartSec=2s
 Type=simple
 User=$USER
 Group=$USER
-WorkingDirectory=$PATH_HOME/tea/
-ExecStart=./gitea web -c custom/conf/app.ini
+WorkingDirectory=$PATH_HOME/tea
+ExecStart=$PATH_HOME/tea/gitea web -c custom/conf/app.ini
 Restart=always
 Environment=USER=$USER HOME=$PATH_HOME GITEA_WORK_DIR=$PATH_HOME/tea
 # If you want to bind Gitea to a port below 1024 uncomment
