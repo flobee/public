@@ -97,7 +97,7 @@ Type=simple
 User=$USER
 Group=$USER
 WorkingDirectory=$PATH_HOME/tea/
-ExecStart=$PATH_HOME/tea/gitea web -c $PATH_HOME/tea/custom/conf/app.ini
+ExecStart=./gitea web -c custom/conf/app.ini
 Restart=always
 Environment=USER=$USER HOME=$PATH_HOME GITEA_WORK_DIR=$PATH_HOME/tea
 # If you want to bind Gitea to a port below 1024 uncomment
@@ -117,7 +117,7 @@ echo "You should be in as user '$USER' now! verify with eg: $: id";
 echo 'Copy the following infomations because after starting the gitea server';
 echo 'it will output an lot and then execute now to start the gitea server: ';
 echo "    cd $PATH_HOME/tea";
-echo "    ./gitea web -p $PORT"
+echo "    ./gitea web -p $PORT -c custom/conf/app.ini"
 echo
 echo "If you just upgrade the binary: "
 echo "Make sure the conf/app.ini is writable for the user '$USER'!";
