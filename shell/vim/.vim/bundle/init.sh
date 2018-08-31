@@ -1,6 +1,7 @@
 #!/bin/sh
 
 # init the plugins docs for vim
+# dont forget cd ~/.vim && git submodule init && git submodule update
 
 # vim -u NONE -c "helptags vim-fugitive/doc" -c q
 # vim -u NONE -c "helptags nerdtree/doc" -c q
