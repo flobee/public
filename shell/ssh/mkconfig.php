@@ -24,7 +24,7 @@ class Mumsys_Service_Ssh_Config_Generator_Default
      */
     public function __construct()
     {
-        $this->_sshConfFile = __DIR__ . '/config-gen'; // '~/.ssh/config';
+        $this->_sshConfFile = __DIR__ . '/ssh-config'; // '~/.ssh/config';
         $this->_confsPath = __DIR__ . '/conffiles/';
     }
 

@@ -18,8 +18,10 @@ function gitaliases($test)
         'cleanup' => array(
             // removes all aliases from $(prefix)/etc/gitconfig
             'system' => false,
+
             // removes all aliases from $HOME/.gitconfig
             'global' => false,
+
             // removes all aliases from the current project .git/config
             'local' => false,
         ),
@@ -29,6 +31,7 @@ function gitaliases($test)
             // root user)
             'system' => array(
             ),
+
             // removes aliases from $HOME/.gitconfig
             'global' => array(
                 'last' => true, // set to true to delete this line!
@@ -37,6 +40,7 @@ function gitaliases($test)
                 'llog' => true,
                 'verbose' => true,
             ),
+
             // removes aliases from the current project .git/config
             'local' => array(),
         ),
@@ -96,6 +100,7 @@ function gitaliases($test)
                 #'url' => 'config --local --get-regexp remote\\.\\.\\*\\.url',
 
                 'amend' => 'commit --amend',
+
                 // git drymerge <branch>
                 'drymerge' => '!git merge --no-commit --squash ',
 
@@ -156,39 +161,39 @@ function gitaliases($test)
          ),
     );
 
-    foreach($aliases as $job => $list)
-    {
-        foreach($list as  $way => $commands)
-        {
-            if ($way == 'system' && $_SERVER['USER'] != 'root') {
+    foreach ( $aliases as $job => $list ) {
+
+        foreach($list as  $way => $commands) {
+
+            if ( $way == 'system' && $_SERVER['USER'] != 'root' ) {
                 // echo 'skip, not root' . PHP_EOL;
                 continue;
             }
 
-            if ($way == 'local') {
+            if ( $way == 'local' ) {
                 $way = '';
             } else {
                 $way = ' --' . $way;
             }
 
-            switch($job)
+            switch ( $job )
             {
                 case 'cleanup':
-                    if ($commands===true) {
+                    if ( $commands===true ) {
                             echo '"cleanup" not implemented yet';
-                        }
+                    }
                     break;
 
                 case 'drop':
-                    foreach($commands as $alias => $cmd) {
-                       if ($cmd===true) {
+                    foreach ( $commands as $alias => $cmd ) {
+                       if ( $cmd === true ) {
                            $execlist[] = 'git config' . $way . ' --unset alias.' . $alias;
                        }
                    }
                    break;
 
                 case 'add':
-                    foreach($commands as $alias => $cmd) {
+                    foreach ( $commands as $alias => $cmd ) {
                         $execlist[] = 'git config' . $way . ' alias.' . $alias . ' "' . $cmd .'"';
                     }
                 break;
@@ -196,16 +201,16 @@ function gitaliases($test)
         }
     }
 
-    foreach($execlist as $cmd)
+    foreach ( $execlist as $cmd )
     {
-        if ($test === false)
+        if ( $test === false )
         {
-            $x = exec($cmd, $data, $exitCode);
+            $x = exec( $cmd, $data, $exitCode );
             if ( $x || $data || $exitCode > 5 ) {
                 echo 'Problem? cmd: ' . $cmd . PHP_EOL;
                 echo (empty($x) ? '0':$x) . " || data || $exitCode" . PHP_EOL;
             }
-            if ($exitCode == 255) {
+            if ( $exitCode == 255 ) {
                 echo 'ERROR: permission problem with: '. $cmd . PHP_EOL;
             }
         } else {
@@ -222,4 +227,5 @@ if (@$_SERVER['argv'][1] == 'run') {
     echo '# Execute commands run ' . basename(__FILE__) .' run ' . PHP_EOL;
 }
 
-gitaliases($test);
+gitaliases( $test );
+
