@@ -1,0 +1,17 @@
+#ee0701 bug ; Something is not working
+#ee0702 Core Must Have ; Implementation which is high important and will be used in several projects
+#70c24a DomainAdmin ; DomainAdmin related tasks. Kind of FE for the application FW
+#cccccc duplicate ; Tbx This issue or pull request already exists
+#84b6eb Feature ; Feature
+#53e917 Improvement ; Improvement
+#fbca04 Library ; Library related
+#ee0703 Prio 1 ; Priority High Level (1)
+#53e917 Prio 9 ; Priority High Level (9)
+#eb6420 Security ; Security relevant topics
+#006b75 Task ; Task / Todo
+#bfdadc Waiting ; Waiting to become a Task
+#128a0c help wanted ; Need some help
+#e6e6e6 invalid ; Something is wrong
+#207de5 Question ; More information is needed
+#ffffff wontfix ; This won't be fixed
+
