@@ -5,8 +5,13 @@ MYSQL_PORT='3306'
 MYSQL_HOST='localhost'
 #MYSQL_SOCK=''
 #
-# backup options
-OUTDIR=/path/to/store/databases/localhost
+# backup options, weekly
+OUTDIR=/path/to/store/databases/localhost/`date +"%W"`; 
+
+# Option to delete the path "${OUTDIR}/<database name>" (if exists)
+# befor new backup files will be created to that path (less IO, but maybe 
+# danger if you need this files if the backup fails); Default OFF, "y" for ON
+OPT_DEL_EXISTING='';
 
 # restore options
 #

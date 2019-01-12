@@ -85,6 +85,12 @@ MYSQLDUMP_OPTIONS="--routines --triggers --events --threads 8 --compress --lock-
 
 for DBNAME in `cat ${DBLISTFILE}` ;
 do
+    if [[ "${OPT_DEL_EXISTING}" = "y" && -d "${OUTDIR}/${DBNAME}" ]] ;
+    then
+        echo "remove existing (old) backups in '...${OUTDIR: -10:30}/${DBNAME}'";
+        rm -rf "${OUTDIR}/${DBNAME}";
+    fi
+    
     echo "Dumping: '${DBNAME}' to '${OUTDIR}/${DBNAME}'"
     mydumper ${MYDUMPER_CONN} ${MYSQLDUMP_OPTIONS} --database "${DBNAME}" --outputdir "${OUTDIR}/${DBNAME}"
     # mysqldump ${MYSQL_CONN} ${MYSQLDUMP_OPTIONS} ${DBNAME} > "${OUTDIR}/${DBNAME}.sql"
@@ -92,6 +98,6 @@ done
 
 
 # clean up
-rm $DBLISTFILE
+rm $DBLISTFILE;
 
 exit 0;
