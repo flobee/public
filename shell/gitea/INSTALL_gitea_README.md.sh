@@ -37,7 +37,10 @@
 PATH_HOME=/home/git
 USER=git
 PORT=3001
-GITEA_BIN_URL=https://dl.gitea.io/gitea/master/gitea-master-linux-amd64
+# latest: https://dl.gitea.io/gitea/master/gitea-master-linux-amd64
+GITEA_BIN_URL=https://dl.gitea.io/gitea/1.7.4/gitea-1.7.4-linux-amd64
+# To install as a service set to 1 otherwise something different e.g 0
+INSTALL_AS_SERVICE=1
 # ------------------------------------------------------------------------------
 
 adduser --system \
@@ -139,15 +142,17 @@ echo '---------------------------------------------------------------------';
 # first run of gittea should be under user $USER
 su - $USER
 
-
-# remove existing
-systemctl daemon-reload
-systemctl stop gitea
-systemctl disable gitea
-# re-add
-systemctl enable gitea
-systemctl daemon-reload
-systemctl start gitea
+if [ "$INSTALL_AS_SERVICE" = "1" ];
+then
+    # remove existing
+    systemctl daemon-reload
+    systemctl stop gitea
+    systemctl disable gitea
+    # re-add
+    systemctl enable gitea
+    systemctl daemon-reload
+    systemctl start gitea
+fi
 
 
 echo '---------------------------------------------------------------------';
