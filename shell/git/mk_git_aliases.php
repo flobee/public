@@ -73,6 +73,9 @@ function gitaliases($test)
                 #'mr' => 'merge',
                 'df' => 'diff',
                 'unstage' => 'reset HEAD',
+
+                'undo-notpushed' => '!git reset HEAD~1 --soft',
+
                 /* git alias : list all aliases
                  * useful in order to learn git syntax */
                 'alias' => '!git config --list | grep alias | cut -c 7-',
