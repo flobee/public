@@ -1,6 +1,6 @@
 #!/bin/sh
 ### BEGIN INIT INFO
-# Provides:             varlogs
+# Provides:             logtoram
 # Required-Start:       $remote_fs $time logtoram
 # Required-Stop:        umountnfs $time logtoram
 # X-Start-Before:       $syslog
