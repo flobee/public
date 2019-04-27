@@ -1,6 +1,14 @@
 # Logs to RAM
 (E.g. for the raspberry to reduce writes/ bring up SD Card health)
 
+Ideas also from:
+ - https://forum-raspberrypi.de/forum/thread/4046-var-log-in-eine-art-ramdisk-auslagern-weitere-optimierungen-bezgl-logs/
+ - https://forum.ubuntuusers.de/topic/var-log-als-ramdisk/2/
+ - https://forum.ubuntuusers.de/topic/boot-selbst-geschriebener-dienste-vor-system-d/
+
+
+# Usage/ TODOs to get it run
+
     mkdir /var/log_bak
 
     echo '# log to RAM'  >> /etc/fstab
@@ -38,3 +46,13 @@ if rsyslog is in use: update the init script:
     # /etc/init.d/logtoram sync
     # and compare after a reboot eg.:
     # diff -rq /var/log /var/log_bak
+
+
+## Cronjob
+
+You may backup e.g. in a daily way the current logs
+    
+    $ crontab -e
+    
+    # backup in case of power of errors (once a day)
+    10 10 * * *    /etc/init.d/logtoram sync

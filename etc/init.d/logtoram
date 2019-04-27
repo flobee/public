@@ -3,6 +3,8 @@
 # Provides:             varlogs
 # Required-Start:       $remote_fs $time logtoram
 # Required-Stop:        umountnfs $time logtoram
+# X-Start-Before:       $syslog
+# X-Stop-After:         $syslog
 # Default-Start:        2 3 5
 # Default-Stop:         0 1 6
 # Short-Description:    /var/log
