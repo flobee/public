@@ -10,3 +10,7 @@ deb-src http://mirror2.hs-esslingen.de/mariadb/repo/10.2/debian stretch main
 deb [arch=amd64,i386] http://mirror2.hs-esslingen.de/mariadb/repo/10.3/debian stretch main
 deb-src http://mirror2.hs-esslingen.de/mariadb/repo/10.3/debian stretch main
 
+# MariaDB 10.4 repository list - created 2019-07-16 10:27 UTC
+# http://downloads.mariadb.org/mariadb/repositories/
+deb [arch=amd64] http://mirror2.hs-esslingen.de/mariadb/repo/10.4/debian buster main
+deb-src http://mirror2.hs-esslingen.de/mariadb/repo/10.4/debian buster main
