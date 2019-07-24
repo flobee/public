@@ -22,14 +22,15 @@ Ideas also from:
 
 
 possible problems to be checked:
- - logfs/ttmpfs must be mounted: OK
+ - logfs/tmpfs must be mounted: OK
  - logtoram init script must be started befor services (e.g. rsyslog) using it: to be checked!
- - perms of logs must be verified, otherwise services can fail.
+ - perms of logs must be verified, otherwise some services can fail (even when 
+   missing empty directories for "vdr" or "apache" etc...).
    eg. if "logtoram stop" fails after an important update or crash
-   after installing new services you may run "/etc/init.d/logtoram sync" by hand to be sure all
-   new logs und their perms will be reseted after a reboot
+   after installing new services you may run "/etc/init.d/logtoram sync" by hand 
+   to be sure all new logs und their perms will be reseted after a reboot
  - logrotate may leave old gz files which are not really nessesary. update rsync
-   cmd of log to ram or limit logrotate configuration
+   cmd of logtoram or limit logrotate configuration
 
 
 if rsyslog is in use: update the init script:
@@ -39,7 +40,7 @@ if rsyslog is in use: update the init script:
     #       # Required-Start:    $remote_fs $time logtoram
     #       # Required-Stop:     umountnfs $time logtoram
     # save & close
-    # update-rc.d rsyslog defaults
+    # update-rc.d logtoram defaults 9 99
     # reboot
     #
     # NOTE: If services fail: check if the log dirs still exists. befor a reboot run
@@ -54,5 +55,5 @@ You may backup e.g. in a daily way the current logs
     
     $ crontab -e
     
-    # backup in case of power of errors (once a day)
+    # backup in case of power loss or errors (once a day) at 10:10
     10 10 * * *    /etc/init.d/logtoram sync

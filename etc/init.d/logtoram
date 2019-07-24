@@ -16,7 +16,7 @@
 
 RSYNC="/usr/bin/rsync"
 RSYNCCONF_TO_RAM="--recursive --links --checksum --perms --partial --times --group --owner --devices --specials --exclude='*.gz' --exclude='*.1'"
-RSYNCCONF_TO_BAK="--recursive --links --checksum --perms --partial --times --group --owner --devices --specials"
+RSYNCCONF_TO_BAK="--recursive --links --checksum --perms --partial --times --group --owner --devices --specials --exclude='*.gz' --exclude='*.1'"
 
 DIR_LOG="/var/log/"
 DIR_BAK="/var/log_bak/"
@@ -48,4 +48,3 @@ case $1 in
 esac
 
 exit 0
-

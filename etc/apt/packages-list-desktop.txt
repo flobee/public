@@ -86,6 +86,7 @@ dosfstools                                       install
 dpkg                                             install
 dpkg-dev                                         install
 dvbcut                                           install
+dvb-apps                                         install
 dvd+rw-tools                                     install
 e2fsprogs                                        install
 enigmail                                         install

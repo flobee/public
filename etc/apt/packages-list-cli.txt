@@ -64,6 +64,7 @@ dmsetup                                          install
 dosfstools                                       install
 dpkg                                             install
 dpkg-dev                                         install
+dvb-apps                                         install
 e2fsprogs                                        install
 ethtool                                          install
 faad                                             install
