@@ -1,6 +1,9 @@
-You may find out your pi harware
+# Raspberry PI Models
 
-from: https://www.raspberrypi-spy.co.uk/2012/09/checking-your-raspberry-pi-board-version/
+
+## You may find out your pi harware
+
+Source: https://www.raspberrypi-spy.co.uk/2012/09/checking-your-raspberry-pi-board-version/
 
 it seems there are different controller/ implementations for different actions
 
@@ -62,4 +65,12 @@ Pi 3 Model B                    1GB     a22082 (Embest, China)
 Pi 3 Model B+                   1GB     a020d3 (Sony, UK)
 
 --< Models < ------------------------------------------------------------------
+
+
+## Hardware Informations
+
+Source: https://elinux.org/RPI_vcgencmd_usage
+
+Some of the scripts i take place here to test things in `../checks/` folder.
+
 

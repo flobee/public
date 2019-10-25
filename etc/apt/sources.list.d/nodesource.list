@@ -1,5 +1,9 @@
 # help: https://github.com/nodejs/help/issues/1040
 # add cert: 
 # wget -qO- https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add -
-deb https://deb.nodesource.com/node_8.x buster main
-deb-src https://deb.nodesource.com/node_8.x buster main
+#deb https://deb.nodesource.com/node_8.x buster main
+#deb-src https://deb.nodesource.com/node_8.x buster main
+
+deb https://deb.nodesource.com/node_12.x buster main
+deb-src https://deb.nodesource.com/node_12.x buster main
+

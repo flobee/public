@@ -1,8 +1,5 @@
-Some scripts for raspberry PI 
+# Some scripts for raspberry PI 
 
-Sorted by models
+Currently sorted by models (maybe the stucture changes one day)
 
 Generally: Using raspbian (lite + custom installations), currently "stretch"
-
-
-

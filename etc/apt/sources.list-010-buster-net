@@ -13,9 +13,12 @@ deb http://ftp.de.debian.org/debian/ buster main contrib non-free
 deb-src http://ftp.de.debian.org/debian/ buster main contrib non-free
 deb http://ftp.debian.org/debian/ buster-updates main contrib non-free
 
-deb http://security.debian.org/ security/updates main contrib non-free
+#deb http://security.debian.org/ security/updates main contrib non-free
 deb http://security.debian.org/debian-security buster/updates main contrib non-free
 deb-src http://security.debian.org/debian-security buster/updates main contrib non-free
+deb http://security.debian.org/ buster/updates main contrib non-free
+deb-src http://security.debian.org/ buster/updates main contrib non-free
+
 # buster-updates, previously known as 'volatile'
 deb http://ftp.de.debian.org/debian/ buster-updates main contrib non-free
 deb-src http://ftp.de.debian.org/debian/ buster-updates main contrib non-free
@@ -46,4 +49,15 @@ deb-src http://ftp.de.debian.org/debian/ buster-backports main contrib non-free
 # deb http://e-tobi.net/vdr-experimental buster vdr-multipatch base
 # deb-src http://e-tobi.net/vdr-experimental buster vdr-multipatch base
 
+# Atom Editor
+# # curl -L https://packagecloud.io/AtomEditor/atom/gpgkey | apt-key add -
+#deb [arch=amd64] https://packagecloud.io/AtomEditor/atom/any/ any main
+
+# Dino
+#deb [arch=amd64,i386] http://download.opensuse.org/repositories/network:/messaging:/xmpp:/dino/Debian_9.0/ /
+
+# Ghostwriter md editor
+# apt-key adv --keyserver ha.pool.sks-keyservers.net --recv-keys EF3F38C8FD5E1EE2E7B3B657653124679B3CCB19                                                                                     
+deb http://ppa.launchpad.net/wereturtle/ppa/ubuntu bionic main 
+#deb-src http://ppa.launchpad.net/wereturtle/ppa/ubuntu bionic main
 

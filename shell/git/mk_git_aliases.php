@@ -73,14 +73,17 @@ function gitaliases($test)
                 #'mr' => 'merge',
                 'df' => 'diff',
                 'unstage' => 'reset HEAD',
+
+                'undo-notpushed' => '!git reset HEAD~1 --soft',
+
                 /* git alias : list all aliases
                  * useful in order to learn git syntax */
                 'alias' => '!git config --list | grep alias | cut -c 7-',
                 // push and pull all
                 'pa' => '!git push --all && git pull --all',
-                'aa' => '!git add -A',
+                'aa' => '!git add --update',
                 'pl' => 'pull -v',
-                #'ps' => 'push',
+                'ps' => 'push',
                 #'all' => '!git add . && git commit',
 
                 'ls' => 'stash list',
