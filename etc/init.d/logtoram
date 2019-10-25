@@ -15,7 +15,7 @@
 
 
 #pi3 req:
-#set -o errexit -o nounset -o xtrace
+set -o errexit -o nounset -o xtrace
 
 RSYNC="/usr/bin/rsync"
 RSYNCCONF_TO_RAM="--recursive --links --checksum --perms --partial --times --group --owner --devices --specials --exclude='*.gz' --exclude='*.1'"
