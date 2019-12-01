@@ -45,6 +45,7 @@ cpp                                              install
 cpulimit                                         install
 crda                                             install
 cron                                             install
+cronic                                           install
 cryptsetup                                       install
 cryptsetup-bin                                   install
 cups-client                                      install

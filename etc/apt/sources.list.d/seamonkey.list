@@ -1,0 +1,6 @@
+# seamonkey browser from Ubuntuzilla ( https://sourceforge.net/p/ubuntuzilla/wiki/Main_Page/ )
+# @see https://wiki.debian.org/Seamonkey
+# sudo apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 2667CA5C
+#
+deb http://downloads.sourceforge.net/project/ubuntuzilla/mozilla/apt all main
+

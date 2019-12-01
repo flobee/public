@@ -46,6 +46,7 @@ cpp                                              install
 cpulimit                                         install
 crda                                             install
 cron                                             install
+cronic                                           install
 curl                                             install
 dash                                             install
 davfs2                                           install
