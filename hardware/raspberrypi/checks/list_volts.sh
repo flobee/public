@@ -7,5 +7,5 @@
 #
 
 for nfo in core sdram_c sdram_i sdram_p ; do
-    echo -e "$nfo:\t\t$(vcgencmd measure_volts $nfo)";
+    echo "$(vcgencmd measure_volts $nfo) $nfo";
 done

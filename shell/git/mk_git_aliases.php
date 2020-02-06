@@ -83,7 +83,7 @@ function gitaliases($test)
                 'pa' => '!git push --all && git pull --all',
                 'aa' => '!git add --update',
                 'pl' => 'pull -v',
-                #'ps' => 'push',
+                'ps' => 'push',
                 #'all' => '!git add . && git commit',
 
                 'ls' => 'stash list',

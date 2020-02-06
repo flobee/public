@@ -45,6 +45,7 @@ cpp                                              install
 cpulimit                                         install
 crda                                             install
 cron                                             install
+cronic                                           install
 cryptsetup                                       install
 cryptsetup-bin                                   install
 cups-client                                      install
@@ -64,6 +65,7 @@ dmsetup                                          install
 dosfstools                                       install
 dpkg                                             install
 dpkg-dev                                         install
+dvb-apps                                         install
 e2fsprogs                                        install
 ethtool                                          install
 faad                                             install

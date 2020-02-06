@@ -57,6 +57,7 @@ cpp                                              install
 cpulimit                                         install
 crda                                             install
 cron                                             install
+cronic                                           install
 cryptsetup                                       install
 cryptsetup-bin                                   install
 cups-client                                      install
@@ -86,6 +87,7 @@ dosfstools                                       install
 dpkg                                             install
 dpkg-dev                                         install
 dvbcut                                           install
+dvb-apps                                         install
 dvd+rw-tools                                     install
 e2fsprogs                                        install
 enigmail                                         install
@@ -402,6 +404,7 @@ thunderbird                                      install
 thunderbird-l10n-de                              install
 traceroute                                       install
 transfig                                         install
+transmageddon                                    install
 tree                                             install
 ttf-dejavu                                       install
 ttf-dejavu-core                                  install
