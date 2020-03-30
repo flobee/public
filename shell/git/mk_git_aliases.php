@@ -1,4 +1,4 @@
-#!/usr/bin/env php 
+#!/usr/bin/env php
 <?php
 
 # Git alias generator
@@ -13,40 +13,41 @@
 
 function gitaliases($test)
 {
-    // workflow: cleanup/purge -> or drop/ remove -> add aliases
+    // workflow: cleanup -> or drop/ remove -> add aliases
     $aliases = array(
         'cleanup' => array(
-            // removes all aliases from the current project .git/config
-            'local' => false,
+            // removes all aliases from $(prefix)/etc/gitconfig
+            'system' => false,
+
             // removes all aliases from $HOME/.gitconfig
             'global' => false,
 
-            // removes all aliases from $(prefix)/etc/gitconfig
-            'system' => false,
+            // removes all aliases from the current project .git/config
+            'local' => false,
         ),
+
         'drop' => array(
-            // removes aliases from the current project .git/config
-            'local' => array(
+            // removes aliases from $(prefix)/etc/gitconfig (probably only for
+            // root user)
+            'system' => array(
             ),
+
             // removes aliases from $HOME/.gitconfig
             'global' => array(
-                'last' => true, // set to true to drop or delete this line!
+                'last' => true, // set to true to delete this line!
                 'll' => true,
                 'l' => true,
                 'llog' => true,
                 'verbose' => true,
             ),
-            // removes aliases from $(prefix)/etc/gitconfig (probably only for 
-            // root)
-            'system' => array(
-            ),
-        ),
-        'add' => array(
-            // adds aliases to the current project .git/config
-            'local' => array(),
 
-            // adds aliases to $(prefix)/etc/gitconfig (probably only root can 
-            // do this) if you see some here and you are not the first user, 
+            // removes aliases from the current project .git/config
+            'local' => array(),
+        ),
+
+        'add' => array(
+            // adds aliases to $(prefix)/etc/gitconfig (probably only root can
+            // do this) if you see some here and you are not the first user,
             // they are already available for you :-)
             'system' => array(
                 'co' => 'checkout',
@@ -72,6 +73,9 @@ function gitaliases($test)
                 #'mr' => 'merge',
                 'df' => 'diff',
                 'unstage' => 'reset HEAD',
+
+                'undo-notpushed' => '!git reset HEAD~1 --soft',
+
                 /* git alias : list all aliases
                  * useful in order to learn git syntax */
                 'alias' => '!git config --list | grep alias | cut -c 7-',
@@ -79,8 +83,9 @@ function gitaliases($test)
                 'pa' => '!git push --all && git pull --all',
                 'aa' => '!git add -A',
                 #'pl' => 'pull',
+                'aa' => '!git add --update',
                 'pl' => 'pull -v',
-                #'ps' => 'push',
+                'ps' => 'push',
                 #'all' => '!git add . && git commit',
 
                 'ls' => 'stash list',
@@ -99,7 +104,10 @@ function gitaliases($test)
                 #'continue' => '!git add . && git rebase --continue',
                 #'url' => 'config --local --get-regexp remote\\.\\.\\*\\.url',
 
-                #'amend' => 'commit --amend',
+                'amend' => 'commit --amend',
+
+                // git drymerge <branch>
+                'drymerge' => '!git merge --no-commit --squash ',
 
                 'svnupdate' => '!git svn fetch && git svn rebase',
                 'svncommit' => '!git svn dcommit',
@@ -150,42 +158,47 @@ function gitaliases($test)
                 #git sm-push will ask to push also submodules
                 'sm-push' => 'push --recurse-submodules=on-demand',
             ),
+
+            // adds aliases to the current project .git/config
+            'local' => array(
+
+            ),
          ),
     );
 
-    foreach($aliases as $job => $list)
-    {
-        foreach($list as  $way => $commands)
-        {
-            if ($way == 'system' && $_SERVER['USER'] != 'root') {
+    foreach ( $aliases as $job => $list ) {
+
+        foreach($list as  $way => $commands) {
+
+            if ( $way == 'system' && $_SERVER['USER'] != 'root' ) {
                 // echo 'skip, not root' . PHP_EOL;
                 continue;
             }
 
-            if ($way == 'local') {
+            if ( $way == 'local' ) {
                 $way = '';
             } else {
                 $way = ' --' . $way;
             }
 
-            switch($job)
+            switch ( $job )
             {
                 case 'cleanup':
-                    if ($commands===true) {
+                    if ( $commands===true ) {
                             echo '"cleanup" not implemented yet';
-                        }
+                    }
                     break;
 
                 case 'drop':
-                    foreach($commands as $alias => $cmd) {
-                       if ($cmd===true) {
+                    foreach ( $commands as $alias => $cmd ) {
+                       if ( $cmd === true ) {
                            $execlist[] = 'git config' . $way . ' --unset alias.' . $alias;
                        }
                    }
                    break;
 
                 case 'add':
-                    foreach($commands as $alias => $cmd) {
+                    foreach ( $commands as $alias => $cmd ) {
                         $execlist[] = 'git config' . $way . ' alias.' . $alias . ' "' . $cmd .'"';
                     }
                 break;
@@ -193,16 +206,16 @@ function gitaliases($test)
         }
     }
 
-    foreach($execlist as $cmd)
+    foreach ( $execlist as $cmd )
     {
-        if ($test === false)
+        if ( $test === false )
         {
-            $x = exec($cmd, $data, $exitCode);
+            $x = exec( $cmd, $data, $exitCode );
             if ( $x || $data || $exitCode > 5 ) {
                 echo 'Problem? cmd: ' . $cmd . PHP_EOL;
                 echo (empty($x) ? '0':$x) . " || data || $exitCode" . PHP_EOL;
             }
-            if ($exitCode == 255) {
+            if ( $exitCode == 255 ) {
                 echo 'ERROR: permission problem with: '. $cmd . PHP_EOL;
             }
         } else {
@@ -215,7 +228,9 @@ function gitaliases($test)
 $test = true;
 if (@$_SERVER['argv'][1] == 'run') {
     $test = false;
-    //echo 'Will execute commands...' . PHP_EOL;
+} else {
+    echo '# Execute commands run ' . basename(__FILE__) .' run ' . PHP_EOL;
 }
 
-gitaliases($test);
+gitaliases( $test );
+

@@ -1,1 +1,14 @@
-screenrc.plugin.sensors-fan_
+#!/bin/sh
+
+# Usage: <this script><_underscore_><name of the fan to look for>
+# 
+# eg.: in my case "fan1" which is listed in sensores command 
+# 
+# then create a symlink eg.: 
+# "ln -s /path/to/.screenrc.plugin.sensors-fan_ /path/to/.screenrc.plugin.sensors-fan_fan1"
+# or: "ln -s '/path/to/.screenrc.plugin.disk-free_' '/path/to/.screenrc.plugin.disk-free_crypt-sda5-home'"
+
+fan=`echo $0 | cut -d '_' -f2`;
+
+sensors | grep "$fan" | awk '{print $2}' | tr -d +
+

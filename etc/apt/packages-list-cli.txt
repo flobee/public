@@ -15,8 +15,9 @@
 # > sudo apt-get dselect-upgrade
 #
 # dpkg --set-selections < <this file>
-# but: use sync-available of dctrl-tools pkg befor you use dpkg --set-selections to update to db
+# but: use sync-available of dctrl-tools pkg befor you use dpkg --set-selections to update the db
 
+alsa-utils                                       install
 anacron                                          install
 apache2-utils                                    install
 apt                                              install
@@ -44,17 +45,16 @@ cpp                                              install
 cpulimit                                         install
 crda                                             install
 cron                                             install
+cronic                                           install
 cryptsetup                                       install
 cryptsetup-bin                                   install
 cups-client                                      install
 cups-common                                      install
-cups-pk-helper                                   install
 curl                                             install
 dash                                             install
 davfs2                                           install
-ddrescueview                                     install
+gddrescue                                        install
 debianutils                                      install
-default-jre                                      install
 default-jre-headless                             install
 dh-autoreconf                                    install
 dh-make                                          install
@@ -65,11 +65,12 @@ dmsetup                                          install
 dosfstools                                       install
 dpkg                                             install
 dpkg-dev                                         install
-dvd+rw-tools                                     install
+dvb-apps                                         install
 e2fsprogs                                        install
 ethtool                                          install
 faad                                             install
 fakeroot                                         install
+fancontrol                                       install
 ffmpeg                                           install
 ffmpeg-doc                                       install
 findutils                                        install
@@ -83,12 +84,11 @@ gettext-base                                     install
 gettext-doc                                      install
 git                                              install
 git-extras                                       install
-git-gui                                          install
 git-man                                          install
 git-svn                                          install
 github-backup                                    install
-gitk                                             install
 gitstats                                         install
+ghostscript                                      install
 gpm                                              install
 grep                                             install
 groff-base                                       install
@@ -120,8 +120,6 @@ libavfilter6                                     install
 libavformat57                                    install
 libavresample3                                   install
 libavutil55                                      install
-libdvdcss2                                       install
-libdvdcss2-dbgsym                                install
 libpam-mount                                     install
 libpam-ssh                                       install
 libtool                                          install
@@ -143,25 +141,24 @@ md5deep                                          install
 mlocate                                          install
 mp3blaster                                       install
 mp3check                                         install
-mp3diags                                         install
 mp3info                                          install
 mp3rename                                        install
 mp4v2-utils                                      install
-mplayer                                          install
 mppenc                                           install
 multitail                                        install
 mutt                                             install
 mysql-common                                     install
 nano                                             install
 ncftp                                            install
+ncdu                                             install
 ndiff                                            install
 net-tools                                        install
 netbase                                          install
-netcat-traditional                               install
+netcat                                           install
+netcat-openbsd                                   install
 netpbm                                           install
 nfs-common                                       install
 nmap                                             install
-notification-daemon                              install
 ntfs-3g                                          install
 ntp                                              install
 ntpdate                                          install
@@ -169,11 +166,9 @@ openssh-client                                   install
 openssh-server                                   install
 openssh-sftp-server                              install
 openssl                                          install
-owncloud-client                                  install
-owncloud-client-l10n                             install
 parted                                           install
+parted-doc                                       install
 patch                                            install
-pavucontrol                                      install
 pdepend                                          install
 perl                                             install
 phing                                            install
@@ -199,6 +194,7 @@ php-tidy                                         install
 php-xml                                          install
 php-xmlrpc                                       install
 php-xsl                                          install
+php-xdebug                                       install
 php-zip                                          install
 phpmd                                            install
 phpunit                                          install
@@ -211,12 +207,10 @@ rename                                           install
 reportbug                                        install
 rrdtool                                          install
 rsync                                            install
-sane-utils                                       install
 screen                                           install
 sed                                              install
 shared-mime-info                                 install
 smartmontools                                    install
-smb4k                                            install
 smbc                                             install
 smbclient                                        install
 smbnetfs                                         install
@@ -229,6 +223,7 @@ sudo                                             install
 svn2cl                                           install
 tar                                              install
 telnet                                           install
+tshark                                           install
 traceroute                                       install
 transfig                                         install
 tree                                             install
@@ -241,7 +236,6 @@ unace                                            install
 unar                                             install
 unrar                                            install
 unzip                                            install
-ure                                              install
 urlview                                          install
 usbutils                                         install
 vim                                              install

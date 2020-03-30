@@ -1,11 +1,11 @@
 # source: sury.org
 # To add this repository please do:
 # apt-get install apt-transport-https lsb-release ca-certificates
-# wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
+# wget -O /etc/apt/trusted.gpg.d/php-updates.gpg https://packages.sury.org/php/apt.gpg
 # echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php-updates.list
 # apt-get update
 #
 # deb https://packages.sury.org/php/ jessie main
-deb https://packages.sury.org/php/ stretch main
+#deb https://packages.sury.org/php/ stretch main
 deb https://packages.sury.org/php/ buster main
 
