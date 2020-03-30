@@ -12,19 +12,22 @@ swap=`echo $0 | cut -d '_' -f2`;
 
 if [ "$swap" = "used" ]; then
     # swap used in MB
-    free -m | grep -i swap | awk '{print $3}'
+    # free -m | grep -i swap | awk '{print $3}'
+    free -m | tail -n1 | awk '{print $3}'
 fi
 
 
 if [ "$swap" = 'free' ]; then
     # swap free space in MB
-    free -m | grep -i swap | awk '{print $4}'
+    # free -m | grep -i swap | awk '{print $4}'
+    free -m | tail -n1 | awk '{print $4}'
 fi
 
 
 if [ "$swap" = "" ]; then
     # swap free space in MB
-    free -m | grep -i swap | awk '{print "Swap used:"$3"/free:"$4}'
+    # free -m | grep -i swap | awk '{print "Swap used:"$3"/free:"$4}'
+    free -m | tail -n1 | awk '{print "Swap used:"$3"/free:"$4}'
 fi
 
 

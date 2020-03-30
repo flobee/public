@@ -79,7 +79,7 @@ backtick 2 90 90 /home/florianb/workspace/public/shell/screenrc/screenrc.plugin.
 # backtick 3 45 45 /home/florianb/workspace/public/shell/screenrc/screenrc.plugin.cpu-temp-core0
 backtick 4 90 90 /home/florianb/workspace/public/shell/screenrc/screenrc.plugin.swap_used
 backtick 5 30 30 /home/florianb/workspace/public/shell/screenrc/screenrc.plugin.cpu-usage-core0
-backtick 6 30 30 /home/florianb/workspace/public/shell/screenrc/screenrc.plugin.disk-free_sda1
+#backtick 6 30 30 /home/florianb/workspace/public/shell/screenrc/screenrc.plugin.disk-free_sda1
 # backtick 7 60 60 /home/florianb/workspace/public/shell/screenrc/screenrc.plugin.sensors-fan1
 
 
@@ -123,9 +123,11 @@ termcapinfo xterm 'is=\E[r\E[m\E[2J\E[H\E[?7h\E[?1;4;6l'
 # Example of automatically running some programs in windows on screen startup.
 #
 # screen -t monkey ssh monkey
-#screen -t prozesse 11 top
+#screen -t ps 11 top
 screen -t syslog 9 tail -f -n300 /var/log/syslog
 # screen -t mail 10 mutt
+#screen -t tunnel 10 ~/tunnel.sh
+
 # this screen we i want to see frist when i start the screen cmd, so this goes to the last line
 screen -t zsh 0 zsh
 
