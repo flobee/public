@@ -74,13 +74,13 @@ hardstatus on
 
 # demo for backtick command; e.g. use in hardstatus string: "%1`%{-}" for backtick 1
 # backtick 2 90 90 $HOME/scripts/homes/.screenrc.plugin.test
-backtick 1 90 90 /home/flobee/workspace/public/shell/screenrc/screenrc.plugin.mem-used
-backtick 2 90 90 /home/flobee/workspace/public/shell/screenrc/screenrc.plugin.mem-free
-# backtick 3 45 45 /home/flobee/workspace/public/shell/screenrc/screenrc.plugin.cpu-temp-core0
-backtick 4 90 90 /home/flobee/workspace/public/shell/screenrc/screenrc.plugin.swap_used
-backtick 5 30 30 /home/flobee/workspace/public/shell/screenrc/screenrc.plugin.cpu-usage-core0
-backtick 6 30 30 /home/flobee/workspace/public/shell/screenrc/screenrc.plugin.disk-free_sda1
-# backtick 7 60 60 /home/flobee/workspace/public/shell/screenrc/screenrc.plugin.sensors-fan1
+backtick 1 90 90 $HOME/workspace/public/shell/screenrc/screenrc.plugin.mem-used
+backtick 2 90 90 $HOME/workspace/public/shell/screenrc/screenrc.plugin.mem-free
+backtick 3 45 45 $HOME/workspace/public/shell/screenrc/screenrc.plugin.cpu-temp-core0
+backtick 4 90 90 $HOME/workspace/public/shell/screenrc/screenrc.plugin.swap_used
+backtick 5 30 30 $HOME/workspace/public/shell/screenrc/screenrc.plugin.cpu-usage-core0
+backtick 6 30 30 $HOME/workspace/public/shell/screenrc/screenrc.plugin.disk-free_sdb1
+backtick 7 60 60 $HOME/workspace/public/shell/screenrc/screenrc.plugin.sensors-fan_fan1
 
 
 #caption always "%{= mw}%c:%s | %Y%m%d | %=  %{= mw}%-w%{= wm}%50>%n-%t%{-}%+w%{= mw}%-38=%1` | %l"
@@ -124,10 +124,10 @@ termcapinfo xterm 'is=\E[r\E[m\E[2J\E[H\E[?7h\E[?1;4;6l'
 #
 # screen -t monkey ssh monkey
 #screen -t prozesse 11 top
-#screen -t syslog 9 tail -f -n300 /var/log/syslog
+#screen -t prportl-log 7 tail -f logs/presseportal.cli.cfg.php.log
+#screen -t feedcache-log 8 tail -f logs/feedcache.cli.cfg.php.log
+screen -t syslog 9 tail -f -n300 /var/log/syslog
 # screen -t mail 10 mutt
 # this screen we i want to see frist when i start the screen cmd, so this goes to the last line
-#screen -t zsh 0 zsh
-
-source ~/.screenrc.local
+screen -t zsh 0 zsh
 
