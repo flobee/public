@@ -6,5 +6,5 @@
 # sudo apt-key add oracle_vbox_2016.asc
 #
 #deb http://download.virtualbox.org/virtualbox/debian stretch contrib
-deb http://download.virtualbox.org/virtualbox/debian bionic contrib
+deb [arch=amd64] http://download.virtualbox.org/virtualbox/debian bionic contrib
 
