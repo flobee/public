@@ -1,0 +1,5 @@
+# Atom Editor
+# wget -qO - https://packagecloud.io/AtomEditor/atom/gpgkey | sudo apt-key add -
+#
+deb [arch=amd64] https://packagecloud.io/AtomEditor/atom/any/ any main
+
