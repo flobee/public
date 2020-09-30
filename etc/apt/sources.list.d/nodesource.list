@@ -4,6 +4,7 @@
 #deb https://deb.nodesource.com/node_8.x buster main
 #deb-src https://deb.nodesource.com/node_8.x buster main
 
-deb https://deb.nodesource.com/node_12.x buster main
-deb-src https://deb.nodesource.com/node_12.x buster main
+#buster->testing OFF
+#deb https://deb.nodesource.com/node_12.x buster main
+#deb-src https://deb.nodesource.com/node_12.x buster main
 

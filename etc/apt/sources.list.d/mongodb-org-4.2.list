@@ -1,0 +1,4 @@
+# https://docs.mongodb.com/manual/tutorial/install-mongodb-on-debian/
+# wget -qO - https://www.mongodb.org/static/pgp/server-4.2.asc | sudo apt-key add -
+deb http://repo.mongodb.org/apt/debian buster/mongodb-org/4.2 main
+

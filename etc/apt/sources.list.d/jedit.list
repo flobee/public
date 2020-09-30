@@ -1,0 +1,4 @@
+# http://www.jedit.org/index.php?page=download&platform=unix#option_two
+# apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E6A233DBE3AFBEFC
+deb http://switch.dl.sourceforge.net/project/jedit /
+
