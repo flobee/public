@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# the partition to look for? 
+# Usage: <this script><_underscore_><name of the device to look for>
+# eg.: in this case "crypt-sda5-home" which is in 
+# /dev/mapper/crypt-sda5-home to get free disk space as (-h) human readable
+# 
+# so, create a symlink eg.: 
+# "ln -s /path/to/.screenrc.plugin.disk-free_ /path/to/.screenrc.plugin.disk-free_sda1"
+# or: "ln -s '/path/to/.screenrc.plugin.disk-free_' '/path/to/.screenrc.plugin.disk-free_crypt-sda5-home'"
+
+
+disk=`echo $0 | cut -d '_' -f2`;
+
+df -h | grep ${disk} | awk '{print $4}'
