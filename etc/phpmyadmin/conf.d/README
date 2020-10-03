@@ -1,0 +1,11 @@
+Server configs beginning with server cfg $i = 1000
+
+`$cfg['Servers'][$i]` where `$i` starts with 1000 and each config script
+gets unique id/number in the filename to detect the id for the usage.
+This then scales for 8999 db servers.
+
+E.g: file `1000-mydbserver.php` will be set to: 
+`$cfg['Servers'][1000]['hostname'] = 'mydbserver';`
+
+All the rest uses the defaults or set inside the specific 
+`conf.d/[id]-[hostname[].php` file
