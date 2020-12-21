@@ -1,0 +1,32 @@
+[Desktop Entry]
+Type=Service
+X-KDE-ServiceTypes=KonqPopupMenu/Plugin
+Icon=black_sum
+MimeType=application/octet-stream;inode/directory;
+Actions=2mp4comp21batch;2mp4comp28batch;ts2mpg;ts2mpgb;
+
+
+[Desktop Action 2mp4comp21batch]
+Name=mpg2mp4.sh 21 -b
+Icon=black_sum
+Exec=(if [ -f "%f" ]; then ~/scripts/mpg2mp4.sh 28 "%f" -b; fi)
+
+
+[Desktop Action 2mp4comp28batch]
+Name=mpg2mp4.sh 28 -b
+Icon=black_sum
+Exec=(if [ -f "%f" ]; then ~/scripts/mpg2mp4.sh 28 "%f" -b; fi)
+
+
+[Desktop Action ts2mpg]
+Name=ts2mpg.sh %f (direct)
+Icon=black_sum
+Exec=(if [ -f "%f" ]; then ~/scripts/ts2mpg.sh "%f"; fi)
+
+
+[Desktop Action ts2mpgb]
+Name=ts2mpg.sh %f -b
+Icon=black_sum
+Exec=(if [ -f "%f" ]; then ~/scripts/ts2mpg.sh "%f" -b; fi)
+
+
