@@ -1,0 +1,12 @@
+<app_config>
+	<app>
+		<name>milkyway_nbody</name>
+		<max_concurrent>1</max_concurrent>
+	</app>
+	<app_version>
+		<app_name>milkyway_nbody</app_name>
+        <plan_class>mt</plan_class>
+        <avg_ncpus>2</avg_ncpus>
+		<cmdline>--nthreads 1</cmdline>
+	</app_version>
+</app_config>
