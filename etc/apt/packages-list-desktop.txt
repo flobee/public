@@ -15,6 +15,7 @@
 # > sudo apt-get dselect-upgrade
 #
 # dpkg --set-selections < <this file>
+# but: use sync-available of dctrl-tools pkg befor you use dpkg --set-selections to update the db
 
 anacron                                          install
 apache2-utils                                    install

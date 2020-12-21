@@ -30,3 +30,6 @@ alias l='ls --color=auto'
 alias grep='grep -n --color --exclude-dir=".svn" --exclude-dir=".git" --exclude-dir="CodeCoverage"'
 
 alias konqueror='konqueror --profile filemanagement'
+
+alias ncdu='ncdu -x'
+
