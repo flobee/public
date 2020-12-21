@@ -1,3 +1,3 @@
 # apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 120ED28D54840598
-deb http://deb.tuxedocomputers.com/debian stretch main
-
+#deb http://deb.tuxedocomputers.com/debian stretch main
+deb http://deb.tuxedocomputers.com/ubuntu bionic main
