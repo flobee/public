@@ -51,3 +51,8 @@ fi
 #    $MYSQL $@
 # }
 
+# enable debian zsh antigen
+if [ -f /usr/share/zsh-antigen/antigen.zsh ]; then
+    source /usr/share/zsh-antigen/antigen.zsh
+fi
+

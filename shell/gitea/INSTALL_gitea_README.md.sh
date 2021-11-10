@@ -41,11 +41,18 @@ PORT=3001
 #GITEA_BIN_URL=https://dl.gitea.io/gitea/1.4.2/gitea-1.4.2-linux-amd64
 #GITEA_BIN_URL=https://dl.gitea.io/gitea/1.7.4/gitea-1.7.4-linux-amd64
 #GITEA_BIN_URL=https://dl.gitea.io/gitea/1.10.3/gitea-1.10.3-linux-amd64
-GITEA_BIN_URL=https://dl.gitea.io/gitea/1.11.5/gitea-1.11.5-linux-amd64
+#GITEA_BIN_URL=https://dl.gitea.io/gitea/1.11.5/gitea-1.11.5-linux-amd64
+#GITEA_BIN_URL=https://dl.gitea.io/gitea/1.12.3/gitea-1.12.3-linux-amd64
+#GITEA_BIN_URL=https://dl.gitea.io/gitea/1.15.6/gitea-1.15.6-linux-amd64
 
 # To install as a service set to 1 otherwise something different e.g 0
 INSTALL_AS_SERVICE=1
 # ------------------------------------------------------------------------------
+
+if ["${GITEA_BIN_URL}" = "" ] ; then
+    echo "GITEA_BIN_URL not given. Exit..."
+    exit 1;
+fi
 
 adduser --system \
     --shell /bin/bash \
