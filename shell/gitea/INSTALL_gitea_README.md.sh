@@ -49,7 +49,7 @@ PORT=3001
 INSTALL_AS_SERVICE=1
 # ------------------------------------------------------------------------------
 
-if ["${GITEA_BIN_URL}" = "" ] ; then
+if [ "${GITEA_BIN_URL}" = "" ] ; then
     echo "GITEA_BIN_URL not given. Exit..."
     exit 1;
 fi
