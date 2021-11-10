@@ -8,4 +8,4 @@
 # deb https://packages.sury.org/php/ jessie main
 #deb https://packages.sury.org/php/ stretch main
 deb https://packages.sury.org/php/ buster main
-
+deb https://packages.sury.org/php/ bullseye main

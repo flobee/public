@@ -8,4 +8,5 @@
 #deb http://download.virtualbox.org/virtualbox/debian stretch contrib
 #deb [arch=amd64] http://download.virtualbox.org/virtualbox/debian bionic contrib
 deb [arch=amd64] http://download.virtualbox.org/virtualbox/debian buster contrib
+deb [arch=amd64] http://download.virtualbox.org/virtualbox/debian bullseye contrib
 
