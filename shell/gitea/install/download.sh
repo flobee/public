@@ -32,8 +32,8 @@ fi
 
 
 if [ "${DOWNLOAD_NOW}" = "1" ]; then
-    wget --output-document="/tmp/${GITEA_BIN_BASENAME}" "${GITEA_BIN_URL}" || rm "/tmp/${GITEA_BIN_BASENAME}"
-    wget --output-document="/tmp/${GITEA_BIN_BASENAME}.sha256" "${GITEA_BIN_URL}.sha256" || rm "/tmp/${GITEA_BIN_BASENAME}.sha256"
+    wget --quiet --show-progress --output-document="/tmp/${GITEA_BIN_BASENAME}" "${GITEA_BIN_URL}" || rm "/tmp/${GITEA_BIN_BASENAME}"
+    wget --quiet --show-progress --output-document="/tmp/${GITEA_BIN_BASENAME}.sha256" "${GITEA_BIN_URL}.sha256" || rm "/tmp/${GITEA_BIN_BASENAME}.sha256"
 fi
 
 if [ ! -f "/tmp/${GITEA_BIN_BASENAME}" ] ; then
