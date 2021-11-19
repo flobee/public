@@ -1,0 +1,24 @@
+#!/bin/bash
+
+DIR_OF_FILE="$(dirname $(readlink -f "$0"))";
+. ${DIR_OF_FILE}/config.sh
+
+#
+# backup handling
+
+echo '# backup sources';
+
+if [ ! -d "${PATH_BACKUPS}" ]; then
+    mkdir -p "${PATH_BACKUPS}";
+fi
+
+echo '# pls delete old backups, probably:'
+ls -alh ${PATH_BACKUPS}/${DIRNAME_REPOSITORIES}-*;
+ls -alh ${PATH_BACKUPS}/${DIRNAME_GITEA}-*;
+
+echo '# creating backups, pls. wait...';
+tar -czf ${PATH_BACKUPS}/${DIRNAME_REPOSITORIES}-${TIMENOW}.tgz ${PATH_REPOSITORIES}/;
+tar -czf ${PATH_BACKUPS}/${DIRNAME_GITEA}-${TIMENOW}.tgz ${PATH_GITEA}/;
+echo "# Backups created: ${DIRNAME_REPOSITORIES}-${TIMENOW}.tgz, ${DIRNAME_GITEA}-${TIMENOW}.tgz";
+echo
+
