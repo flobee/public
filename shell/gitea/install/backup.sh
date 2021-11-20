@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 DIR_OF_FILE="$(dirname $(readlink -f "$0"))";
 . ${DIR_OF_FILE}/config.sh
@@ -21,4 +21,3 @@ tar -czf ${PATH_BACKUPS}/gitea-${DIRNAME_REPOSITORIES}-${TIMENOW}.tgz ${PATH_REP
 tar -czf ${PATH_BACKUPS}/gitea-${DIRNAME_GITEA}-${TIMENOW}.tgz ${PATH_GITEA}/;
 echo "# Backups created: gitea-${DIRNAME_REPOSITORIES}-${TIMENOW}.tgz, gitea-${DIRNAME_GITEA}-${TIMENOW}.tgz";
 echo
-

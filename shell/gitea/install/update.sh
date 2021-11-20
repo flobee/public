@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Paths/ settings you may want to change: see config.sh
 
@@ -15,3 +15,5 @@ chmod +x "${PATH_GITEA}/gitea"
 systemctl stop gitea
 
 systemctl start gitea
+
+. ${DIR_OF_FILE}/z_after_install_update.sh

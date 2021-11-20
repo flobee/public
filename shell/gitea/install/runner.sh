@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # usage: See README.md
 
@@ -6,7 +6,9 @@ DIR_OF_FILE="$(dirname $(readlink -f "$0"))";
 . ${DIR_OF_FILE}/config.sh
 cd ${PATH_HOME};
 
-
+# VirtualBox autostart
+#VBoxManage startvm 'giteavm' --type headless
+#sleep 45; # wait for the VM is up
 
 ###
 # Backup
@@ -51,8 +53,6 @@ if [ "${ACTION_TYPE}" != 'I' ] && [ "${ACTION_TYPE}" != 'U' ]; then
     echo "ACTION_TYPE invalid, check config, exit";
     exit 1;
 fi
-
-sh ${DIR_OF_FILE}/z_after_install_update.sh
 
 
 

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Download gitea bin
 # Paths/ settings you may want to change: see config.sh

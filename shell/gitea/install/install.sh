@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Paths/ settings you may want to change: see config.sh
 
@@ -107,8 +107,8 @@ echo "    LFS: ${PATH_GITEA}/data/lfs ";
 echo '';
 echo ' Mail setup: Ask your admins!';
 echo '---------------------------------------------------------------------';
-echo 'After it, close the session CRTL + C (stop gitea) then CRTL + D (out
-of user git) to go ahead with this script';
+echo "After it, close the session CRTL + C (stop gitea) then CRTL + D (out
+of user ${USER}) to go ahead with this script";
 echo '---------------------------------------------------------------------';
 
 # first run of gittea should be under user ${USER}
@@ -125,3 +125,5 @@ then
     systemctl daemon-reload
     systemctl start gitea
 fi
+
+. ${DIR_OF_FILE}/z_after_install_update.sh

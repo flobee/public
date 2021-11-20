@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 #
 # --- Paths and settings you may want to change: -----------------------
@@ -39,13 +39,6 @@ ACTION_TYPE='I';                            # Type of installation: I|U
 
 # gitea download urls as var GITEA_BIN_URL to be installed by the installer
 #GITEA_BIN_URL=https://dl.gitea.io/gitea/1.4.2/gitea-1.4.2-linux-amd64
-#GITEA_BIN_URL=https://github.com/go-gitea/gitea/releases/download/v1.6.4/gitea-1.6.4-linux-amd64
-#GITEA_BIN_URL=https://dl.gitea.io/gitea/1.7.4/gitea-1.7.4-linux-amd64
-#GITEA_BIN_URL=https://github.com/go-gitea/gitea/releases/download/v1.7.4/gitea-1.7.4-linux-amd64
-#GITEA_BIN_URL=https://dl.gitea.io/gitea/1.10.3/gitea-1.10.3-linux-amd64
-#GITEA_BIN_URL=https://github.com/go-gitea/gitea/releases/download/v1.10.3/gitea-1.10.3-linux-amd64
-#GITEA_BIN_URL=https://dl.gitea.io/gitea/1.11.5/gitea-1.11.5-linux-amd64
-#GITEA_BIN_URL=https://github.com/go-gitea/gitea/releases/download/v1.11.5/gitea-1.11.5-linux-amd64
 #GITEA_BIN_URL=https://dl.gitea.io/gitea/1.12.3/gitea-1.12.3-linux-amd64
 #GITEA_BIN_URL=https://github.com/go-gitea/gitea/releases/download/v1.12.3/gitea-1.12.3-linux-amd64
 #GITEA_BIN_URL=https://dl.gitea.io/gitea/1.15.6/gitea-1.15.6-linux-amd64

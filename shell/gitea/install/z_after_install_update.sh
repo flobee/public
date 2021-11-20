@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 DIR_OF_FILE="$(dirname $(readlink -f "$0"))";
 . ${DIR_OF_FILE}/config.sh
