@@ -25,18 +25,21 @@ The documentation was not good enough in that time so this may help you today.
 Install `gitea` under user "`git`"? Read ahead:
 
 Now you will find the list of commands and scripts here in `install/*.sh` you
-may execute by hand or running the `runner.sh` script.
+may execute by hand or running the main `runner.sh` script.
 
-The `runner.sh` script will guide you a little. Asks questions for backups or
-the kind of update (update/install from scratch) depending on `config.sh`
+The `runner.sh` script will guide you by default. Asks questions for backups or
+the kind of update (update or install from scratch) depending on `config.sh`
 settings.
+
 Read all infomations of the output befor you go on to avoid problems.
 
 The scripts should be run under `root` and will setup needed path and rights and
 switch the user when needed for setup/configure the frontend (gitea frontend)
 with furhter details.
 
+
 Hints:
+
 Forget your /home/git/.ssh/authorized_keys
 Gitea will do! Bring it to zero bytes if already exists and you will have
 less issues.
@@ -44,7 +47,8 @@ less issues.
 
 ## Getting started:
 
-+ Edit `config.sh` to setup your needs. (By default you will be asked a lot)
++ Edit `config.sh` to setup your needs. (By default you will be asked for each
+action)
 
 + Copy all files to the server where you want to run gitea.
 
@@ -53,10 +57,15 @@ less issues.
 + Log-in at the server (or ssh remote call) and
     - run `runner.sh`
 
-Feel free to run single scripts like: `backup.sh`, `download.sh`, `install.sh`
+Feel free to run the single scripts like: `backup.sh`, `download.sh`, `install.sh`
 or `update.sh`.
 
 Depending on the settings in `config.sh` the `runner.sh` does
 all steps and can guide you or just does it without request any futher user
 input.
+
+By default this was tested with debian's default shell: `dash`. If you have
+problems please report or post suggestions. i'm not that high-end shell junkie
+and everything here could be improved but it should work with all posix shells
+out there (-:
 
