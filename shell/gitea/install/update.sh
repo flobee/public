@@ -6,7 +6,10 @@ DIR_OF_FILE="$(dirname $(readlink -f "$0"))";
 . ${DIR_OF_FILE}/config.sh
 
 # Download gitea bin
-sh ${DIR_OF_FILE}/download.sh
+sh ${DIR_OF_FILE}/download.sh "$1"
+if [ "$?" != 0 ]; then
+    exit 1;
+fi
 
 echo '# install binary';
 cp -f "/tmp/${GITEA_BIN_BASENAME}" "${PATH_GITEA}/gitea"

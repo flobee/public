@@ -52,6 +52,9 @@ DIRNAME_GITEA=`basename "${PATH_GITEA}"`
 TIMENOW=`date +'%Y%m%d-%H%M%S'`;
 
 GITEA_BIN_BASENAME=`basename "$GITEA_BIN_URL"`;
+if [ "${GITEA_BIN_BASENAME}" = "" ]; then
+    GITEA_BIN_BASENAME='gitea-bin';
+fi
 
 DIR_OF_FILE="$(dirname $(readlink -f "$0"))";
 

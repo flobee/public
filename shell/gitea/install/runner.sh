@@ -34,19 +34,19 @@ fi
 # request action type again?
 if [ "${ACTION_ASKQUESTIONS}" = "Y" ]; then
     _ACTION_TYPE=${ACTION_TYPE};
-    echo "Run install(I) or update(U) ? (defaut: '${ACTION_TYPE}')";
+    echo "Run install (I) or update (U) ? (defaut: '${ACTION_TYPE}')";
     read -p "install (I) or update (U) (def:'${_ACTION_TYPE}'): " ACTION_TYPE
     ACTION_TYPE=${ACTION_TYPE:-$_ACTION_TYPE}
 fi
 
 if [ "${ACTION_TYPE}" = 'U' ]; then
     echo 'Install variant: update';
-    sh ${DIR_OF_FILE}/update.sh;
+    sh ${DIR_OF_FILE}/update.sh "$1";
 fi
 
 if [ "${ACTION_TYPE}" = 'I' ]; then
     echo 'Install variant: install (new, all checks)';
-    sh ${DIR_OF_FILE}/install.sh;
+    sh ${DIR_OF_FILE}/install.sh "$1";
 fi
 
 if [ "${ACTION_TYPE}" != 'I' ] && [ "${ACTION_TYPE}" != 'U' ]; then
@@ -60,6 +60,6 @@ fi
 # finishing
 #
 
-echo 'done';
+echo 'end';
 
 exit 0;
