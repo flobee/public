@@ -69,3 +69,10 @@ problems please report or post suggestions. i'm not that high-end shell junkie
 and everything here could be improved but it should work with all posix shells
 out there (-:
 
+
+## Updates
+
+Maybe some time some updates are required. Use the `selfupdate.sh` script to
+replace/update existing scripts.
+
+Note: `config.sh` would be replaced with the default values!
