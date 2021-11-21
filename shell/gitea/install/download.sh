@@ -1,10 +1,18 @@
 #!/bin/sh
 
+# ---------------------------------------------------------------------
 # Download gitea bin
 # Paths/ settings you may want to change: see config.sh
+# ---------------------------------------------------------------------
 
+
+# ---------------------------------------------------------------------
+# Basic includes for all scripts
+# ---------------------------------------------------------------------
 DIR_OF_FILE="$(dirname $(readlink -f "$0"))";
-. ${DIR_OF_FILE}/config.sh
+. ${DIR_OF_FILE}/shellFunctions.sh
+sourceConfigs "${DIR_OF_FILE}" "config.sh-dist" "config.sh"
+# ---------------------------------------------------------------------
 
 
 if [ "${GITEA_BIN_URL}" = "" ] &&  [ "${ACTION_ASKQUESTIONS}" = "N" ] && [ "$1" = "" ]; then

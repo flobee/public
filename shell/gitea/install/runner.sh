@@ -2,8 +2,14 @@
 
 # usage: See README.md
 
+# ---------------------------------------------------------------------
+# Basic includes for all scripts
+# ---------------------------------------------------------------------
 DIR_OF_FILE="$(dirname $(readlink -f "$0"))";
-. ${DIR_OF_FILE}/config.sh
+. ${DIR_OF_FILE}/shellFunctions.sh
+sourceConfigs "${DIR_OF_FILE}" "config.sh-dist" "config.sh"
+# ---------------------------------------------------------------------
+
 cd ${PATH_HOME};
 
 # VirtualBox autostart
@@ -14,15 +20,15 @@ cd ${PATH_HOME};
 # Backup
 
 if [ "${ACTION_ASKQUESTIONS}" = "Y" ]; then
-    CONFIRMCOMMAND=${ACTION_BACKUPDEF};
+    CONFIRMCOMMAND=${ACTION_BACKUPDEFAULT};
     echo "Run backup bevor going on? (defaut: '${ACTION_ASKQUESTIONS}')";
-    confirmCommand "${ACTION_BACKUPDEF}";
+    confirmCommand "${ACTION_BACKUPDEFAULT}";
     if [ "$?" = 0 ] && [ ${CONFIRMCOMMAND} = "Y" ]; then
         sh ${DIR_OF_FILE}/backup.sh
     fi
 fi
 
-if [ "${ACTION_ASKQUESTIONS}" = "N" ] && [ "${ACTION_BACKUPDEF}" = "Y" ]; then
+if [ "${ACTION_ASKQUESTIONS}" = "N" ] && [ "${ACTION_BACKUPDEFAULT}" = "Y" ]; then
     sh ${DIR_OF_FILE}/backup.sh
 fi
 

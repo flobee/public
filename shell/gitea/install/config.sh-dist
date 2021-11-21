@@ -1,8 +1,8 @@
 #!/bin/sh
 
-###
+# ---------------------------------------------------------------------
 # Paths and settings you may want to change
-#
+# ---------------------------------------------------------------------
 
 
 # the user for this installation (eg. the 'git' user in/for: /home/git)
@@ -19,17 +19,20 @@ PATH_GITEA="$PATH_HOME/tea";                # gitea in /home/git/tea/
 
 PATH_REPOSITORIES="$PATH_HOME/repositories" # repos in /home/git/repositories/
 
-ACTION_BACKUPDEF='Y';                       # default value for creating backups first: Y|N
-
-# To install as a service set to 1 otherwise something different e.g: 0
-INSTALL_AS_SERVICE=1
-
 ACTION_ASKQUESTIONS='Y';                    # Ask or just use the config defaults (Y|N)? N for automisations
+                                            # If 'N' all actions will perform without asking.
 
 ACTION_TYPE='I';                            # Type of installation: I|U
                                             # I = Install (new installation) also possible for updates
                                             #     to detect OS changes
                                             # U = just updates (fast, maybe dont work on OS changes)
+
+ACTION_BACKUPDEFAULT='Y';                   # default value for creating backups first: Y|N
+
+# To install as a service set to 1 otherwise something different e.g: 0
+INSTALL_AS_SERVICE=1
+
+
 
 # gitea download urls as var GITEA_BIN_URL to be installed by the installer
 #GITEA_BIN_URL=https://dl.gitea.io/gitea/1.4.2/gitea-1.4.2-linux-amd64
@@ -56,7 +59,7 @@ if [ "${GITEA_BIN_BASENAME}" = "" ]; then
     GITEA_BIN_BASENAME='gitea-bin';
 fi
 
-DIR_OF_FILE="$(dirname $(readlink -f "$0"))";
+#DIR_OF_FILE="$(dirname $(readlink -f "$0"))";
 
 # source basic functions in several [sub]scripts
-. ${DIR_OF_FILE}/shellFunctions.sh;
+#. ${DIR_OF_FILE}/shellFunctions.sh;

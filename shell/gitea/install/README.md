@@ -52,15 +52,15 @@ action)
 
 + Copy all files to the server where you want to run gitea.
 
-    scp ./this/sources/gitea/install root@server:/path/to/eg/tmp/
+    `scp ./this/sources/gitea/install root@server:/home/git/tea/`
 
 + Log-in at the server (or ssh remote call) and
-    - run `runner.sh`
+    - run `/home/git/tea/runner.sh`
 
-Feel free to run the single scripts like: `backup.sh`, `download.sh`, `install.sh`
-or `update.sh`.
+Feel free to run the single scripts like: `backup.sh`, `download.sh`,
+`install.sh` or `update.sh`.
 
-Depending on the settings in `config.sh` the `runner.sh` does
+Depending on the settings in `config.sh[-dist]` the `runner.sh` does
 all steps and can guide you or just does it without request any futher user
 input.
 
@@ -75,10 +75,15 @@ out there (-:
 Maybe some time some updates are required. Use the `selfupdate.sh` script to
 replace/update existing scripts.
 
-Note: `config.sh` would be replaced with the default values!
+Note: `config.sh-dist` would be replaced with the default values!
 
 For automisations you can set the config to not ask questions anymore and
-disable the  `GITEA_BIN_URL`.
+disable the  `GITEA_BIN_URL`. E.g. using your custom `config.sh`
 
 Then call `runner.sh '[new url]'` or `download.sh '[new url]'` to update or
 install gitea from that source bin url.
+
+To avoid overwriting your settings (e.g. when using `selfupdate.sh`) add your
+own `config.sh` including your settings which you can find in `config.sh-dist`.
+The script first scanns the default `config.sh-dist` file and then scanns your
+`config.sh` file (if exists) so that your values will take affect.

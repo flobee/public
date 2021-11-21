@@ -1,16 +1,23 @@
 #!/bin/sh
 
+# ---------------------------------------------------------------------
 # self update script
 # updates all scripts required for this program
+# ---------------------------------------------------------------------
 
+# ---------------------------------------------------------------------
+# Basic includes for all scripts
+# ---------------------------------------------------------------------
 DIR_OF_FILE="$(dirname $(readlink -f "$0"))";
-. ${DIR_OF_FILE}/config.sh
+. ${DIR_OF_FILE}/shellFunctions.sh
+sourceConfigs "${DIR_OF_FILE}" "config.sh-dist" "config.sh"
+# ---------------------------------------------------------------------
 
 # all old files to be removed except of this script
-FILE_LIST_OLD='backup.sh config.sh download.sh install.sh README.md runner.sh shellFunctions.sh update.sh z_after_install_update.sh';
+FILE_LIST_OLD='backup.sh config.sh-dist download.sh install.sh README.md runner.sh shellFunctions.sh update.sh z_after_install_update.sh';
 
 # all new files to download
-FILE_LIST_NEW='backup.sh config.sh download.sh install.sh README.md runner.sh shellFunctions.sh update.sh z_after_install_update.sh selfupdate.sh';
+FILE_LIST_NEW='backup.sh config.sh-dist download.sh install.sh README.md runner.sh shellFunctions.sh update.sh z_after_install_update.sh selfupdate.sh';
 
 EXECUTABLES='selfupdate.sh runner.sh';
 
@@ -33,6 +40,15 @@ for FILE in ${EXECUTABLES};
 do
     chmod +x "${DIR_OF_FILE}/${FILE}"
 done;
+
+
+if [ -f "${DIR_OF_FILE}/config.sh" ]; then
+    echo '+ ---------------------------------------------------------------------';
+    echo "| Custom 'config.sh' found"
+    echo "| Please compare your custom 'config.sh' with 'config.sh-dist' first"
+    echo "| befor you go on";
+    echo '+ ---------------------------------------------------------------------';
+fi
 
 echo 'Script updates (selfupdate) complete';
 

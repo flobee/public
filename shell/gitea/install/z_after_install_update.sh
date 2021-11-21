@@ -1,7 +1,12 @@
 #!/bin/sh
 
+# ---------------------------------------------------------------------
+# Basic includes for all scripts
+# ---------------------------------------------------------------------
 DIR_OF_FILE="$(dirname $(readlink -f "$0"))";
-. ${DIR_OF_FILE}/config.sh
+. ${DIR_OF_FILE}/shellFunctions.sh
+sourceConfigs "${DIR_OF_FILE}" "config.sh-dist" "config.sh"
+# ---------------------------------------------------------------------
 
 echo '---------------------------------------------------------------------';
 echo "If you dont see any erros.. the service was removed, re-added and gitea
