@@ -13,6 +13,11 @@ DIR_OF_FILE="$(dirname $(readlink -f "$0"))";
 sourceConfigs "${DIR_OF_FILE}" "config.sh-dist" "config.sh"
 # ---------------------------------------------------------------------
 
+# pre-install to check if required packages are available
+sh ${DIR_OF_FILE}/pre-install.sh
+if [ "$?" != 0 ]; then
+    exit 1;
+fi
 
 # Download gitea bin
 sh ${DIR_OF_FILE}/download.sh "$1"
@@ -46,6 +51,7 @@ chmod 600 "${PATH_HOME}/.ssh/authorized_keys"
 mkdir -p ${PATH_GITEA}
 chown ${USER}:${USER} ${PATH_GITEA}
 
+mkdir -p ${PATH_GITEA}/{custom,data,indexers,public,log}
 
 echo '# install binary';
 cp -f "/tmp/${GITEA_BIN_BASENAME}" "${PATH_GITEA}/gitea"

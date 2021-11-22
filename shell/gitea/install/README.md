@@ -13,23 +13,23 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 # About
 
-Install helper scripts for `gitea`
+Install helper scripts for `gitea`.
 
-under debian stretch|buster|bullseye and many other *nix OS's.
+Under debian stretch|buster|bullseye and many other *nix OS's.
 
 I had some issues at the very first day installing `gitea` and was not able to
 get it run.
 
 The documentation was not good enough in that time so this may help you today.
 
-Install `gitea` under user "`git`"? Read ahead:
+Install `gitea` under user "`git`"?. Optional you can change the user.
 
-Now you will find the list of commands and scripts here in `install/*.sh` you
-may execute by hand or running the main `runner.sh` script.
+Now you will find some scripts here in `install/*.sh` you may execute by hand or
+running the main `runner.sh` script.
 
 The `runner.sh` script will guide you by default. Asks questions for backups or
-the kind of update (update or install from scratch) depending on `config.sh`
-settings.
+the kind of update (update or install from scratch) depending on
+`config.sh[-dist]` settings.
 
 Read all infomations of the output befor you go on to avoid problems.
 
@@ -47,15 +47,15 @@ less issues.
 
 ## Getting started:
 
-+ Edit `config.sh` to setup your needs. (By default you will be asked for each
-action)
++ Check `config.sh-dist` and setup your `config.sh` to overwrite defaults (by
+default you will be asked for each action)
 
 + Copy all files to the server where you want to run gitea.
 
-    `scp ./this/sources/gitea/install root@server:/home/git/tea/`
+    `scp ./sources/to/gitea/install root@server:/home/git/tea/`
 
 + Log-in at the server (or ssh remote call) and
-    - run `/home/git/tea/runner.sh`
+    - run `/home/git/tea/install/runner.sh`
 
 Feel free to run the single scripts like: `backup.sh`, `download.sh`,
 `install.sh` or `update.sh`.
@@ -78,12 +78,29 @@ replace/update existing scripts.
 Note: `config.sh-dist` would be replaced with the default values!
 
 For automisations you can set the config to not ask questions anymore and
-disable the  `GITEA_BIN_URL`. E.g. using your custom `config.sh`
+disable/update the  `GITEA_BIN_URL`. E.g. using your custom `config.sh`
 
 Then call `runner.sh '[new url]'` or `download.sh '[new url]'` to update or
 install gitea from that source bin url.
 
 To avoid overwriting your settings (e.g. when using `selfupdate.sh`) add your
 own `config.sh` including your settings which you can find in `config.sh-dist`.
-The script first scanns the default `config.sh-dist` file and then scanns your
-`config.sh` file (if exists) so that your values will take affect.
+The scripts first scanns the default `config.sh-dist` file and then scanns your
+`config.sh` file (if exists) so that your values will take account (lifo).
+
+
+## Usage over the time
+
+Add your custom `config.sh`:
+
++ Probably disable asking question
++ Set default action for updates (U)
++ set/disable the GITEA_BIN_URL and start updates using `runner.sh '[new url]'`
+
+Than you can run the `runner.sh` which just do all automatically.
+
+Once gitea is installed there are not may things to take care of. Except on OS
+changes or big changes of gitea where the installer needs some updates.
+
+Then use `selfupdate.sh` and compare/review the `config.sh-dist` for changes and
+update your custom `config.sh` if exists.

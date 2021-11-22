@@ -13,11 +13,10 @@ DIR_OF_FILE="$(dirname $(readlink -f "$0"))";
 sourceConfigs "${DIR_OF_FILE}" "config.sh-dist" "config.sh"
 # ---------------------------------------------------------------------
 
-# all old files to be removed except of this script
-FILE_LIST_OLD='backup.sh config.sh-dist download.sh install.sh README.md runner.sh shellFunctions.sh update.sh z_after_install_update.sh';
-
+# all old files (may still exists) to be removed
+FILE_LIST_OLD='';
 # all new files to download
-FILE_LIST_NEW='backup.sh config.sh-dist download.sh install.sh README.md runner.sh shellFunctions.sh update.sh z_after_install_update.sh selfupdate.sh';
+FILE_LIST_NEW='backup.sh config.sh-dist download.sh pre-install.sh install.sh README.md runner.sh shellFunctions.sh update.sh z_after_install_update.sh selfupdate.sh';
 
 EXECUTABLES='selfupdate.sh runner.sh';
 
@@ -52,4 +51,4 @@ fi
 
 echo 'Script updates (selfupdate) complete';
 
-echo "run '${DIR_OF_FILE}/runner.sh' now";
+echo "You can run '${DIR_OF_FILE}/runner.sh' now";

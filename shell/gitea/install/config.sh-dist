@@ -4,8 +4,16 @@
 # Paths and settings you may want to change
 # ---------------------------------------------------------------------
 
+# ---------------------------------------------------------------------
+# OS related packet manager to detect if packages are available or
+# needs to be installed. For more see `pre-install.sh`
+PKG_MANAGER='dpkg';
+PKG_MANAGER_OPTS='-s'
+PACKAGES_REQUIRED=' git wget sqlite3 curl';
+PACKAGES_OPTIONAL='apt-transport-https ca-certificates ssl-cert';
+PACKAGES_STOP_ON_INCOMPLETE='Y'; # If required packages are missing: Stop script
 
-# the user for this installation (eg. the 'git' user in/for: /home/git)
+# the user for this installation (eg. the 'git' user in/for: /home/git where gitea will be installed)
 USER=git;
 
 # the port where gitea should be available
