@@ -42,25 +42,49 @@ INSTALL_AS_SERVICE=1
 
 
 
-# gitea download urls as var GITEA_BIN_URL to be installed by the installer
+# ---------------------------------------------------------------------
+# internals NOT for your custom `config.sh`!
+# ---------------------------------------------------------------------
+
+# gitea download url as var GITEA_BIN_URL to be installed by the installer.
+# optional use a generic value: "latest" to scan github.com api to download the latest version (not recomment)
 #GITEA_BIN_URL=https://dl.gitea.io/gitea/1.4.2/gitea-1.4.2-linux-amd64
 #GITEA_BIN_URL=https://dl.gitea.io/gitea/1.12.3/gitea-1.12.3-linux-amd64
 #GITEA_BIN_URL=https://github.com/go-gitea/gitea/releases/download/v1.12.3/gitea-1.12.3-linux-amd64
 #GITEA_BIN_URL=https://dl.gitea.io/gitea/1.15.6/gitea-1.15.6-linux-amd64
-GITEA_BIN_URL=https://github.com/go-gitea/gitea/releases/download/v1.15.6/gitea-1.15.6-linux-amd64
+#GITEA_BIN_URL=https://github.com/go-gitea/gitea/releases/download/v1.15.6/gitea-1.15.6-linux-amd64
+GITEA_BIN_URL='latest';
 
 # where this sources are located to fetch updates
 GITEA_INSTALLER_BASEURL='https://raw.githubusercontent.com/flobee/public/master/shell/gitea/install';
-
-
-###
-# internals
 
 DIRNAME_REPOSITORIES=`basename "${PATH_REPOSITORIES}"`
 
 DIRNAME_GITEA=`basename "${PATH_GITEA}"`
 
 TIMENOW=`date +'%Y%m%d-%H%M%S'`;
+
+# check if 'latest'
+if [ "${GITEA_BIN_URL}" = "latest" ]; then
+    GITEA_VERSION=$(curl --silent "https://api.github.com/repos/go-gitea/gitea/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/' | sed 's|[v,]||g' )
+    # detect OS/kernel
+    if [ -n "$(uname -a | grep i386)" ]; then
+        GITEA_BIN_URL="https://dl.gitea.io/gitea/${GITEA_VERSION}/gitea-${GITEA_VERSION}-linux-386";
+    fi
+
+    if [ -n "$(uname -a | grep x86_64)" ]; then
+        GITEA_BIN_URL="https://dl.gitea.io/gitea/${GITEA_VERSION}/gitea-${GITEA_VERSION}-linux-amd64";
+    fi
+
+    if [ -n "$(uname -a | grep armv6l)" ]; then
+        GITEA_BIN_URL="https://dl.gitea.io/gitea/${GITEA_VERSION}/gitea-${GITEA_VERSION}-linux-arm-6";
+    fi
+
+    if [ -n "$(uname -a | grep armv7l)" ]; then
+        GITEA_BIN_URL="https://dl.gitea.io/gitea/${GITEA_VERSION}/gitea-${GITEA_VERSION}-linux-arm-7";
+    fi
+    #echo "Download 'latest' verison: ${GITEA_BIN_BASENAME}";
+fi
 
 GITEA_BIN_BASENAME=`basename "$GITEA_BIN_URL"`;
 if [ "${GITEA_BIN_BASENAME}" = "" ]; then

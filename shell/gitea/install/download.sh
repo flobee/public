@@ -14,7 +14,7 @@ DIR_OF_FILE="$(dirname $(readlink -f "$0"))";
 sourceConfigs "${DIR_OF_FILE}" "config.sh-dist" "config.sh"
 # ---------------------------------------------------------------------
 
-
+# test for other bin urls
 if [ "${GITEA_BIN_URL}" = "" ] &&  [ "${ACTION_ASKQUESTIONS}" = "N" ] && [ "$1" = "" ]; then
     echo "GITEA_BIN_URL not set, exit"
     exit 1;
@@ -30,7 +30,7 @@ if [ "${GITEA_BIN_URL}" = "" ] &&  [ "${ACTION_ASKQUESTIONS}" = "Y" ] ; then
         _GITEA_BIN_URL=${GITEA_BIN_URL};
     fi
 
-    echo 'Confirm or enter GITEA_BIN_URL:';
+    echo "Enter GITEA_BIN_URL or confirm: '${_GITEA_BIN_URL}'";
     read -p "Url or enter to confirm: '${_GITEA_BIN_URL}': " GITEA_BIN_URL
     GITEA_BIN_URL=${GITEA_BIN_URL:-$_GITEA_BIN_URL}
 fi
@@ -59,6 +59,7 @@ fi
 
 
 if [ "${DOWNLOAD_NOW}" = "1" ]; then
+    # curl -fsSL
     wget --quiet --show-progress --output-document="/tmp/${GITEA_BIN_BASENAME}" "${GITEA_BIN_URL}" || rm "/tmp/${GITEA_BIN_BASENAME}"
     wget --quiet --show-progress --output-document="/tmp/${GITEA_BIN_BASENAME}.sha256" "${GITEA_BIN_URL}.sha256" || rm "/tmp/${GITEA_BIN_BASENAME}.sha256"
 fi

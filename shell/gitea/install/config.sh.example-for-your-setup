@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# ---------------------------------------------------------------------
+# Paths and settings you may want to change
+# ---------------------------------------------------------------------
+
+ACTION_ASKQUESTIONS='N';                    # Ask or just use the config defaults (Y|N)? N for automisations
+                                            # If 'N' all actions will perform without asking.
+
+ACTION_TYPE='U';                            # Type of installation: I|U
+                                            # I = Install (new installation) also possible for updates
+                                            #     to detect OS changes
+                                            # U = just updates (fast, maybe dont work on OS changes)
+
+ACTION_BACKUPDEFAULT='Y';                   # default value for creating backups first: Y|N

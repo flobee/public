@@ -45,10 +45,12 @@ Gitea will do! Bring it to zero bytes if already exists and you will have
 less issues.
 
 
-## Getting started:
+## Getting started
 
-+ Check `config.sh-dist` and setup your `config.sh` to overwrite defaults (by
-default you will be asked for each action)
+With default values:
+
++ Default values are in `config.sh-dist`. The basics are very verbose. Good for
+  the first run!
 
 + Copy all files to the server where you want to run gitea.
 
@@ -59,6 +61,9 @@ default you will be asked for each action)
 
 Feel free to run the single scripts like: `backup.sh`, `download.sh`,
 `install.sh` or `update.sh`.
+
+To reduce output and handling create and setup your `config.sh` to overwrite the
+defaults. By default you will be asked for each action.
 
 Depending on the settings in `config.sh[-dist]` the `runner.sh` does
 all steps and can guide you or just does it without request any futher user
@@ -77,30 +82,41 @@ replace/update existing scripts.
 
 Note: `config.sh-dist` would be replaced with the default values!
 
-For automisations you can set the config to not ask questions anymore and
-disable/update the  `GITEA_BIN_URL`. E.g. using your custom `config.sh`
+For automisations you can set the config to not ask questions anymore e.g. using
+your custom `config.sh`. Suggested values then:
 
-Then call `runner.sh '[new url]'` or `download.sh '[new url]'` to update or
-install gitea from that source bin url.
+    ACTION_ASKQUESTIONS='N';
+    ACTION_TYPE='U';
+
+Then call `runner.sh '[new url]'` or `download.sh '[new url]'` for a specific
+version you selected or just `runner.sh` or `download.sh` for the latest
+version.
 
 To avoid overwriting your settings (e.g. when using `selfupdate.sh`) add your
 own `config.sh` including your settings which you can find in `config.sh-dist`.
-The scripts first scanns the default `config.sh-dist` file and then scanns your
+The scripts first scans the default `config.sh-dist` file and then scans your
 `config.sh` file (if exists) so that your values will take account (lifo).
 
 
 ## Usage over the time
 
+Once gitea is installed there are not may things to take care of. Except on OS
+changes or changes of gitea where the installer needs some updates.
+
+Then use `selfupdate.sh` and compare/review the `config.sh-dist` for changes and
+update your custom `config.sh` if exists.
+
 Add your custom `config.sh`:
 
 + Probably disable asking question
 + Set default action for updates (U)
-+ set/disable the GITEA_BIN_URL and start updates using `runner.sh '[new url]'`
++ Set if you want backups with this script or not
 
 Than you can run the `runner.sh` which just do all automatically.
 
-Once gitea is installed there are not may things to take care of. Except on OS
-changes or big changes of gitea where the installer needs some updates.
+Suggestion: symlink `config.sh.example-for-your-setup` to `config.sh` if you
+want to have updates from the maintainer. It is only the 'update' case and
+creates backups.
 
-Then use `selfupdate.sh` and compare/review the `config.sh-dist` for changes and
-update your custom `config.sh` if exists.
+
+Happy git + tea :)

@@ -16,7 +16,7 @@ sourceConfigs "${DIR_OF_FILE}" "config.sh-dist" "config.sh"
 # all old files (may still exists) to be removed
 FILE_LIST_OLD='';
 # all new files to download
-FILE_LIST_NEW='backup.sh config.sh-dist download.sh pre-install.sh install.sh README.md runner.sh shellFunctions.sh update.sh z_after_install_update.sh selfupdate.sh';
+FILE_LIST_NEW='backup.sh config.sh-dist config.sh.example-for-your-setup download.sh pre-install.sh install.sh README.md runner.sh shellFunctions.sh update.sh z_after_install_update.sh selfupdate.sh';
 
 EXECUTABLES='selfupdate.sh runner.sh';
 
