@@ -1,2 +1,2 @@
-Script moved to `install/runner.sh` but download all files in `install/`
+Script moved to `https://github.com/flobee/gitea-installer.git`
 
