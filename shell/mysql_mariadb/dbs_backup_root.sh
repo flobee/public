@@ -68,12 +68,26 @@ do
     DBLIST="${DBLIST} ${DB}" ; 
 done
 
+set wait_time = 10 # seconds
+
+echo "Are you sure you meant to run this script?"
+echo "This script does something drastic that you would severely regret if you happened to run this script by mistake!"
+echo ""
+set temp_cnt = ${wait_time}
+# https://www.cyberciti.biz/faq/csh-shell-scripting-loop-example/
+
 
 echo "Backup goes to: '${OUTDIR}/<database-name>/<sql-files>.sql'";
 echo "List of DBs to backup: ${DBLIST}";
 echo
 echo "Job starts in 3 sec... to abort press CTRL + C";
-sleep 3;
+secs=4;
+while [ $secs -gt 0 ];
+do
+    printf "\rJob starts in %.d sec/s " $((secs--));
+    sleep 1;
+done
+
 
 # Depending on you backup strategy you may want improved speed or less backup size.
 # For speed play with the number of threads (def: 4) statement-size and rows size,
