@@ -17,7 +17,7 @@ if [ "$governor" = "" ]; then
 fi
 
 if [ "$governor" = 'performance' ] ; then
-    cpupower --cpu all frequency-set -g performance --min 0.8GHz --max 3.8GHz # works cpu performance
+    cpupower --cpu all frequency-set -g performance --min 0.8GHz --max 3.2GHz # works cpu performance
 else
     cpupower --cpu all frequency-set -g powersave --min 0.8GHz --max 1.2GHz # works cpu powersave
 fi
