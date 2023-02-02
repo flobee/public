@@ -1,0 +1,10 @@
+https://store.kde.org/p/998366/
+
+KDE Framework 5
+Storage location as there are 2 paths to choose from.
+Copy the file to:
+~/.local/share/kservices5/ServiceMenus/ (current user)
+or
+/usr/share/kservices5/ServiceMenus/ (all users)
+
+With the command "kf5-config --path services", the paths could be checked.
