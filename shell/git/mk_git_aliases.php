@@ -39,6 +39,7 @@ function gitaliases($test)
                 'l' => true,
                 'llog' => true,
                 'verbose' => true,
+                'repos' => true,
             ),
 
             // removes aliases from the current project .git/config
@@ -57,7 +58,6 @@ function gitaliases($test)
                 'br' => 'branch',
                 'alias' => '!git config -l | grep alias | cut -c 7-',
                 'df' => 'diff',
-
             ),
 
             // adds aliases to $HOME/.gitconfig
@@ -129,10 +129,10 @@ function gitaliases($test)
 
                 #git sm-trackbranch : places all submodules on their respective branch specified in .gitmodules
                 #This works if submodules are configured to track a branch, i.e if .gitmodules looks like :
-                #[submodule "my-submodule"]
-                #   path = my-submodule
-                #   url = git@wherever.you.like/my-submodule.git
-                #   branch = my-branch
+#               #[submodule "my-submodule"]
+#               #   path = my-submodule
+#               #   url = git@wherever.you.like/my-submodule.git
+#               #   branch = my-branch
                 # 'sm-trackbranch' => '! git submodule foreach -q --recursive \'branch="\$(git config -f $toplevel/.gitmodules submodule.$name.branch)"; git checkout $branch\'',
 
                 #sm-pullrebase :
@@ -157,6 +157,9 @@ function gitaliases($test)
 
                 #git sm-push will ask to push also submodules
                 'sm-push' => 'push --recurse-submodules=on-demand',
+
+//                'repos' => '! "find ~/workspace -type d -execdir test -d {}/.git \\\; -prune -print"',
+//                // nedded: repos =  !"find -type d -execdir test -d {}/.git \\; -prune -print"
             ),
 
             // adds aliases to the current project .git/config
