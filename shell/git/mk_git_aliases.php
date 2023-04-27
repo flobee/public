@@ -96,7 +96,7 @@ function gitaliases($test)
                 'verbose' => "log --graph --stat '--pretty=format:Author of %C(red)%h%Creset was %C(green)%an%Creset, %C(blue)%ar%Creset, message was:\n%s\n%b\n%Creset'",
                 #'l' => 'log --format=\'%C(red)%h%Creset %C(green)%an%Creset - %C(yellow)%s%Creset\' --graph',
                 'll' => 'log --pretty=format:\'%C(red)%h%Creset%C(blue)%d %C(green)%an%Creset - %s %C(blue)(%cr)%Creset\' --graph --date=relative',
-                'llog' =>    "log --graph --stat '--pretty=format:Author of %Cred%h%Creset was %C(green)%ae%Creset, %C(blue)%ar%Creset, message:\n%C(yellow)%s\n%b\n%Creset'",
+                'llog' => "log --graph --stat '--pretty=format:Author of %Cred%h%Creset was %C(green)%ae%Creset, %C(blue)%ar%Creset, message:\n%C(yellow)%s\n%b\n%Creset'",
 
                 //'last' => "log -5 --graph --stat --pretty=format:'Author of %Cblue%h%Creset was %C(yellow)%an%Creset, %C(blue)%ar%Creset, message was\n%C(yellow)%s\n%b\n%Creset'",
                 'last' => 'log -5 --pretty=format:\'%C(red)%h%Creset%C(blue)%d %C( green)%an%Creset - %s %C(blue)( %cr)%Creset\' --graph --date=relative',
@@ -158,8 +158,11 @@ function gitaliases($test)
                 #git sm-push will ask to push also submodules
                 'sm-push' => 'push --recurse-submodules=on-demand',
 
-//                'repos' => '! "find ~/workspace -type d -execdir test -d {}/.git \\\; -prune -print"',
+                'llogxx' => "log --graph --stat '--pretty=format:Author of %Cred%h%Creset was %C(green)%ae%Creset, %C(blue)%ar%Creset, message:\n%C(yellow)%s\n%b\n%Creset'",
+
+                'repos' => "! \"find ~/workspace -type d -execdir test -d {}/.git \\\; -prune -print\"",
 //                // nedded: repos =  !"find -type d -execdir test -d {}/.git \\; -prune -print"
+//                // https://stackoverflow.com/questions/11981716/how-to-quickly-find-all-git-repos-under-a-directory
             ),
 
             // adds aliases to the current project .git/config
