@@ -1,4 +1,4 @@
-#/bin/sh
+#!/bin/sh
 
 # set cpu frequency by a governor code based on debian package 'linux-cpupower'
 # https://manpages.debian.org/testing/linux-cpupower/cpupower-frequency-set.1.en.html
