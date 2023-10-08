@@ -3,8 +3,9 @@ Type=Service
 X-KDE-ServiceTypes=KonqPopupMenu/Plugin
 Icon=black_sum
 MimeType=application/octet-stream;inode/directory;
-Actions=2mp4comp21batch;2mp4comp28batch;ts2mpg;ts2mpgb;
-
+Actions=2mp4comp21batch;2mp4comp28batch;ts2mpg;ts2mpgb;imgresize800;imgresize1200;imgresize1600;imgresize1920;
+Encoding=UTF-8
+#X-KDE-Submenu=Compress and Resize
 
 [Desktop Action 2mp4comp21batch]
 Name=mpg2mp4.sh 21 -b
@@ -30,3 +31,23 @@ Icon=black_sum
 Exec=(if [ -f "%f" ]; then ~/scripts/ts2mpg.sh "%f" -b; fi)
 
 
+[Desktop Action imgresize800]
+Name=convert %f -resize "800"
+Icon=crop
+#Exec=(kdialog --title "x info" --msgbox "%D/x800_`basename %f`")
+Exec=(if [ -f "%f" ]; then convert "%f" -resize "800" "%D/x800_`basename %f`"; fi)
+
+[Desktop Action imgresize1200]
+Name=convert %f -resize "1200"
+Icon=crop
+Exec=(if [ -f "%f" ]; then convert "%f" -resize "1200" "%D/x1200_`basename %f`"; fi)
+
+[Desktop Action imgresize1600]
+Name=convert %f -resize "1600"
+Icon=crop
+Exec=(if [ -f "%f" ]; then convert "%f" -resize "1600" "%D/x1600_`basename %f`"; fi)
+
+[Desktop Action imgresize1920]
+Name=convert %f -resize "1920"
+Icon=crop
+Exec=(if [ -f "%f" ]; then convert "%f" -resize "1920" "%D/x1920_`basename %f`"; fi)
