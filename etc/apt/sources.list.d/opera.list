@@ -1,6 +1,11 @@
 ## Add this line for Opera browser
 ## use "stable" instead of distribution name
-## wget -O - http://deb.opera.com/archive.key | apt-key add -
+## OLD (since deb11):wget -O - http://deb.opera.com/archive.key | apt-key add -
+# NEW:
+# See hints: https://deb.opera.com/manual.html (but `dd` cmd? hmm), better:
+# curl https://deb.opera.com/archive.key | gpg --dearmor > /usr/share/keyrings/opera-browser.gpg
+# echo "deb [signed-by=/usr/share/keyrings/opera-browser.gpg] https://deb.opera.com/opera-stable/ stable non-free" | sudo dd of=/etc/apt/sources.list.d/opera.list
+
 #
-#deb http://deb.opera.com/opera-stable/ stable non-free
+deb [signed-by=/usr/share/keyrings/opera-browser.gpg] http://deb.opera.com/opera-stable/ stable non-free
 #deb https://deb.opera.com/opera-developer/ stable non-free #Opera Browser (final releases)

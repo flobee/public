@@ -1,5 +1,9 @@
 # Atom Editor
-# wget -qO - https://packagecloud.io/AtomEditor/atom/gpgkey | sudo apt-key add -
-#
-deb [arch=amd64] https://packagecloud.io/AtomEditor/atom/any/ any main
+# OLD: wget -qO - https://packagecloud.io/AtomEditor/atom/gpgkey | sudo apt-key add -
+# NEW (deb>=11)
+# # wget -qO - https://packagecloud.io/AtomEditor/atom/gpgkey | gpg --dearmor > /usr/share/keyrings/atom-editor.gpg
+# echo "deb [signed-by=/usr/share/keyrings/atom-editor.gpg] https://packagecloud.io/AtomEditor/atom/any/ any main" | sudo dd of=/etc/apt/sources.list.d/atom-editor.list
+
+# OLD: deb [arch=amd64] https://packagecloud.io/AtomEditor/atom/any/ any main
+deb [arch=amd64 signed-by=/usr/share/keyrings/atom-editor.gpg] https://packagecloud.io/AtomEditor/atom/any/ any main
 

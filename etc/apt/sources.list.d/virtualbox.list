@@ -1,12 +1,13 @@
-# beginning with stretch, Debian 9.0: 
+# beginning with stretch, Debian 9.0:
 # https://wiki.debian.org/VirtualBox
 #
 # cd /tmp
 # curl -O https://www.virtualbox.org/download/oracle_vbox_2016.asc
 # sudo apt-key add oracle_vbox_2016.asc
+# wget -qO - https://www.virtualbox.org/download/oracle_vbox_2016.asc | gpg --dearmor > /usr/share/keyrings/virtualbox.gpg
 #
 #deb http://download.virtualbox.org/virtualbox/debian stretch contrib
 #deb [arch=amd64] http://download.virtualbox.org/virtualbox/debian bionic contrib
-deb [arch=amd64] http://download.virtualbox.org/virtualbox/debian buster contrib
-deb [arch=amd64] http://download.virtualbox.org/virtualbox/debian bullseye contrib
-deb [arch=amd64] http://download.virtualbox.org/virtualbox/debian bookworm contrib
+#deb [arch=amd64] http://download.virtualbox.org/virtualbox/debian buster contrib
+#deb [arch=amd64] http://download.virtualbox.org/virtualbox/debian bullseye contrib
+deb [arch=amd64 signed-by=/usr/share/keyrings/virtualbox.gpg] http://download.virtualbox.org/virtualbox/debian bookworm contrib

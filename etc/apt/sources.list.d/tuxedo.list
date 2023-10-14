@@ -1,3 +1,6 @@
 # apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 120ED28D54840598
+# New: sudo gpg --no-default-keyring --keyring /usr/share/keyrings/tuxedocomputers.gpg --keyserver keyserver.ubuntu.com --recv-keys 120ED28D54840598
 #deb http://deb.tuxedocomputers.com/debian stretch main
-deb http://deb.tuxedocomputers.com/ubuntu bionic main
+#deb http://deb.tuxedocomputers.com/ubuntu bionic main
+
+deb [signed-by=/usr/share/keyrings/tuxedocomputers.gpg] http://deb.tuxedocomputers.com/ubuntu bionic main

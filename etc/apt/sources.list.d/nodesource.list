@@ -1,6 +1,15 @@
 # help: https://github.com/nodejs/help/issues/1040
-# add cert: 
-# wget -qO- https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add -
+#
+# Install help in shell:
+# sudo apt-get update && sudo apt-get install -y ca-certificates curl gnupg
+# curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | sudo gpg --dearmor -o /usr/share/keyrings/nodesource.gpg
+# NODE_MAJOR=20
+# echo "deb [signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | sudo tee /etc/apt/sources.list.d/nodesource.list
+# #sudo apt-get update && sudo apt-get install nodejs -y
+# add cert:
+# wget -qO- https://deb.nodesource.com/gpgkey/nodesource.gpg.key | gpg --dearmor > /usr/share/keyrings/nodesource.gpg
+
+#
 #deb https://deb.nodesource.com/node_8.x buster main
 #deb-src https://deb.nodesource.com/node_8.x buster main
 
@@ -8,3 +17,5 @@
 #deb https://deb.nodesource.com/node_12.x buster main
 #deb-src https://deb.nodesource.com/node_12.x buster main
 
+# Current at 2023-10
+deb [arch=amd64 signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main
