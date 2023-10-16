@@ -104,6 +104,7 @@ function gitaliases($test)
                 'last' => 'log -5 --pretty=format:\'%C(red)%h%Creset%C(blue)%d %C( green)%an%Creset - %s %C(blue)( %cr)%Creset\' --graph --date=relative',
 
                 // search for a term in full history
+                // More hints: https://www.w3docs.com/snippets/git/how-to-find-a-deleted-file-in-the-project-commit-history.html
                 'logfind' => '!git llog --all --full-history -- ',
 
                 // playground
