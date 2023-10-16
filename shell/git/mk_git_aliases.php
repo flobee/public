@@ -38,6 +38,8 @@ function gitaliases($test)
                 'll' => true,
                 'l' => true,
                 'llog' => true,
+                'llogxx' => true,
+                'logfind' => true,
                 'verbose' => true,
                 'repos' => true,
             ),
@@ -101,6 +103,12 @@ function gitaliases($test)
                 //'last' => "log -5 --graph --stat --pretty=format:'Author of %Cblue%h%Creset was %C(yellow)%an%Creset, %C(blue)%ar%Creset, message was\n%C(yellow)%s\n%b\n%Creset'",
                 'last' => 'log -5 --pretty=format:\'%C(red)%h%Creset%C(blue)%d %C( green)%an%Creset - %s %C(blue)( %cr)%Creset\' --graph --date=relative',
 
+                // search for a term in full history
+                'logfind' => '!git llog --all --full-history -- ',
+
+                // playground
+                'llogxx' => "log --graph --stat '--pretty=format:Author of %Cred%h%Creset was %C(green)%ae%Creset, %C(blue)%ar%Creset, message:\n%C(yellow)%s\n%b\n%Creset'",
+
                 #'continue' => '!git add . && git rebase --continue',
                 #'url' => 'config --local --get-regexp remote\\.\\.\\*\\.url',
 
@@ -119,6 +127,12 @@ function gitaliases($test)
                 'visual'  => '!gitk',
 
                 'tags' => '!git tag',
+
+                // https://stackoverflow.com/questions/11981716/how-to-quickly-find-all-git-repos-under-a-directory
+//                'repos' => "! \"find ~/workspace -type d -execdir test -d {}/.git \\\; -prune -print\"",
+//                // nedded: repos =  !"find -type d -execdir test -d {}/.git \\; -prune -print"
+//                //tux[1|2]deb: reposorg =  !"find ~/workspace -type d -execdir test -d {}/.git \\; -prune -print"
+//
 
                 ######################
                 #Submodules aliases
@@ -158,13 +172,10 @@ function gitaliases($test)
                 #git sm-push will ask to push also submodules
                 'sm-push' => 'push --recurse-submodules=on-demand',
 
-                'llogxx' => "log --graph --stat '--pretty=format:Author of %Cred%h%Creset was %C(green)%ae%Creset, %C(blue)%ar%Creset, message:\n%C(yellow)%s\n%b\n%Creset'",
-
-                'repos' => "! \"find ~/workspace -type d -execdir test -d {}/.git \\\; -prune -print\"",
-//                // nedded: repos =  !"find -type d -execdir test -d {}/.git \\; -prune -print"
-//                // https://stackoverflow.com/questions/11981716/how-to-quickly-find-all-git-repos-under-a-directory
+                //'sm-stat' => "! git status && git submodule foreach 'git status' "
             ),
 
+            //
             // adds aliases to the current project .git/config
             'local' => array(
 
@@ -235,7 +246,7 @@ $test = true;
 if (@$_SERVER['argv'][1] == 'run') {
     $test = false;
 } else {
-    echo '# Execute commands run ' . basename(__FILE__) .' run ' . PHP_EOL;
+    echo '# To execute commands run: "php ' . basename(__FILE__) .' run"' . PHP_EOL;
 }
 
 gitaliases( $test );
