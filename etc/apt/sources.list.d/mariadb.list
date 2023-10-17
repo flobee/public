@@ -1,8 +1,10 @@
-# MariaDB 10.2 repository list - created 2018-03-01 11:59 UTC
+# MariaDB
 # http://downloads.mariadb.org/mariadb/repositories/
 # sudo apt-get install software-properties-common dirmngr
-# OLD??: sudo apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xF1656F24C74CD1D8
-#
+# OLD: sudo apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xF1656F24C74CD1D8
+# NEW: sudo gpg --no-default-keyring --keyring /usr/share/keyrings/mariadb.gpg --keyserver keyserver.ubuntu.com --recv-keys 0xF1656F24C74CD1D8
+
+# MariaDB 10.2 repository list - created 2018-03-01 11:59 UTC
 #deb [arch=amd64] http://mirror2.hs-esslingen.de/mariadb/repo/10.2/debian stretch main
 #deb-src http://mirror2.hs-esslingen.de/mariadb/repo/10.2/debian stretch main
 
@@ -23,4 +25,3 @@
 # MariaDB 10.5 repository list
 #deb [arch=amd64] http://mirror2.hs-esslingen.de/mariadb/repo/10.5/debian bullseye main
 #deb-src http://mirror2.hs-esslingen.de/mariadb/repo/10.5/debian bullseye main
-
