@@ -104,6 +104,7 @@ function gitaliases($test)
                 'last' => 'log -5 --pretty=format:\'%C(red)%h%Creset%C(blue)%d %C( green)%an%Creset - %s %C(blue)( %cr)%Creset\' --graph --date=relative',
 
                 // search for a term in full history
+                // More hints: https://www.w3docs.com/snippets/git/how-to-find-a-deleted-file-in-the-project-commit-history.html
                 'logfind' => '!git llog --all --full-history -- ',
 
                 // playground
@@ -164,13 +165,13 @@ function gitaliases($test)
                 #  (Note : On the contrary, git submodule update will stick
                 #to the last committed SHA1 in the master repo)
                 #
-                'sm-pullrebase' => '! git pull --rebase; git submodule update; git sm-trackbranch ; git submodule foreach \'git pull --rebase\' ',
+                #'sm-pullrebase' => '! git pull --rebase; git submodule update; git sm-trackbranch ; git submodule foreach \'git pull --rebase\' ',
 
                 # git sm-diff will diff the master repo *and* its submodules
                 'sm-diff' => '! git diff && git submodule foreach \'git diff\' ',
 
                 #git sm-push will ask to push also submodules
-                'sm-push' => 'push --recurse-submodules=on-demand',
+                #'sm-push' => 'push --recurse-submodules=on-demand',
 
                 //'sm-stat' => "! git status && git submodule foreach 'git status' "
             ),
