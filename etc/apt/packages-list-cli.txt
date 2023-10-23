@@ -66,6 +66,7 @@ dosfstools                                       install
 dpkg                                             install
 dpkg-dev                                         install
 dvb-apps                                         install
+dvb-tool                                         install
 e2fsprogs                                        install
 ethtool                                          install
 faad                                             install
