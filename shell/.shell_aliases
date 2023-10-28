@@ -1,4 +1,9 @@
 #
+# aliases and shell functions (see below)
+# debian/raspbian includes .bash_aliases per default if exists.
+# so use it to include custom stuff and link shell_aliases to bash aliases or zsh aliases
+#
+#
 # Some example alias instructions
 #
 # Interactive operation... this is always a good option!
@@ -33,3 +38,9 @@ alias konqueror='konqueror --profile filemanagement'
 
 alias ncdu='ncdu -x'
 
+#
+# shell functions now to include
+#
+if [ -f ~/.shell_functions ]; then
+    source ~/.shell_functions;
+fi
