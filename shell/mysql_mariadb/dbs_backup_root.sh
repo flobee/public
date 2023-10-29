@@ -13,9 +13,9 @@
 # As, with given directory (manual backup), will create:
 # eg: "<script> /tmp/somepath" will result in:
 # /tmp/somepath/<database-name>/<sql files of tables and schemas> and you will 
-# be ask for settings.
+# be ask for the db credentials/ settings.
 # or, otherwise location to an individual config including the parameters:
-#   MYSQL_USER, MYSQL_PASS, MYSQL_PORT, MYSQL_HOST, OUTDIR
+#   MYSQL_USER, MYSQL_PASS, MYSQL_PORT, MYSQL_HOST, OUTDIR... see dbs_dummy.cnf
 # to be run as cron job.
 # If you only want to run this script in cron you can alter the shebang to (a)sh
 # or dash
@@ -60,7 +60,8 @@ SQL="${SQL} ('mysql','information_schema','performance_schema', 'phpmyadmin')"
 
 HASH=`date +"%Y%m%d%H%M%S"`;
 DBLISTFILE="/tmp/${HASH}DatabasesToDump.txt"
-mysql ${MYSQL_CONN} -ANe"${SQL}" > "${DBLISTFILE}"
+mysql ${MYSQL_CONN} -ANe"${SQL}" | sort -h > "${DBLISTFILE}"
+# mysql ${MYSQL_CONN} -ANe"${SQL}" > "${DBLISTFILE}"
 
 DBLIST=""
 for DB in `cat ${DBLISTFILE}` ; 
@@ -68,32 +69,35 @@ do
     DBLIST="${DBLIST} ${DB}" ; 
 done
 
-set wait_time = 10 # seconds
-
-echo "Are you sure you meant to run this script?"
-echo "This script does something drastic that you would severely regret if you happened to run this script by mistake!"
-echo ""
-set temp_cnt = ${wait_time}
-# https://www.cyberciti.biz/faq/csh-shell-scripting-loop-example/
+#echo 'wlib' > ${DBLISTFILE};
+#DBLIST=wlib;
+#
+#set wait_time = 10 # seconds
+#
+#echo "Are you sure you meant to run this script?"
+#echo "This script does something drastic that you would severely regret if you happened to run this script by mistake!"
+#echo ""
+#set temp_cnt = ${wait_time}
+## https://www.cyberciti.biz/faq/csh-shell-scripting-loop-example/
 
 
 echo "Backup goes to: '${OUTDIR}/<database-name>/<sql-files>.sql'";
 echo "List of DBs to backup: ${DBLIST}";
 echo
-echo "Job starts in 3 sec... to abort press CTRL + C";
+echo "Job starts in 4 sec... to abort press CTRL + C";
 secs=4;
 while [ $secs -gt 0 ];
 do
     printf "\rJob starts in %.d sec/s " $((secs--));
     sleep 1;
-done
+done;
+echo '';
 
 
-# Depending on you backup strategy you may want improved speed or less backup size.
+# Depending on your backup strategy you may want improved speed or less backup size.
 # For speed play with the number of threads (def: 4) statement-size and rows size,
 # For limited file sizes you may use "--compress" but in limited backup time intervals
-MYSQLDUMP_OPTIONS="--routines --triggers --events --threads 8 --compress --lock-all-tables --rows
-3000000 --statement-size 100000"
+MYSQLDUMP_OPTIONS="--routines --triggers --events --threads ${MYDUMPER_OPT_THREATS:-4} ${MYDUMPER_OPT_COMPRESS:-''} --lock-all-tables --rows ${MYDUMPER_OPT_ROWS:-3000000} --statement-size ${MYDUMPER_OPT_STMTSIZE:-100000} ${MYDUMPER_OPT_ADDITIONAL:-''}"
 # mysqldump ${MYSQL_CONN} ${MYSQLDUMP_OPTIONS} --databases ${DBLIST} --no-data > "${OUTDIR}.schema.sql"
 # mysqldump ${MYSQL_CONN} ${MYSQLDUMP_OPTIONS} --no-create-info --databases ${DBLIST} > "${OUTDIR}.data.sql"
 

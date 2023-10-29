@@ -4,8 +4,11 @@ MYSQL_PASS='adminpass'
 MYSQL_PORT='3306'
 MYSQL_HOST='localhost'
 #MYSQL_SOCK=''
+
+###
+# backup options
 #
-# backup options, weekly
+# Where to store backup files...:
 OUTDIR=/path/to/store/databases/localhost/`date +"%W"`; 
 
 # Option to delete the path "${OUTDIR}/<database name>" (if exists)
@@ -13,10 +16,32 @@ OUTDIR=/path/to/store/databases/localhost/`date +"%W"`;
 # danger if you need this files if the backup fails); Default OFF, "y" for ON
 OPT_DEL_EXISTING='';
 
+###
 # restore options
 #
 # restore databases from this directory
 RST_OPT_DIR=''; #eg: /path/to/get/master/databases
 #
 # Drop each database befor restoring it (true|false), set to true if exists
-RST_OPT_DROP=false
+RST_OPT_DROP=false;
+
+###
+# mydumper dumping options.
+#
+# for more @see `man mydumper`
+#
+# Number of threads (default: 4) Maybe too much on low servers (io, cpu...)
+MYDUMPER_OPT_THREATS=4;
+
+# Number of rows to fetch (may in- or decrease) default: unlimited, here: 3000000
+MYDUMPER_OPT_ROWS=1000000;
+
+# Statement size
+MYDUMPER_OPT_STMTSIZE=100000;
+
+# Enable compression. For limited file sizes you may use "--compress" but in 
+# limited backup time intervals otherwise ''
+MYDUMPER_OPT_COMPRESS='--compress';
+
+# Additional mydumper options (key or key/value pairs) to pipe in (see man mydumper)
+MYDUMPER_OPT_ADDITIONAL='';
