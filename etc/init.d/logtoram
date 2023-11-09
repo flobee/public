@@ -13,6 +13,8 @@
 #                       RAM 2 FS (shutdown / reboot)
 ### END INIT INFO
 
+#crontab (as root):
+# cronic /etc/init.d/logtoram sync
 
 #pi3 req:
 set -o errexit -o nounset -o xtrace
