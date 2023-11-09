@@ -93,7 +93,7 @@ manpages-dev                                     install
 mc                                               install
 mc-data                                          install
 md5deep                                          install
-mlocate                                          install
+locate                                           install
 multitail                                        install
 mutt                                             install
 mysql-common                                     install
