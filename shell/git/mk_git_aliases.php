@@ -5,11 +5,20 @@
 #
 # @autor Florian Blasel
 #
-# shell command to update/init git aliases to global ~/.gitconfig (your user)
-# this will add aliases to gitconfig when using the bash function gitaliases
-# examples:
-#   git config --global alias.visual '!gitk'
-#   git config --global --unset alias.visual
+# Executes shell commands to update/remove or init git aliases to 
+# global ~/.gitconfig (your user).
+# When runnin as root: 
+# - 'system' (system wide (/etc)), 
+# - 'global' (current user (root), 
+# - 'local' (current repo)
+# can be handled.
+# To be used in bash or zsh... to have 'git aliases'
+#
+# Including own helper aliases for daily business.
+#
+# Examples what this script does:
+#   git config --global alias.visual '!gitk' # git visual 
+#   git config --global --unset alias.visual # dropped in 'drop' to unset
 
 function gitaliases($test)
 {
@@ -42,6 +51,7 @@ function gitaliases($test)
                 'logfind' => true,
                 'verbose' => true,
                 'repos' => true,
+                'iDontWantThisAliasAnymore' => true, # to global blacklist the key or to be recreated afterwards
             ),
 
             // removes aliases from the current project .git/config
@@ -51,7 +61,8 @@ function gitaliases($test)
         'add' => array(
             // adds aliases to $(prefix)/etc/gitconfig (probably only root can
             // do this) if you see some here and you are not the first user,
-            // they are already available for you :-)
+            // they may be already available for you
+            // system wide means: limit it to save and known and working commands all over the time
             'system' => array(
                 'co' => 'checkout',
                 'ci' => 'commit',
@@ -97,8 +108,12 @@ function gitaliases($test)
                 // --- showing logs ---
                 'verbose' => "log --graph --stat '--pretty=format:Author of %C(red)%h%Creset was %C(green)%an%Creset, %C(blue)%ar%Creset, message was:\n%s\n%b\n%Creset'",
                 #'l' => 'log --format=\'%C(red)%h%Creset %C(green)%an%Creset - %C(yellow)%s%Creset\' --graph',
-                'll' => 'log --pretty=format:\'%C(red)%h%Creset%C(blue)%d %C(green)%an%Creset - %s %C(blue)(%cr)%Creset\' --graph --date=relative',
-                'llog' => "log --graph --stat '--pretty=format:Author of %Cred%h%Creset was %C(green)%ae%Creset, %C(blue)%ar%Creset, message:\n%C(yellow)%s\n%b\n%Creset'",
+
+                #202311: %cd respects --date setting, now iso strict
+                'll' => 'log --pretty=format:\'%C(red)%h%Creset%C(blue)%d %C(green)%an%Creset - %s %C(blue)(%cd)%Creset\' --graph --date=iso8601-strict',
+
+                #202311: %cd respects --date setting, now iso strict
+                'llog' => "log --graph --stat '--pretty=format:Author of %Cred%h%Creset was %C(green)%ae%Creset, %C(blue)%cd%Creset, message:\n%C(yellow)%s\n%b\n%Creset' --date=iso8601-strict",
 
                 //'last' => "log -5 --graph --stat --pretty=format:'Author of %Cblue%h%Creset was %C(yellow)%an%Creset, %C(blue)%ar%Creset, message was\n%C(yellow)%s\n%b\n%Creset'",
                 'last' => 'log -5 --pretty=format:\'%C(red)%h%Creset%C(blue)%d %C( green)%an%Creset - %s %C(blue)( %cr)%Creset\' --graph --date=relative',
@@ -107,8 +122,8 @@ function gitaliases($test)
                 // More hints: https://www.w3docs.com/snippets/git/how-to-find-a-deleted-file-in-the-project-commit-history.html
                 'logfind' => '!git llog --all --full-history -- ',
 
-                // playground
-                'llogxx' => "log --graph --stat '--pretty=format:Author of %Cred%h%Creset was %C(green)%ae%Creset, %C(blue)%ar%Creset, message:\n%C(yellow)%s\n%b\n%Creset'",
+                // playground, #202311: %cd respects --date setting, now iso lazy
+                'llogxx' => "log --graph --stat '--pretty=format:Author of %Cred%h%Creset was %C(green)%ae%Creset, %C(blue)%cd%Creset, message:\n%C(yellow)%s\n%b\n%Creset' --date=iso",
 
                 #'continue' => '!git add . && git rebase --continue',
                 #'url' => 'config --local --get-regexp remote\\.\\.\\*\\.url',
