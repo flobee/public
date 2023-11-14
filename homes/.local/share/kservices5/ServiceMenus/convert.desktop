@@ -8,16 +8,16 @@ Encoding=UTF-8
 #X-KDE-Submenu=Compress and Resize
 
 [Desktop Action 2mp4comp21batch]
-Name=mpg2mp4.sh 21 -b
+Name=mpg2mp4.sh -c 21 -b
 Icon=black_sum
-Exec=(if [ -f "%f" ]; then ~/scripts/mpg2mp4.sh 28 "%f" -b; fi)
+Exec=(if [ -f "%f" ]; then ~/scripts/mpg2mp4.sh -c 28 -f "%f" -b; fi)
 
 
 [Desktop Action 2mp4comp28batch]
-Name=mpg2mp4.sh 28 -b
+Name=mpg2mp4.sh -c 28 -b
 Icon=black_sum
-Exec=(if [ -f "%f" ]; then ~/scripts/mpg2mp4.sh 28 "%f" -b; fi)
-
+Exec=(if [ -f "%f" ]; then ~/scripts/mpg2mp4.sh -c 28 -f "%f" -b; fi)
+#Exec=(kdialog --title "info" --msgbox "Path:%D\n~/scripts/mpg2mp4.sh -c 28 -f "%f" -b")
 
 [Desktop Action ts2mpg]
 Name=ts2mpg.sh %f (direct)
