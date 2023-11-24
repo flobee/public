@@ -85,6 +85,7 @@ function gitaliases($test)
                 #'fall' => 'fetch --all',
                 #'mr' => 'merge',
                 'df' => 'diff',
+                'dfs '=> 'diff --staged',
                 'unstage' => 'reset HEAD',
 
                 'undo-notpushed' => '!git reset HEAD~1 --soft',
