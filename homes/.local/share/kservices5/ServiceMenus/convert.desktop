@@ -10,7 +10,7 @@ Encoding=UTF-8
 [Desktop Action 2mp4comp21batch]
 Name=mpg2mp4.sh -c 21 -b
 Icon=black_sum
-Exec=(if [ -f "%f" ]; then ~/scripts/mpg2mp4.sh -c 28 -f "%f" -b; fi)
+Exec=(if [ -f "%f" ]; then ~/scripts/mpg2mp4.sh -c 21 -f "%f" -b; fi)
 
 [Desktop Action 2mp4comp28batch]
 Name=mpg2mp4.sh -c 28 -b
