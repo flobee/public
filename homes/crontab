@@ -1,0 +1,5 @@
+
+# cleanup thumbs. last check: dont work with dconf-editor: 512MB vs. 10GB in real )-:
+find ~/.cache/thumbnails/ -type f -mtime +365  -exec rm {} \;
+
+
