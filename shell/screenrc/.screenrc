@@ -125,6 +125,9 @@ termcapinfo xterm 'is=\E[r\E[m\E[2J\E[H\E[?7h\E[?1;4;6l'
 #chdir /home/USER/some/path
 #screen -t tbx 2 zsh
 #
+#chdir /var/www/html/owncloud-current
+#screen -t owncloud 3 zsh
+#
 # screen -t monkey ssh monkey
 #screen -t prozesse 11 top
 screen -t presseportal-log 7 tail -f /home/flobee/servers/master/flobee/mycron/logs/presseportal.cli.cfg.php.log
