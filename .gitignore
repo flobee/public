@@ -4,3 +4,4 @@
 vdr_updowntime.php.cfg.php
 shell/git/fix-author.cfg
 shell/screenrc/.screenrc.m*
+shell/2FA/2fa-config.sh
