@@ -1,0 +1,10 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Apache NetBeans IDE 20.0
+Comment=The Smarter Way to Code
+Exec=/bin/sh "PATH_TO/netbeans-20/bin/netbeans"
+Icon=PATH_TO/netbeans-20/nb/netbeans.png
+Categories=Application;Development;Java;IDE
+Version=1.0
+Type=Application
+Terminal=0
