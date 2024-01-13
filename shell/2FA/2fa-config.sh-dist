@@ -3,15 +3,15 @@
 # copy this file to 2fa-config.sh and add your settings
 
 # Paths to programs...
-BIN_GPG2="/usr/bin/gpg2"
-BIN_OATHTOOL="/usr/bin/oathtool"
+BIN_GPG2="/usr/bin/gpg2";
+BIN_OATHTOOL="/usr/bin/oathtool";
 
 ## run: 'gpg --list-secret-keys --keyid-format LONG' to get 'uid' and 'kid' ##
 # GnuPG user id (uid) (something like this within the cert...):
-UID_KEY="YOU <YOU@domain.tld>"
+UID_KEY="YOU <YOU@domain.tld>";
 
 # GnuPG key id (kid); E.g: rsa4096/123ABC567.....
-KID_KEY=""
+KID_KEY="";
 
-# services directory E.g: $HOME/.2fa/ or $HOME/.ssh/gnupg/
-SERVICE_DIR_2FA=""
+# services directory E.g: $HOME/.2fa/ or $HOME/.gnupg/2FA/ or /media/USB-Stick/MY-PRIVATE-KEYS
+SERVICE_DIR_2FA="";

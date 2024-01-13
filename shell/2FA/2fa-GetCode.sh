@@ -1,17 +1,20 @@
 #!/bin/bash
+# ---------------------------------------------------------------------
+# Purpose: Encrypt the totp secret stored in $dir/$service/.key file
+# Author: Vivek Gite {https://www.cyberciti.biz/} under GPL v 2.x or above
 #
 # https://www.cyberciti.biz/faq/use-oathtool-linux-command-line-for-2-step-verification-2fa/
 #
-# Purpose: Display 2FA code on screen
-# Author: Vivek Gite {https://www.cyberciti.biz/} under GPL v 2.x or above
-# --------------------------------------------------------------------------
-
-
+# Fork and extended by flobee //github.com/flobee/public/shell/2FA/
+#
 # ---------------------------------------------------------------------
 DIR_OF_FILE="$(dirname "$(readlink -f "$0")")";
+if [ ! -f "${DIR_OF_FILE}/2fa-config.sh" ]; then
+    echo 'Please configure "2fa-config.sh" first';
+    exit 1;
+fi
 . "${DIR_OF_FILE}"/2fa-config.sh;
 # ---------------------------------------------------------------------
-
 
 # Build CLI arg
 s=$(basename "$1")
@@ -28,12 +31,12 @@ totp=$($BIN_GPG2 --quiet -u "${KID_KEY}" -r "${UID_KEY}" --decrypt "$kg")
 #echo "$totp";
 
 # Generate 2FA totp code and display on screen
-echo "Your code for '$s' is ..."
+echo -n "# Your code for '$s' "
 code=$($BIN_OATHTOOL -b --totp "$totp")
 ## Copy to clipboard too ##
 ## if xclip command found  on Linux system ##
 type -a xclip &>/dev/null
-[ $? -eq 0 ] && { echo -n "$code" | xclip -sel clip; echo "*** Code copied to clipboard too ***"; }
+[ $? -eq 0 ] && { echo -n "$code" | xclip -sel clip; echo "**Code copied to clipboard**"; }
 echo "$code"
 
 # Make sure we don't have .key file in plain text format ever #
