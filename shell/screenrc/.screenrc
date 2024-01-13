@@ -121,6 +121,7 @@ termcapinfo xterm 'is=\E[r\E[m\E[2J\E[H\E[?7h\E[?1;4;6l'
 # ------------------------------------------------------------------------------
 
 # Example of automatically running some programs in windows on screen startup.
+#screen -t monkey ssh monkey
 #
 #chdir /home/USER/some/path
 #screen -t tbx 2 zsh
@@ -129,11 +130,20 @@ termcapinfo xterm 'is=\E[r\E[m\E[2J\E[H\E[?7h\E[?1;4;6l'
 #screen -t owncloud 3 zsh
 #
 # screen -t monkey ssh monkey
-#screen -t prozesse 11 top
-screen -t presseportal-log 7 tail -f /home/flobee/servers/master/flobee/mycron/logs/presseportal.cli.cfg.php.log
-screen -t feedcache-log 8 tail -f /home/flobee/servers/master/flobee/mycron/logs/feedcache.cli.cfg.php.log
-screen -t syslog 9 tail -f -n300 /var/log/syslog
+#screen -t prozesse 11 htop
+screen -t syslog 9 tail -f -n100 /var/log/syslog
 # screen -t mail 10 mutt
-# this screen we i want to see frist when i start the screen cmd, so this goes to the last line
-screen -t zsh 0 zsh
+#
+# this screen i want to see frist when i start the screen cmd, so this goes to the last line
+#screen -t zsh 0 zsh
+#
+#
+#
+# Now at ~/.screenrc.local, other options to source
+source ~/.screenrc.local
+
+
+
+
+
 

@@ -1,0 +1,27 @@
+# ------------------------------------------------------------------------------
+# ".screenrc.local" for local setups
+# ------------------------------------------------------------------------------
+
+# Example of automatically running some programs in windows on screen startup.
+#screen -t monkey ssh monkey
+#
+#chdir /home/USER/some/path
+#screen -t tbx 2 zsh
+#
+#chdir /var/www/html/owncloud
+#screen -t owncloud 3 zsh
+#
+# screen -t monkey ssh monkey
+#screen -t top 11 htop
+screen -t syslog 9 tail -f -n100 /var/log/syslog
+# screen -t mail 10 mutt
+#
+# this screen i want to see frist when i start the screen cmd, so this goes to the last line
+screen -t zsh 0 zsh
+
+
+
+
+
+
+
