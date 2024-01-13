@@ -33,7 +33,7 @@ code=$($BIN_OATHTOOL -b --totp "$totp")
 ## Copy to clipboard too ##
 ## if xclip command found  on Linux system ##
 type -a xclip &>/dev/null
-[ $? -eq 0 ] && { echo "$code" | xclip -sel clip; echo "*** Code copied to clipboard too ***"; }
+[ $? -eq 0 ] && { echo -n "$code" | xclip -sel clip; echo "*** Code copied to clipboard too ***"; }
 echo "$code"
 
 # Make sure we don't have .key file in plain text format ever #
