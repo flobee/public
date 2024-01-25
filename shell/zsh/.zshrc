@@ -2416,21 +2416,21 @@ check_com new || alias new=modified
 #  $ awk -F ':' '{ print $2" : "$1" "$3 }' \
 #    /usr/local/lib/words/en-de.ISO-8859-1.vok > ~/.translate/de-en.ISO-8859-1.vok
 #f5# Translates a word
-trans() {
-    emulate -L zsh
-    case "$1" in
-        -[dD]*)
-            translate -l de-en $2
-            ;;
-        -[eE]*)
-            translate -l en-de $2
-            ;;
-        *)
-            echo "Usage: $0 { -D | -E }"
-            echo "         -D == German to English"
-            echo "         -E == English to German"
-    esac
-}
+#trans() {
+#    emulate -L zsh
+#    case "$1" in
+#        -[dD]*)
+#            translate -l de-en $2
+#            ;;
+#        -[eE]*)
+#            translate -l en-de $2
+#            ;;
+#        *)
+#            echo "Usage: $0 { -D | -E }"
+#            echo "         -D == German to English"
+#            echo "         -E == English to German"
+#    esac
+#}
 
 # Usage: simple-extract <file>
 # Using option -d deletes the original archive file.
