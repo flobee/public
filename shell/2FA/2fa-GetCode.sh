@@ -8,7 +8,22 @@
 # Fork and extended by flobee //github.com/flobee/public/shell/2FA/
 #
 # ---------------------------------------------------------------------
-DIR_OF_FILE="$(dirname "$(readlink -f "$0")")";
+# DIR_OF_FILE="$(dirname "$0")";
+# echo "dir:"$DIR_OF_FILE;
+# echo '$0' $0;
+if [ -L "$0" ] ; then
+   if [ -e "$0" ] ; then
+      DIR_OF_FILE="$(dirname "$0")";
+   else
+      echo "Broken link to '$0'"
+      exit 1;
+   fi
+elif [ -e "$0" ] ; then
+   DIR_OF_FILE="$(dirname "$(readlink -f "$0")")";
+else
+   echo "Missing link or file to get the config"
+   exit 1;
+fi
 if [ ! -f "${DIR_OF_FILE}/2fa-config.sh" ]; then
     echo 'Please configure "2fa-config.sh" first';
     exit 1;
