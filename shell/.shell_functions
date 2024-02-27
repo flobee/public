@@ -13,7 +13,44 @@ trim() {
     # remove leading whitespace characters
     var="${var#"${var%%[![:space:]]*}"}"
     # remove trailing whitespace characters
-    var="${var%"${var##*[![:space:]]}"}"   
+    var="${var%"${var##*[![:space:]]}"}"
     echo -n "$var"
 }
 
+# trim string
+# @param string $1 Input string to be trimmed
+# function trim() {
+#    echo "$1" | xargs;
+# }
+
+
+# The regular bash eval works by jamming all its arguments into a string then
+# evaluating the string. This function treats its arguments as individual
+# arguments to be passed to the command being run.
+# https://stackoverflow.com/a/39458935
+function eval_command() {
+    "$@";
+}
+
+# confirm command.
+# $1 string Request message
+# returns 0 for 'do (n)otting', 1 for "yes confirm the request"
+function confirmCommand() {
+    local opts="y/N";
+    while true; do
+        read -r -n 1 -p "${1:-Continue?} [$opts] (def:N): " ANSWER
+        case $ANSWER in
+            # '')
+            #     return 0; # 0 = default, do something
+                ;;
+            [nN])
+                echo; return 0; # 0 = default: do nothing
+                ;;
+            [jJyY])
+                echo; return 1; # 1 = do something
+                ;;
+            *)
+                txt_warn "Invalid input. One of $opts. (yYjJ=Yes, nN=No, def=No)";
+        esac
+    done
+}
