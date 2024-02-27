@@ -8,9 +8,6 @@
 # Fork and extended by flobee //github.com/flobee/public/shell/2FA/
 #
 # ---------------------------------------------------------------------
-# DIR_OF_FILE="$(dirname "$0")";
-# echo "dir:"$DIR_OF_FILE;
-# echo '$0' $0;
 if [ -L "$0" ] ; then
    if [ -e "$0" ] ; then
       DIR_OF_FILE="$(dirname "$0")";
