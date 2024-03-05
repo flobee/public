@@ -1,0 +1,25 @@
+server {
+
+    # dont do it if you have other options to pipe stuff.
+
+    listen 80;
+    listen [::]:80;
+
+    server_name gitea.localhost;
+
+    access_log /var/log/nginx/vhost_$host;
+
+    root /var/www;
+
+    # Add index.php to the list if you are using PHP
+    index index.php index.html index.htm index.nginx-debian.html;
+    #autoindex on;
+
+    location / {
+        # try_files $uri $uri/ =404;
+        #proxy_pass http://debnode64:3001;
+        proxy_pass http://debnode64.fritz.box:3001;
+    }
+
+}
+

@@ -1,0 +1,32 @@
+server {
+	listen 80;
+	listen [::]:80;
+
+    server_name php70.localhost;
+
+    root /home/flobee/workspace;
+
+    access_log /var/log/nginx/vhost_$host;
+
+    index  index.php index.html index.htm;
+
+	location / {
+        # dir listing:
+        #autoindex on;
+        #autoindex_exact_size off;
+        #autoindex_localtime on;
+
+		try_files $uri $uri/ =404;
+	}
+	
+	# pass PHP scripts to FastCGI server
+	location ~ \.php$ {
+		include snippets/fastcgi-php.conf;
+	
+		# With php-fpm (or other unix sockets):
+		fastcgi_pass unix:/var/run/php/php7.0-fpm.sock;
+		# With php-cgi (or other tcp sockets):
+		# fastcgi_pass 127.0.0.1:9000;
+	}
+}
+
