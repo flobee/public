@@ -3,7 +3,7 @@
 
 
 /**
- * Git alias generator
+ * Git alias generator - php version
  *
  * # @autor Florian Blasel
  *
@@ -11,7 +11,7 @@
  * global ~/.gitconfig (your user)
  * When runnin as root:
  *  - 'system' (system wide (/etc)),
- *  - 'global' (current user/ your user (you)),
+ *  - 'global' (current user/ your user (you|root)),
  *  - 'local' (current repo)
  * can be handled.
  * To be used in bash or zsh... to have 'git aliases'
@@ -150,6 +150,8 @@ function gitaliases( $test, $configFile = false )
                 'visual'  => '!gitk',
 
                 'tags' => '!git tag',
+                # latest tag (if tags available and maintained)
+                'latestTag' => '!git describe --tags `git rev-list --tags --max-count=1`',
 
                 // https://stackoverflow.com/questions/11981716/how-to-quickly-find-all-git-repos-under-a-directory
 //                'repos' => "! \"find ~/workspace -type d -execdir test -d {}/.git \\\; -prune -print\"",
@@ -190,7 +192,7 @@ function gitaliases( $test, $configFile = false )
                 #'sm-pullrebase' => '! git pull --rebase; git submodule update; git sm-trackbranch ; git submodule foreach \'git pull --rebase\' ',
 
                 # git sm-diff will diff the master repo *and* its submodules
-                'sm-diff' => '! git diff && git submodule foreach \'git diff\' ',
+                'sm-diff' => '! git diff && git submodule foreach \'git diff\'',
 
                 #git sm-push will ask to push also submodules
                 #'sm-push' => 'push --recurse-submodules=on-demand',
@@ -206,9 +208,12 @@ function gitaliases( $test, $configFile = false )
          ),
     );
 
+    $json = json_encode( $aliases, JSON_PRETTY_PRINT );
+    file_put_contents( './mk_git_aliases.json.tmp', $json );
+
     foreach ( $aliases as $job => $list ) {
 
-        foreach($list as  $way => $commands) {
+        foreach( $list as  $way => $commands ) {
 
             if ( $way == 'system' && $_SERVER['USER'] != 'root' ) {
                 // echo 'skip, not root' . PHP_EOL;
@@ -216,9 +221,9 @@ function gitaliases( $test, $configFile = false )
             }
 
             if ( $way == 'local' ) {
-                $way = '';
+                $way = '--local';
             } else {
-                $way = ' --' . $way;
+                $way = '--' . $way;
             }
 
             switch ( $job )
@@ -232,14 +237,14 @@ function gitaliases( $test, $configFile = false )
                 case 'drop':
                     foreach ( $commands as $alias => $cmd ) {
                        if ( $cmd === true ) {
-                           $execlist[] = 'git config' . $way . ' --unset alias.' . $alias;
+                           $execlist[] = 'git config ' . $way . ' --unset alias.' . $alias;
                        }
                    }
                    break;
 
                 case 'add':
                     foreach ( $commands as $alias => $cmd ) {
-                        $execlist[] = 'git config' . $way . ' alias.' . $alias . ' "' . $cmd .'"';
+                        $execlist[] = 'git config ' . $way . ' alias.' . $alias . ' "' . $cmd .'"';
                     }
                 break;
             }
