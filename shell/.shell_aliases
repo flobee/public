@@ -32,7 +32,7 @@ alias ll='ls -al --color=auto'
 #alias la='ls -A'
 alias l='ls --color=auto'
 
-alias grep='grep -n --color --exclude-dir=".svn" --exclude-dir=".git" --exclude-dir="CodeCoverage"'
+alias grep='grep -n --color --exclude-dir=".svn" --exclude-dir=".git" --exclude-dir="CodeCoverage" --exclude-dir="node_modules"'
 
 alias konqueror='konqueror --profile filemanagement'
 

@@ -42,7 +42,7 @@ function confirmCommand() {
         case $ANSWER in
             # '')
             #     return 0; # 0 = default, do something
-                ;;
+            #     ;;
             [nN])
                 echo; return 0; # 0 = default: do nothing
                 ;;
@@ -54,3 +54,18 @@ function confirmCommand() {
         esac
     done
 }
+
+# mysql() {
+#    ATTRS=" --compress --auto-rehash --line-numbers --column-names --pager=less --show-warnings -T"
+#
+#    if [ -e /m/common/scripts/mysql ]; then
+#		MYSQL="/m/common/scripts/mysql"
+#    else
+#		if [ -x /usr/bin/mysql ]; then
+#			MYSQL="/usr/bin/mysql"
+#		fi
+#    fi
+#
+#    #$MYSQL $@ "$ATTRS"
+#    $MYSQL $@
+# }

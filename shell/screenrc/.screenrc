@@ -6,7 +6,7 @@
 # copy to $HOME/.screenrc or symlink this file to it.
 #
 # edit this file with "backtick" to enable some plugins, check the plugins files
-# not all are in here. 
+# not all are in here.
 # chmod set x flag to plugins probably for all/world, if world, use absolute links
 # enjoy!
 
@@ -84,7 +84,7 @@ backtick 6 30 30 $HOME/workspace/public/shell/screenrc/screenrc.plugin.disk-free
 
 
 #caption always "%{= mw}%c:%s | %Y%m%d | %=  %{= mw}%-w%{= wm}%50>%n-%t%{-}%+w%{= mw}%-38=%1` | %l"
-hardstatus alwayslastline 
+hardstatus alwayslastline
 # demo: hardstatus string '%{= kG}%-Lw%{= kW}%50> %n*%f %t%{= kG}%+Lw%< %{= kG}%-=%D %m/%d/%y | %C:%s %A | %1`%{-} %2`%{-} '
 #hardstatus alwayslastline "%{Gb}%c:%s | %d %M | %-Lw%{= BG} %50>%n%f+ %t %{-}%+Lw  %= |Host: %H%? |LAvg: %l%?"
 # hardstatus string '%{Gb}%c:%s | %d %M | %-Lw%{= BG} %50>%n%f+ %t %{-}%+Lw  %= |Host:%H%? |LAvg:%l%? |Cpu:%3`%{-}?'
@@ -130,8 +130,8 @@ termcapinfo xterm 'is=\E[r\E[m\E[2J\E[H\E[?7h\E[?1;4;6l'
 #screen -t owncloud 3 zsh
 #
 # screen -t monkey ssh monkey
-#screen -t prozesse 11 htop
-screen -t syslog 9 tail -f -n100 /var/log/syslog
+#screen -t process 11 htop
+#screen -t syslog 9 tail -f -n100 /var/log/syslog
 # screen -t mail 10 mutt
 #
 # this screen i want to see frist when i start the screen cmd, so this goes to the last line
