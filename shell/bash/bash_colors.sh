@@ -94,6 +94,7 @@ $(ct_purple "ct_purple")
 $(ct_cyan "ct_cyan")
 $(ct_grey "ct_grey")
 $(ct_white "ct_white")
+";
 
 
 function ctb_black() { echo -e "\033[90m$1\033[0m"; }
@@ -105,7 +106,7 @@ function ctb_purple(){ echo -e "\033[95m$1\033[0m"; }
 function ctb_cyan()  { echo -e "\033[96m$1\033[0m"; }
 function ctb_grey()  { echo -e "\033[97m$1\033[0m"; }
 function ctb_white() { echo -e "\033[98m$1\033[0m"; }
-ctb_:
+echo "ctb_:
 $(ctb_black "ctb_black")
 $(ctb_red "ctb_red")
 $(ctb_green "ctb_green")
@@ -116,7 +117,19 @@ $(ctb_cyan "ctb_cyan")
 $(ctb_grey "ctb_grey")
 $(ctb_white "ctb_white")
 ";
-or: echo -e "my text $(ct_red "red mark") to know..."
+#or: echo -e "my text $(ct_red "red mark") to know..."
+
+
+# # random color
+# declare -a coloridx=("ct_red" "ct_green" "ct_yellow" "ct_grey" "ct_white" "ctb_red" "ctb_green" "ctb_yellow" "ctb_blue" "ctb_purple" "ctb_cyan" "ctb_black");
+# idx=$(( $RANDOM % 12 ))
+# # idx=((shuf -i 1-16 -n 1));
+# echo "${#coloridx[@]} $idx ${coloridx[@]}";
+# VAR=$(eval "${coloridx[idx]} ${coloridx[idx]}");
+# echo "$VAR";
+
+
+
 
 ### some symbols:
 # https://www.w3schools.com/charsets/ref_utf_symbols.asp
