@@ -96,16 +96,15 @@ function gitaliases( $test, $configFile = false )
 
                 'undo-notpushed' => '!git reset HEAD~1 --soft',
 
-                /* git alias : list all aliases
-                 * useful in order to learn git syntax */
+                /* git alias : show/list all aliases */
                 'alias' => '!git config --list | grep alias | cut -c 7-',
                 // push and pull all
-                'pa' => '!git push --all && git pull --all',
-                'aa' => '!git add -A',
+                //'pa' => '!git push --all && git pull --all',
                 #'pl' => 'pull',
                 'aa' => '!git add --update',
                 'pl' => 'pull -v',
                 'ps' => 'push',
+                //'stashall' => 'stash -u',
                 #'all' => '!git add . && git commit',
 
                 'ls' => 'stash list',
