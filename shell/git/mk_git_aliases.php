@@ -28,14 +28,23 @@
 
 function gitaliases( $test, $configFile = false )
 {
-    // workflow: cleanup -> or drop/ remove -> add aliases
+    // workflow: cleanup (optional) -> drop/remove -> add aliases
     $aliases = array(
+        // Cleanup: If set to true it will remove all configured aliases which
+        // exists in this config.
+        // If an alias is disabled or removed, there is 'no' chance to
+        // disable it, because, with this config, its not available anymore.
+        // Then: Add them to the drop list then.
+        // But: It helps to resort the entrys over the time because new entrys
+        // will stay below the old once. Then we could decide new for the
+        // handling or detect the old once.
+        // So, global it set to true now by default.
         'cleanup' => array(
             // removes all aliases from $(prefix)/etc/gitconfig
             'system' => false,
 
             // removes all aliases from $HOME/.gitconfig
-            'global' => false,
+            'global' => true,
 
             // removes all aliases from the current project .git/config
             'local' => false,
@@ -44,12 +53,13 @@ function gitaliases( $test, $configFile = false )
         'drop' => array(
             // removes aliases from $(prefix)/etc/gitconfig (probably only for
             // root user)
-            'system' => array(
-            ),
+            'system' => array(),
 
             // removes aliases from $HOME/.gitconfig
+            // set to true to delete an alias! AND: For disabled or removed
+            // entries so that they can go! This list may grow over the time.
             'global' => array(
-                'last' => true, // set to true to delete this line!
+                'last' => true,
                 'll' => true,
                 'l' => true,
                 'llog' => true,
@@ -57,7 +67,12 @@ function gitaliases( $test, $configFile = false )
                 'logfind' => true,
                 'verbose' => true,
                 'repos' => true,
-                'iDontWantThisAliasAnymore' => true, # to global blacklist the key or to be recreated afterwards
+                'reposorg' => true,
+                'sm-pullrebase' => true,
+                'sm-push' => true,
+                'sm-trackbranch' => true,
+                'sm-last' => true,
+                'sm-stat' => true,
             ),
 
             // removes aliases from the current project .git/config
@@ -68,7 +83,7 @@ function gitaliases( $test, $configFile = false )
             // adds aliases to $(prefix)/etc/gitconfig (probably only root can
             // do this) if you see some here and you are not the first user,
             // they may be already available for you
-            // system wide means: limit it to save and known and working commands all over the time
+            // system wide means: limit it to be save and to known and working commands all over the time
             'system' => array(
                 'co' => 'checkout',
                 'ci' => 'commit',
@@ -81,6 +96,9 @@ function gitaliases( $test, $configFile = false )
 
             // adds aliases to $HOME/.gitconfig
             'global' => array(
+                /* git alias : show/list all aliases */
+                'alias' => '!git config --list | grep alias | cut -c 7-',
+
                 'co' => 'checkout',
                 'ci' => 'commit',
                 'up' => 'pull -v',
@@ -96,11 +114,8 @@ function gitaliases( $test, $configFile = false )
 
                 'undo-notpushed' => '!git reset HEAD~1 --soft',
 
-                /* git alias : show/list all aliases */
-                'alias' => '!git config --list | grep alias | cut -c 7-',
-                // push and pull all
+                // push and pull all: DANGER
                 //'pa' => '!git push --all && git pull --all',
-                #'pl' => 'pull',
                 'aa' => '!git add --update',
                 'pl' => 'pull -v',
                 'ps' => 'push',
@@ -200,26 +215,25 @@ function gitaliases( $test, $configFile = false )
             ),
 
             //
-            // adds aliases to the current project .git/config
-            'local' => array(
-
-            ),
+            // adds aliases to the current project ./.git/config
+            'local' => array(),
          ),
     );
 
     $json = json_encode( $aliases, JSON_PRETTY_PRINT );
     file_put_contents( './mk_git_aliases.json.tmp', $json );
 
+    $execlist = array();
     foreach ( $aliases as $job => $list ) {
 
         foreach( $list as  $way => $commands ) {
-
-            if ( $way == 'system' && $_SERVER['USER'] != 'root' ) {
+            $wayRaw = $way;
+            if ( $way === 'system' && $_SERVER['USER'] != 'root' ) {
                 // echo 'skip, not root' . PHP_EOL;
                 continue;
             }
 
-            if ( $way == 'local' ) {
+            if ( $way === 'local' ) {
                 $way = '--local';
             } else {
                 $way = '--' . $way;
@@ -228,8 +242,10 @@ function gitaliases( $test, $configFile = false )
             switch ( $job )
             {
                 case 'cleanup':
-                    if ( $commands===true ) {
-                            echo '"cleanup" not implemented yet';
+                    if ( $commands === true ) {
+                        foreach ( $aliases['add'][$wayRaw] as $alias => &$cmd ) {
+                            $execlist[] = 'git config ' . $way . ' --unset alias.' . $alias;
+                        }
                     }
                     break;
 

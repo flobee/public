@@ -1,0 +1,71 @@
+{
+    "cleanup": {
+        "system": false,
+        "global": true,
+        "local": false
+    },
+    "drop": {
+        "system": [],
+        "global": {
+            "last": true,
+            "ll": true,
+            "l": true,
+            "llog": true,
+            "llogxx": true,
+            "logfind": true,
+            "verbose": true,
+            "repos": true,
+            "reposorg": true,
+            "sm-pullrebase": true,
+            "sm-push": true,
+            "sm-trackbranch": true,
+            "sm-last": true,
+            "sm-stat": true
+        },
+        "local": []
+    },
+    "add": {
+        "system": {
+            "co": "checkout",
+            "ci": "commit",
+            "st": "status -sb",
+            "stat": "status",
+            "br": "branch",
+            "alias": "!git config -l | grep alias | cut -c 7-",
+            "df": "diff"
+        },
+        "global": {
+            "alias": "!git config --list | grep alias | cut -c 7-",
+            "co": "checkout",
+            "ci": "commit",
+            "up": "pull -v",
+            "st": "status -sb",
+            "stat": "status",
+            "br": "branch",
+            "df": "diff",
+            "dfs ": "diff --staged",
+            "unstage": "reset HEAD",
+            "undo-notpushed": "!git reset HEAD~1 --soft",
+            "aa": "!git add --update",
+            "pl": "pull -v",
+            "ps": "push",
+            "ls": "stash list",
+            "verbose": "log --graph --stat '--pretty=format:Author of %C(red)%h%Creset was %C(green)%an%Creset, %C(auto,yellow)%ar%Creset, message was:\n%s\n%b\n%Creset'",
+            "ll": "log --pretty=format:'%C(red)%h%Creset%C(blue)%d %C(green)%an%Creset - %s %C(yellow)(%cd)%Creset' --graph --date=iso8601-strict",
+            "llog": "log --graph --stat '--pretty=format:Author of %Cred%h%Creset was %C(green)%ae%Creset, %C(yellow)%cd%Creset, message:\n%C(auto)%s\n%b\n%Creset' --date=iso8601-strict",
+            "last": "log -5 --pretty=format:'%C(red)%h%Creset%C(auto)%d %C( green)%an%Creset - %s %C(yellow)( %cr)%Creset' --graph --date=relative",
+            "logfind": "!git llog --all --full-history -- ",
+            "llogxx": "log --graph --stat '--pretty=format:Author of %Cred%h%Creset was %C(green)%ae%Creset, %C(yellow)%cd%Creset, message:\n%C(auto)%s\n%b\n%Creset' --date=iso",
+            "amend": "commit --amend",
+            "drymerge": "!git merge --no-commit --squash ",
+            "svnupdate": "!git svn fetch && git svn rebase",
+            "svncommit": "!git svn dcommit",
+            "discard": "!git checkout -- ",
+            "visual": "!gitk",
+            "tags": "!git tag",
+            "latestTag": "!git describe --tags `git rev-list --tags --max-count=1`",
+            "sm-diff": "! git diff && git submodule foreach 'git diff'"
+        },
+        "local": []
+    }
+}
