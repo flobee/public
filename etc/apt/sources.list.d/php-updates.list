@@ -11,4 +11,5 @@
 #deb https://packages.sury.org/php/ buster main
 #deb https://packages.sury.org/php/ bullseye main
 #deb https://packages.sury.org/php/ bookworm main
+#deb [signed-by=/usr/share/keyrings/php-updates.gpg] https://packages.sury.org/php/ focal main # ubuntu way
 deb [signed-by=/usr/share/keyrings/php-updates.gpg] https://packages.sury.org/php/ bookworm main
