@@ -147,3 +147,5 @@ echo -e '
    ☒ = \u2612 fail
    ☐ = \u2610 to do
 ';
+# 9940	26D4	NO ENTRY
+function mark_abort() { echo "⛔️"; }
