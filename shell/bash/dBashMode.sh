@@ -131,6 +131,7 @@ function ctb_white() { echo -e "\033[98m$1\033[0m"; }
 # color helpers: marker/icons
 function mark_ok()   { echo -e "$(ctb_green "\xE2\x9C\x94") "; }
 function mark_fail() { echo -e "$(ctb_red "\xE2\x9C\x96") "; }
+function mark_abort() { echo "⛔️"; }
 
 # color helpers: text
 function txt_ok()   { echo -e "$(ct_green "$1")"; }
