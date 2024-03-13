@@ -1,15 +1,13 @@
 #!/bin/bash
 
 #DIR_OF_FILE="$(dirname "$(readlink -f "$0")")";
-SCRIPT_FILENAME=$(basename "$0");
+SCRIPT_FILENAME=$(basename "$0")
 
 if [ -z "$BASH" ]; then
-   echo "Please run this script '$0' with bash";
-   echo "Call it like './${SCRIPT_FILENAME}' or 'bash ${SCRIPT_FILENAME}";
-   exit 1;
+    echo "Please run this script '$0' with bash"
+    echo "Call it like './${SCRIPT_FILENAME}' or 'bash ${SCRIPT_FILENAME}"
+    exit 1
 fi
-
-
 
 ###
 # bash assoc array
@@ -53,14 +51,10 @@ fi
 # then
 #   echo "True"
 
-
-
 # Clear Assoc key       unset ACTIONLIST["key1"]
 # or reinit to clear:   declare -A ACTIONLIST
 # Delete Assoc Array:   unset ACTIONLIST
 #
-
-
 
 # --- assoc array
 # declare -A ACTIONLIST
@@ -112,8 +106,6 @@ fi
 #     printf '%s \t\t\t %s\n' "$key" "${PRG_GLOBALS[$key]}"
 # done
 
-
-
 # --- idx array
 # declare -a ACTIONLIST_KEY
 # ACTIONLIST_KEY[1]="menu 01"
@@ -126,12 +118,8 @@ fi
 # printf 'size idx values * -> %s\n' "'${#ACTIONLIST_KEY[*]}'"
 # echo -e "\n";
 
-
-
-
 #Setting the desired value into the variable
 # PS3="Choose an action: ";
-
 
 # ex 1
 # PS3="Choose an action: ";
@@ -160,7 +148,6 @@ fi
 #     esac
 # done
 
-
 # ex 2
 # PS3="Choose an action: ";
 # menu=(
@@ -188,4 +175,3 @@ fi
 #          *) echo "Ooops - Option '$REPLY' not implemented, exit"; break;;
 #       esac
 #    done
-
