@@ -381,20 +381,12 @@ function do_noop() {
 
 
 function do_exit() {
-    local b="";
-    b=$(cat <<'EOTXT'
-        _\|/_
-        (o o)
-+----oOO-{_}-OOo----+
-|  Have a good day  |
-
-EOTXT
-);
-   echo "$b";
+   echo "$BANNER_OUTRO";
    echo
 
    exit;
 }
+
 
 ### End General functions }}} ##################################################
 
@@ -566,6 +558,138 @@ BANNER_INTRO
 );
 
 BANNER_INTRO="${BANNER_INTRO_PRE/VERSION_STRING/${VERSION_STRING}}";
+
+# Umpf TL:DR: 1 - 26 DEC!
+BANNER_OUTRO_PRE_DEC=$(
+    cat <<'BANNER_OUTRO_DEC'
+
+                     .-"``"-.
+                    /______; \
+                   {_______}\|
+                   (/ a a \)(_)
+                   (.-.).-.)
+      _______ooo__(    ^    )____________
+     /             '-.___.-'             \
+    |  Have a wonderful Christmas season  |
+    |           and a good day            |
+     \___________________________________/
+                   |_  |  _|
+                   \___|___/
+                   {___|___}
+                    |_ | _|
+                    /-'Y'-\
+                   (__/ \__)
+
+BANNER_OUTRO_DEC
+);
+
+# North earth : ~21 Mar - ~20Jun
+BANNER_OUTRO_PRE_SPR=$(
+    cat <<'BANNER_OUTRO_SPR'
+
+          ,
+      /\^/`\
+     | \/   |         SPRING IS IN THE AIR!
+     \ \    /                                          _ _
+      '\\//'                                         _{ ' }_
+        ||                DON'T PANIC               { `.!.` }
+        ||  ,                                         {_,_}
+    |\  ||  |\                                          |
+    | | ||  | |         Have a good day               (\|  /)
+    | | || / /                                         \| //
+     \ \||/ / \\   `   /       ´      `   \\   o //     |//
+      `\\//`   \\   \./    \\ /    ///     \\ o //   \\ |/ /
+     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+BANNER_OUTRO_SPR
+);
+
+#  ~21 Juni | Jul | Aug | ~ 20Sep
+BANNER_OUTRO_PRE_SUM=$(
+    cat <<'BANNER_OUTRO_SUM'
+      SUMMER TIME             .
+                         .    |    .
+                          \   |   /
+                      '.   \  '  /   .'
+                        '. .'```'. .'
+    <>.............:::::::`.......`:::::::................<>
+    <>:                                see you the beach :<>
+    <>:                              and have a good day :<>
+    <><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+
+BANNER_OUTRO_SUM
+);
+
+# Bug to be shown at 24.12 and 31.12 - 1.1
+BANNER_OUTRO_PRE_BUG=$(
+    cat <<'BANNER_OUTRO_BUG'
+                            _ ._  _ , _ ._
+                          (_ ' ( `  )_  .__)
+                        ( (  (    )   `)  ) _)
+                       (__ (_   (_ . _) _) ,__)
+                           `~~`\ ' . /`~~`
+                           ,::: ;   ; :::,
+                          ':::::::::::::::'
+     _________________c42______/_ __ \______________________
+    |                                                       |
+    |                 BAD, BAD, BUG HERE                    |
+    |_______________________________________________________|
+
+BANNER_OUTRO_BUG
+);
+
+
+BANNER_OUTRO_PRE_DEF=$(
+    cat <<'EOTXT'
+         _\|/_
+         (o o)
+ +--- oOO-{_}-OOo----+
+ |  Have a good day  |
+ / ------------------ \
+
+EOTXT
+);
+
+function getBannerOutro() {
+    local banner="$BANNER_OUTRO_PRE_DEF";
+    case $(date +%m-%d) in
+        # north hemisphere lazy strict and nearby
+        #
+        # BANNER_OUTRO_PRE_SPR # spring    # North earth : ~21 Mar - ~20Jun
+        # BANNER_OUTRO_PRE_SUM # summer    # ~21 Juni | Jul | Aug | ~ 20Sep
+        # BANNER_OUTRO_PRE_DEC # xmas time # Upf TL;DR: 1 - 26 DEC!
+        # BANNER_OUTRO_PRE_BUG # winter    # Bug to be shown at 24.12 and 31.12 - 1.1
+
+        03-2[1-9] | 03-3* | 04-[0123]* | 05-[0123]* | 06-[01]* | 06-20)
+            banner="$BANNER_OUTRO_PRE_SPR";
+            ;;
+
+        06-2[1-9] | 06-3* | 07-[0123]* | 08-[0123]* | 09-[01]* | 09-20)
+            banner="$BANNER_OUTRO_PRE_SUM";
+            ;;
+
+        # 09-2[2-9] | 09-3* | 1[012]-[01]* | 12-2[012])
+        #     echo "autumn"
+        #     ;;
+
+        12-2[4-6] | 01-01 | 12-31)
+            banner="$BANNER_OUTRO_PRE_BUG";
+            ;;
+
+        12-0[1-9] | 12-1[0-9] | 12-2[0-6]*)
+            banner="$BANNER_OUTRO_PRE_DEC";
+            ;;
+
+        # 12-2[1-9] | 12-3* | 01-[0123]* | 02-[0123]* | 03-[1*|20)
+        #     banner="wintertime";
+        #     ;;
+    esac
+
+    echo "$banner";
+}
+
+BANNER_OUTRO="$(getBannerOutro)";
+
 
 ### End promotion }}} ##########################################################
 
