@@ -106,11 +106,11 @@ function date_events() {
         # xmas time # Upf TL;DR: 1 - 26 DEC!
         # winter    # special at 24.12 and 31.12 - 1.1
 
-        03-2[1-9] | 03-3* | 04-[123]* | 05-[123]* | 06-[01]* | 06-20)
+        03-2[1-9] | 03-3* | 04-[0123]* | 05-[0123]* | 06-[01]* | 06-20)
             banner="springtime";
             ;;
 
-        06-2[1-9] | 06-3* | 07-[123]* | 08-[123]* | 09-[01]* | 09-20)
+        06-2[1-9] | 06-3* | 07-[0123]* | 08-[0123]* | 09-[01]* | 09-20)
             banner="summertime";
             ;;
 
@@ -145,6 +145,7 @@ date_events "03-20" "othertime";
 date_events "03-21" "springtime";
 date_events "03-31" "springtime";
 date_events "04-21" "springtime";
+date_events "05-01" "springtime";
 date_events "05-21" "springtime";
 date_events "06-01" "springtime";
 date_events "06-10" "springtime";
