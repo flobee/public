@@ -129,10 +129,13 @@ $(ctb_white "ctb_white")
 # https://www.w3schools.com/charsets/ref_utf_symbols.asp
 #
 # big fail and red: \xE2\x9D\x8C, posix/utf8:
+
+function mark_abort() { echo "⛔️"; }
 echo -e "
    \u2714 =HEAVY CHECK MARK;
    \u2713 =CHECK MARK;
-   \u274c = cross mark"
+   \u274c = cross mark
+   $(mark_abort) abort"
 # hex codes for utf8 presentation
 # 2715 MULTIPLICATION X
 
@@ -142,4 +145,4 @@ echo -e '
    ☐ = \u2610 to do
 '
 # 9940	26D4	NO ENTRY
-function mark_abort() { echo "⛔️"; }
+
