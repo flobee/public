@@ -29,8 +29,8 @@
 
 const FS = require( 'node:fs' );
 const JSON5 = require( 'json5' );
-const OS = require("node:os");
-const PROCESS = require('node:process');
+const OS = require( "node:os" );
+const PROCESS = require( 'node:process' );
 
 function gitaliases( test )
 {
@@ -41,64 +41,66 @@ function gitaliases( test )
     const execlist = [];
 
     Object.entries( jsonstring ).forEach( aliasConfig => {
-        const [ job, list ] = aliasConfig;
+        const [job, list] = aliasConfig;
 
         Object.entries( jsonstring[ job ] ).forEach( wayList => {
-            let [ way, commands ] = wayList;
+            let [way, commands] = wayList;
             let wayRaw = way;
 
-            if ( way == 'system' && user != 'root' ) {
+            if ( way === 'system' && user !== 'root' ) {
                 // console.log( 'skip system settings: you are not root for this task' );
                 return;
             }
 
-            if ( way == 'local' ) {
+            if ( way === 'local' ) {
                 way = '--local';
             } else {
                 way = '--' + way;
             }
 
-            switch ( job ) {
+            switch ( job )
+            {
                 case 'cleanup':
                     if ( commands === true ) {
                         // console.log(  jsonstring[ 'add' ][wayRaw] );
-                        Object.entries( jsonstring[ 'add' ][wayRaw] ).forEach( aliasList => {
-                            let [ alias, cmd ] = aliasList;
-                            execlist.push( `git config ${way} --unset alias.${alias}`);
-                        });
+                        Object.entries( jsonstring[ 'add' ][ wayRaw ] ).forEach( aliasList => {
+                            let [alias, cmd] = aliasList;
+                            execlist.push( `git config ${way} --unset alias.${alias}` );
+                        } );
                     }
                     break;
 
                 case 'drop':
                     Object.entries( commands ).forEach( aliasList => {
-                        let [ alias, cmd ] = aliasList;
+                        let [alias, cmd] = aliasList;
                         if ( cmd === true ) {
-                            execlist.push( `git config ${way} --unset alias.${alias}`);
+                            execlist.push( `git config ${way} --unset alias.${alias}` );
                         }
-                    });
+                    } );
                     break;
 
                 case 'add':
                     Object.entries( commands ).forEach( aliasList => {
-                        let [ alias, cmd ] = aliasList
-                        execlist.push( `git config ${way} alias.${alias} "${cmd}"`);
-                    });
-                break;
+                        let [alias, cmd] = aliasList;
+                        execlist.push( `git config ${way} alias.${alias} "${cmd}"` );
+                    } );
+                    break;
 
                 default:
-                    console.log(job, ' not implemented' );
+                    console.log( job, ' not implemented' );
             }
         } );
     } );
 
-    const { exec } = require("child_process");
-    const execSync = require('child_process').execSync;
+    const { exec } = require( "child_process" );
+    const execSync = require( 'child_process' ).execSync;
     let code = null;
     Object.values( execlist ).forEach( cmdline => {
         if ( test !== true ) {
             try {
                 execSync( cmdline );
-            } catch ( err ) {
+            }
+            catch ( err ) {
                 if ( err.status > 5 ) {
                     console.log( err );
                 }
@@ -106,7 +108,7 @@ function gitaliases( test )
         } else {
             console.log( cmdline );
         }
-    });
+    } );
 }
 
 var test = true;
