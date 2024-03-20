@@ -41,7 +41,7 @@
 # solutions for development and bring up your enviroment.
 #
 # @autor Florian Blasel
-# @version 2.5.0
+# @version 2.5.6
 # @since 2024-01
 #
 #####
@@ -90,7 +90,7 @@
 DEBUG=0;
 # Using Semver but for visual reasons: no two chars lenght of major, minor,
 # bugfix version: Just N.N.N, where N means only 1 digit!
-VERSION='2.5.5';
+VERSION='2.5.6';
 VERSION_STRING="DIPA.sh - Mode Version ${VERSION}";
 
 
@@ -211,7 +211,6 @@ function eval_command() {
 
 # @param string $1 Command to be checked
 function checkCommandAvailable() {
-
     if ! command -v "$1" &> /dev/null; then
         txt_warn "Command '$1' not available.";
 
@@ -790,7 +789,7 @@ function do_dockerServiceStart() {
     if ! do_dockerServiceCheckIsUp; then
         sudo service docker start;
         if ! checkExitCode "$?" "Service failure"; then
-            txt_warn "$(mark_fail) Start failt";
+            txt_warn "$(mark_fail) Service docker start failt";
 
             return 1;
         fi
@@ -802,15 +801,19 @@ function do_dockerServiceStart() {
 
 
 function do_dockerServiceStop() {
-    if sudo service docker stop; then
-        echo "$(mark_ok) Stopped";
+    if confirmCommand "Stop docker system service? sudo required..."; then
+        if sudo service docker stop; then
+            echo "$(mark_ok) Stopped";
 
-        return 0;
-    else
-        txt_warn "$(mark_fail) Stop failt";
+            return 0;
+        else
+            txt_warn "$(mark_fail) Stop failt";
 
-        return 1;
+            return 1;
+        fi
     fi
+
+    return 0;
 }
 
 
@@ -1776,6 +1779,7 @@ BANNER_INTRO="${BANNER_INTRO_PRE/VERSION_STRING/${VERSION_STRING}}";
 # tput reset;
 # print banner once at startup
 echo -e "${BANNER_INTRO}";
+# ct_blue "${BANNER_INTRO}";
 
 ##
 # program pre checks
