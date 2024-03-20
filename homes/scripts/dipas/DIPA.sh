@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# shellcheck disable=SC2016
-
 #
 #              ███████████████████████████████████████████
 #              █                                         █
@@ -41,7 +39,7 @@
 # solutions for development and bring up your enviroment.
 #
 # @autor Florian Blasel
-# @version 2.5.6
+# @version 2.7.3
 # @since 2024-01
 #
 #####
@@ -82,7 +80,6 @@
 ### }}}
 
 
-
 ################################################################################
 # {{{ ### Script basics ########################################################
 ################################################################################
@@ -90,7 +87,7 @@
 DEBUG=0;
 # Using Semver but for visual reasons: no two chars lenght of major, minor,
 # bugfix version: Just N.N.N, where N means only 1 digit!
-VERSION='2.5.6';
+VERSION='2.7.3';
 VERSION_STRING="DIPA.sh - Mode Version ${VERSION}";
 
 
@@ -114,6 +111,7 @@ if [ -z "$BASH" ]; then
 
    exit 1;
 fi
+
 
 # End Script basics }}}
 
@@ -184,9 +182,6 @@ function confirmCommand() {
     while true; do
         read -r -n 1 -p "${1:-Continue?} [$opts]$defstr: " ANSWER
         case $ANSWER in
-            # '')
-            #     return 1; # 1 do nothing
-            #     ;;
             [nN])
                 echo; return 1; # 1 = do nothing/ else case
                 ;;
@@ -229,7 +224,7 @@ function checkExitCode() {
     if [ "$code" -lt 129 ] && [ "$code" -gt 0 ] ; then
         txt_err "$code $mesg";
 
-        return $code;
+        return "$code";
     fi
 
     return 0;
@@ -260,7 +255,6 @@ function menuhelp () {
     local ln=$((ln+$(($(echo "${BANNER_INTRO}" | wc -l)+1))));
     local l=$(($(tput lines)+0));
 
-
     if [ "$1" = "" ]; then
         # general help info
         txt+="---\n"
@@ -272,7 +266,7 @@ function menuhelp () {
         txt+="\n"
         txt+="If the help text is longer than your terminal, then you can scroll up/down.\n";
         txt+=" - Search in the text, enter: /keyword<enter>\n";
-        txt+=" - Press Ecs to leave search\n";
+        txt+=" - Press Esc to leave search\n";
         txt+=" - Press 'q' to quit and come back to menu\n";
         txt+="\n"
 
@@ -297,10 +291,11 @@ function menuhelp () {
         { echo -e "$txtbanner";
         echo -e "$txt"; } | less -R
     else
-        echo "$txtbanner";
+        echo -e "$txtbanner";
         echo -e "$txt";
     fi
 }
+
 
 # End Script general functions }}}
 
@@ -317,16 +312,7 @@ function do_noop() {
 
 
 function do_exit() {
-    local b="";
-    b=$(cat <<'EOTXT'
-        _\|/_
-        (o o)
-+----oOO-{_}-OOo----+
-|  Have a good day  |
-
-EOTXT
-);
-   echo "$b";
+   echo "$BANNER_OUTRO";
    echo
 
    exit;
@@ -399,7 +385,7 @@ function goto_containerPhp_doDrushCr() {
 
 function goto_containerPhp_doDrushCim() {
     local cmdPhpMem512Drush="";
-    cmdPhpMem512Drush="php -d memory_limit=512M /app/htdocs/vendor/bin/drush";
+    cmdPhpMem512Drush="php -d memory_limit=${DIPAS_EXTS_CFG_PHP_MEMLIMIT} /app/htdocs/vendor/bin/drush";
 
     echo
     echo "Runs: 'drush cim -y'...";
@@ -433,6 +419,17 @@ function goto_containerPhp_doDrushImpTrans() {
     goto_containerPhp_do "cd /app/htdocs; ./vendor/bin/drush locale:import de /app/config/de.po";
 }
 
+
+function goto_containerPhp_doDrushFixDomainEntries() {
+    echo
+    echo "Fix domain entrys for development:";
+    local cmdFixDomains="${cmdPhpMem512Drush} dipas-dev:fix-domain-entries \
+        --host=${DIPAS_XEXT_PHP_FIXDOMAIN_HOST} \
+        --port=${DIPAS_XEXT_PHP_FIXDOMAIN_PORT}";
+    echo -n "Runs: Fix domain entrys ";
+    echo "--host=${DIPAS_XEXT_PHP_FIXDOMAIN_HOST} --port=${DIPAS_XEXT_PHP_FIXDOMAIN_PORT}";
+    goto_containerPhp_do "$cmdFixDomains";
+}
 
 # containerVueRunLint
 function do_codeCSCheck() {
@@ -596,7 +593,7 @@ function do_dbImport() {
 # extended containerDatabaseImport
 function do_dbImport_extended() {
     local cmdPhpMem512Drush="";
-    cmdPhpMem512Drush="php -d memory_limit=512M /app/htdocs/vendor/bin/drush";
+    cmdPhpMem512Drush="php -d memory_limit=${DIPAS_EXTS_CFG_PHP_MEMLIMIT} /app/htdocs/vendor/bin/drush";
 
     local skipImport=0;
 
@@ -613,7 +610,7 @@ function do_dbImport_extended() {
         # Update credentials after a db import
 
         echo
-        echo "Runs: 'drush ucrt admin'...";
+        echo "Runs: 'drush ucrt admin'..."; # Create a user account.
         goto_containerPhp_do "${cmdPhpMem512Drush} ucrt admin";
 
         echo
@@ -656,18 +653,11 @@ function do_dbImport_extended() {
 
         goto_containerPhp_doDrushImpTrans
 
-        echo
-        echo "Fix domain entrys for development:";
-        local cmdFixDomains="${cmdPhpMem512Drush} dipas-dev:fix-domain-entries \
-            --host=${DIPAS_XEXT_PHP_FIXDOMAIN_HOST} \
-            --port=${DIPAS_XEXT_PHP_FIXDOMAIN_PORT}";
-        echo -n "Runs: Fix domain entrys ";
-        echo "--host=${DIPAS_XEXT_PHP_FIXDOMAIN_HOST} --port=${DIPAS_XEXT_PHP_FIXDOMAIN_PORT}";
-        goto_containerPhp_do "$cmdFixDomains";
+        goto_containerPhp_doDrushFixDomainEntries
     fi
 
     echo
-    echo "'$CURRENT_DIPASH_MENUENAME' done";
+    echo "'$SCRIPT_CURRENT_MENUENAME' done";
 }
 
 
@@ -771,11 +761,13 @@ function do_dockerServicesCheck() {
     return $check;
 }
 
+
 # plural version for service and containers
 function do_dockerServicesStart() {
     do_dockerServiceStart;
     do_dockerContainerStart;
 }
+
 
 # plural version for service and containers
 function do_dockerServicesStop() {
@@ -896,9 +888,9 @@ function do_dockerContainerRestart() {
     }
 
     echo "Stop containers...";
-    docker-compose down 2> /dev/null;
+    $SCRIPT_CMD_DOCKERCOMPOSE down 2> /dev/null;
     echo "Start containers...";
-    docker-compose up --detach;
+    $SCRIPT_CMD_DOCKERCOMPOSE up --detach;
 }
 
 
@@ -909,7 +901,7 @@ function do_dockerContainerStart() {
     }
 
     echo "Start containers...";
-    docker-compose up --detach;
+    $SCRIPT_CMD_DOCKERCOMPOSE up --detach;
 }
 
 
@@ -920,7 +912,7 @@ function do_dockerContainerStop() {
     }
 
     echo "Stop containers...";
-    docker-compose down
+    $SCRIPT_CMD_DOCKERCOMPOSE down
 }
 
 
@@ -930,7 +922,7 @@ function do_dockerContainerBuild() {
         txt_warn "cd to path: '${DIPAS_BASE_ROOT_PATH}/docker/' failt";
     }
     echo "Building containers. This may take some time...";
-    docker-compose build --no-cache
+    $SCRIPT_CMD_DOCKERCOMPOSE build --no-cache
 }
 
 
@@ -1021,13 +1013,121 @@ function do_setupReset() {
 }
 
 
+# system core requirements: sudo, docker, code repositories...
+function do_installEnviroment() {
+    local haveSudo=0 inSudoer=0 haveDocker=0 inDocker=0 haveDockerCompose=0 haveGit=0; # 1 means: NO!
+    local pkgList="";
+
+    echo
+    echo "Checking required commands to be available...";
+    checkCommandAvailable "sudo" || { haveSudo=1; }
+    checkCommandAvailable "docker" || { haveDocker=1; }
+    checkCommandAvailable "$SCRIPT_CMD_DOCKERCOMPOSE" || { haveDockerCompose=1; }
+    checkCommandAvailable "git" || { haveGit=1; }
+    id -nG "$USER" | grep -qw  "sudo" || { inSudoer=1; }
+    id -nG "$USER" | grep -qw  "docker" || { inDocker=1; }
+
+    if [ $haveSudo -eq 0 ] &&
+        [ $inSudoer -eq 0 ] &&
+        [ $haveDocker -eq 0 ] &&
+        [ $inDocker -eq 0 ] &&
+        [ $haveDockerCompose -eq 0 ] &&
+        [ $haveGit -eq 0 ]
+    then
+        echo
+        echo "Core software exists an is available. Asuming this is not the"
+        echo "first install case. Skip core install process...";
+
+        return 0;
+    else
+        echo
+        txt_warn "If you have 'root' access you can go on! Otherwise your system";
+        txt_warn "administrator must go on with the core requirements to";
+        txt_warn "install the enviroment packages.";
+        echo
+        echo "This will ask you several times for a password to go on. Stay tuned!";
+
+        if confirmCommand "First install? Try to install required services?"; then
+
+            if [ $haveSudo -eq 1 ]; then
+                echo
+                echo "After install: Logout and come back so the settings are activ.";
+                echo "At this step the program can exit but logout must be done by you.";
+                echo
+                echo "1/2 installing 'sudo' command to improve less requests for root privileges";
+                echo "for the future...";
+
+                su -c "apt install sudo";
+
+                echo
+                txt_warn "Add user '$USER' to sudo'er list...";
+                su -c "/usr/sbin/adduser $USER sudo";
+
+                if id -nG "$USER" | grep -qw  "sudo"; then
+                    inSudoer=0;
+                    echo
+                    txt_warn "At this step the program can exit but logout must be done by you.";
+                    echo
+                    txt_warn "Come back again to finish the setup/ install process.";
+                    echo
+
+                    exit;
+                else
+                    echo "Not in group for sudo'ers. Logout and try again.";
+
+                    exit;
+                fi
+            fi
+
+            if [ $inSudoer -eq 1 ]; then
+                echo
+                txt_warn "Command 'sudo' available but you are not in the list already..."
+                txt_warn "Add user '$USER' to sudo'er list...";
+                su -c "/usr/sbin/adduser $USER sudo";
+                echo
+                txt_warn "At this step the program can exit but logout must be done by you.";
+                txt_warn "Come back again to finish the setup/ install process.";
+
+                exit;
+            fi
+
+            # sudo and in sudoers done...
+            echo
+            txt_warn "You are already a sudo'er.";
+            echo "2/2 installing docker packages now...";
+            pkgList="$SCRIPT_PKGLIST_FOR_DOCKER";
+            # shellcheck disable=SC2086
+            sudo apt install $pkgList;
+
+            if [ $inDocker -eq 1 ]; then
+                echo "Add user '$USER' to docker group...";
+                sudo adduser "$USER" docker || {
+                    txt_warn "Abort. Error adding user to docker group";
+
+                    return 1;
+                }
+            fi
+
+            echo
+            txt_warn "Installation of core packages done. Setup proxy settings if needed now!";
+            echo
+            txt_warn "Logout and come back again to be sure your rights are set and active now!"
+            echo
+
+            exit;
+        fi
+    fi
+}
+
+
 # devEnvironmentCreate
 function do_installDipas() {
 
-    checkCommandAvailable "git"
+    do_installEnviroment;
 
-    # ?? for complet purge and reinstall? Good idea? no|yes ?
+    # Todo for complet purge and reinstall? Good idea? no|yes ?
     # rm ~/projects/DIPAS/*
+
     echo
     if do_checkDipasExists ;then
         ctb_yellow "DIPAS installation exists.";
@@ -1286,9 +1386,312 @@ INSTALLHINTS
 
     echo "Your TO-DOs now:";
     echo "4.1 and 4.2: Import a database or check the docs to go on.";
+
+    echo
+    echo "--- break ---";
+    echo
+    echo "You may want to install also the DIPAS navigator which uses the DIPAS";
+    echo "backend. If all previous actions works fine, you may agree to go on,";
+    echo "otherwise check previous TODOs or errors first and come back again";
+    echo "or select from the menu";
+    if confirmCommand "Confirm to start installing DIPAS navigator..."; then
+        do_installDipasNavigator || {
+            echo
+            txt_warn "Failt. Abort.";
+
+            return 11;
+        }
+    fi
+
 }
 
+
+# @returns int Zero on success or a code > 0 (zero)
+function do_installDipasNavigator() {
+    local urlDipasNavigator="";
+    local branch="${DIPAS_XEXT_REPO_DIPASnavigator_BRANCH:-${DIPAS_XEXT_REPO_DIPASnavigator_BRANCHDEFAULT}}";
+
+    echo "Installing DIPAS navigator...";
+
+    if [ -d "${DIPAS_BASE_ROOT_PATH}/dipas-navigator/.git" ]; then
+        txt_warn "Not cloning DIPAS navigator repo. Exists. Leaving untouched.";
+    else
+        if [ "${DIPAS_REPO_USERNAME}" = "" ]; then
+            urlDipasNavigator="${DIPAS_XEXT_REPO_DIPASnavigator_URL/UNKNOWN@/${DIPAS_REPO_USERNAME}}";
+        else
+            urlDipasNavigator="${DIPAS_XEXT_REPO_DIPASnavigator_URL/UNKNOWN/${DIPAS_REPO_USERNAME}}";
+        fi
+
+        echo "Cloning the DIPAS navigator from '${urlDipasNavigator}'...";
+        if ! git clone "${urlDipasNavigator}" dipas-navigator; then
+            txt_err "Error cloning url. Check url or permissions. Abort";
+
+            return 12;
+        fi
+    fi
+
+    cd "dipas-navigator" || {
+        txt_warn "Error changing to path './dipas-navigator'. Please check. Abort";
+        # other process in the background? permisions problem? This should not happen.
+
+        return 13;
+    };
+
+    if confirmCommand "Checkout branch '${branch}'"; then
+        git checkout "${branch}";
+    fi
+
+    echo
+    echo "Copy 'src/example.config.local.js' to 'src/config.local.js'...";
+    if [ -f "src/config.local.js" ]; then
+        txt_warn "File 'src/config.local.js' exists.";
+        if confirmCommand "Confirm to overwrite..."; then
+            cp src/example.config.local.js src/config.local.js;
+        fi
+    else
+        cp src/example.config.local.js src/config.local.js;
+    fi
+    echo "done";
+
+
+    echo
+    echo "Copy 'example.vue.config.local.js' to 'vue.config.local.js'";
+    echo -e "Edit the file 'vue.config.local.js' at '$(txt_warn "drupal: {")' section.";
+    echo "E.g: Port 8080, baseHost: localhost";
+    if [ -f "vue.config.local.js" ]; then
+        txt_warn "File 'vue.config.local.js' exists.";
+        if confirmCommand "Confirm to overwrite..."; then
+            cp example.vue.config.local.js vue.config.local.js
+        fi
+    else
+        cp example.vue.config.local.js vue.config.local.js
+    fi
+    echo -e "$(mark_ok) Code installation done";
+    echo
+    echo "Make sure current required node version is available for this project.";
+    echo -e "Required node version (from current config): '$(txt_warn "$DIPAS_XEXT_REPO_DIPASnavigator_NODEVERSION")'";
+    echo "Or ask in the team.";
+    echo
+    echo "Setup DIPAS navigator now? 'nvm' should be available but can be done later";
+
+    if [ -f ".nvmrc" ]; then
+        echo -e "'$(txt_warn ".nvmrc")' file found.";
+        echo "Configured version: '$DIPAS_XEXT_REPO_DIPASnavigator_NODEVERSION '";
+        echo "Found version currently in .nvmrc file: '$(cat .nvmrc)'";
+    else
+        echo -e "Add $(txt_warn ".nvmrc") to current project?";
+    fi
+    if confirmCommand "Add/ Update .nvmrc file?"; then
+        # echo -n "echo '$DIPAS_XEXT_REPO_DIPASnavigator_NODEVERSION' > .nvmrc ... ";
+        echo $DIPAS_XEXT_REPO_DIPASnavigator_NODEVERSION > .nvmrc;
+        echo -e "$(mark_ok) done";
+    fi
+
+    cd "$DIPAS_BASE_ROOT_PATH/dipas-navigator" || { echo "cd failed"; };
+
+    echo
+    # shellcheck disable=SC1091
+    if [ "${NVM_DIR}" != "" ]; then
+        txt_warn "'nvm' command found. I'll make it tmp. available from .nvmrc";
+        . "${NVM_DIR}/nvm.sh";
+        echo "Running 'nvm install'";
+        nvm install;
+
+        txt_warn "After closing this session 'nvm' shows probably a different version!";
+
+        echo
+        if confirmCommand "Run 'npm install' now?"; then
+            echo -n "nvm version: $(nvm --version); ";
+            echo -n "npm version: $(npm --version); ";
+            echo "node version: $(node --version)";
+            npm install;
+        fi
+    else
+        echo "nvm not found. Do it manually!";
+    fi
+
+    echo
+    echo "When using/ working with DIPAS navigator: Go to";
+    echo "cd '$DIPAS_BASE_ROOT_PATH/dipas-navigator'";
+    echo "Run 'nvm use' or 'nvm install' to get the required version.";
+    echo "Run 'npm install' to make dependencies available";
+
+    cd "$DIPAS_BASE_ROOT_PATH" || {
+        txt_warn "Error changing to path '${DIPAS_BASE_ROOT_PATH}'. Please check";
+    }
+    echo
+    echo -e "$(mark_ok) Setup complete.";
+
+    return 0;
+}
+
+
 # End YOUR program functions }}}
+
+
+
+################################################################################
+# {{{ ### Promotion for this program ###########################################
+################################################################################
+
+# its: ANSI Regular & Hand Made
+BANNER_INTRO_PRE=$(
+    cat <<'BANNER_INTRO'
+
+              ███████████████████████████████████████████
+              █                                         █
+              █                                         █
+                                                        █
+    ██████   ██\033[0m  \033[36m██████   █████      ███████  ██   ██\033[0m   █
+    ██   ██  ██\033[0m  \033[36m██   ██ ██   ██     ██       ██   ██\033[0m   █
+    ██   ██  ██\033[0m  \033[36m██████  ███████     ███████  ███████\033[0m   █
+    ██   ██  ██\033[0m  \033[36m██      ██   ██          ██  ██   ██\033[0m   █
+    ██████   ██\033[0m  \033[36m██      ██   ██  █  ███████  ██   ██\033[0m   █
+                                                        █
+              █          VERSION_STRING   █
+              █    ██████████████████████████████████████
+              █   █
+              █  █     Digitales Partizipationssystem
+              █ █      DIPAS - dipas.org
+              ██       Hamburg / Germany
+              █
+        [D]eep [I]nstall and [P]roject [A]ssistant [Sh]ellscript
+        For devlopment tasks: DIPA.sh
+
+BANNER_INTRO
+);
+
+BANNER_INTRO="${BANNER_INTRO_PRE/VERSION_STRING/${VERSION_STRING}}";
+
+# Umpf TL:DR: 1 - 26 DEC!
+BANNER_OUTRO_PRE_XMS=$(
+    cat <<'BANNER_OUTRO_DEC'
+
+                     .-"``"-.
+                    /______; \
+                   {_______}\|
+                   (/ a a \)(_)
+                   (.-.).-.)
+      _______ooo__(    ^    )____________
+     /             '-.___.-'             \
+    |  Have a wonderful Christmas season  |
+    |           and a good day            |
+     \___________________________________/
+                   |_  |  _|
+                   \___|___/
+                   {___|___}
+                    |_ | _|
+                    /-'Y'-\
+                   (__/ \__)
+
+BANNER_OUTRO_DEC
+);
+
+# North earth : ~21 Mar - ~20Jun
+BANNER_OUTRO_PRE_SPR=$(
+    cat <<'BANNER_OUTRO_SPR'
+
+          ,
+      /\^/`\
+     | \/   |         SPRING IS IN THE AIR!
+     \ \    /                                          _ _
+      '\\//'                                         _{ ' }_
+        ||                DON'T PANIC               { `.!.` }
+        ||  ,                                         {_,_}
+    |\  ||  |\                                          |
+    | | ||  | |         Have a good day               (\|  /)
+    | | || / /                                         \| //
+     \ \||/ / \\   `   /       ´      `   \\   o //     |//
+      `\\//`   \\   \./    \\ /    ///     \\ o //   \\ |/ /
+     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+BANNER_OUTRO_SPR
+);
+
+#  ~21 Juni | Jul | Aug | ~ 20Sep
+BANNER_OUTRO_PRE_SUM=$(
+    cat <<'BANNER_OUTRO_SUM'
+      SUMMER TIME             .
+                         .    |    .
+                          \   |   /
+                      '.   \  '  /   .'
+                        '. .'```'. .'
+    <>.............:::::::`.......`:::::::................<>
+    <>:                                see you the beach :<>
+    <>:                              and have a good day :<>
+    <><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+
+BANNER_OUTRO_SUM
+);
+
+# Bug to be shown at 24.12 and 31.12 - 1.1
+BANNER_OUTRO_PRE_BUG=$(
+    cat <<'BANNER_OUTRO_BUG'
+                         _ ._  _ , _ ._
+                       (_ ' ( `  )_  .__)
+                     ( (  (    )   `)  ) _)
+                    (__ (_   (_ . _) _) ,__)
+                        `~~`\ ' . /`~~`
+                        ,::: ;   ; :::,
+                       ':::::::::::::::'
+    +--------------c42-----/_ __ _\----------------------+
+    |                 BAD, BAD, BUG HERE.                |
+    |          HAPPY XMAS and a HAPPY NEW YEAR           |
+    +----------------------------------------------------+
+
+BANNER_OUTRO_BUG
+);
+
+
+BANNER_OUTRO_PRE_DEF=$(
+    cat <<'EOTXT'
+          _\|/_
+          (o o)
+ +---- oOO-{_}-OOo----+
+ |   Have a good day  |
+ / ------------------ \
+
+EOTXT
+);
+
+
+function getBannerOutro() {
+    local banner="$BANNER_OUTRO_PRE_DEF";
+
+    case $(date +%m-%d) in
+        # north hemisphere lazy strict and nearby
+        #
+        # BANNER_OUTRO_PRE_SPR # spring    # North earth : ~21 Mar - ~20Jun
+        # BANNER_OUTRO_PRE_SUM # summer    # ~21 Juni | Jul | Aug | ~ 20Sep
+        # BANNER_OUTRO_PRE_XMS # xmas time # Upf TL;DR: 1 - 26 DEC!
+        # BANNER_OUTRO_PRE_BUG #           # Bug to be shown at 24-26.12 and 31.12 - 1.1
+
+        03-2[1-9] | 03-3* | 04-[0123]* | 05-[0123]* | 06-[01]* | 06-20)
+            banner="$BANNER_OUTRO_PRE_SPR";
+            ;;
+        06-2[1-9] | 06-3* | 07-[0123]* | 08-[0123]* | 09-[01]* | 09-20)
+            banner="$BANNER_OUTRO_PRE_SUM";
+            ;;
+        # 09-2[2-9] | 09-3* | 1[012]-[01]* | 12-2[012])
+        #     echo "autumn" ;;
+        12-2[4-6] | 01-01 | 12-31)
+            banner="$BANNER_OUTRO_PRE_BUG";
+            ;;
+        12-0[1-9] | 12-1[0-9] | 12-2[0-6]*)
+            banner="$BANNER_OUTRO_PRE_XMS";
+            ;;
+        # 12-2[1-9] | 12-3* | 01-[0123]* | 02-[0123]* | 03-[1*|20)
+        #     banner="wintertime";
+        #     ;;
+    esac
+
+    echo "$banner";
+}
+
+BANNER_OUTRO="$(getBannerOutro)";
+
+
+# End promotion }}}
 
 
 
@@ -1316,17 +1719,46 @@ DIPAS_REPO_DOCKER_BRANCHDEFAULT="dev"
 DIPAS_REPO_DIPAS_URL="https://UNKNOWN@bitbucket.org/geowerkstatt-hamburg/dipas_community.git";
 DIPAS_REPO_DIPAS_BRANCH="DPS-1626-Base-Vue-Application";
 DIPAS_REPO_DIPAS_BRANCHDEFAULT="dev";
-# Username on bitbucket to clone repos for the install process. Optional
+# Username on vc system to clone repos for the install process.
+# Optional if set in url
 DIPAS_REPO_USERNAME="";
 
 DIPAS_XEXT_PHP_FIXDOMAIN_HOST="localhost";
 DIPAS_XEXT_PHP_FIXDOMAIN_PORT="8080";
+# In some case like db imports php needs more memory limit.
+DIPAS_EXTS_CFG_PHP_MEMLIMIT="512M";
 
+# Don't replace UNKNOWN here! REPO_USERNAME will be used
+DIPAS_XEXT_REPO_DIPASnavigator_URL="https://UNKNOWN@bitbucket.org/geowerkstatt-hamburg/dipas-navigator.git";
+DIPAS_XEXT_REPO_DIPASnavigator_BRANCH="dev";
+DIPAS_XEXT_REPO_DIPASnavigator_BRANCHDEFAULT="dev";
+DIPAS_XEXT_REPO_DIPASnavigator_NODEVERSION="v10.24.1";
+
+# Depeding on the versions of your OS (debian, Ubuntu, WSL) and included
+# external packages (source.list), docker compose can come in different
+# flavors. eg:
+#  1. '/usr/bin/docker-compose' (debian 11, 12; Ubuntu 22.04; real OS's from origin)
+#  2. '/usr/local/bin/docker-compose' (probably manual install, WSL, debian, Ubuntu, mixed)
+#  3. 'docker compose' (builtin from docker.com which maybe dont work currently eg in WSL)
+SCRIPT_CMD_DOCKERCOMPOSE="/usr/local/bin/docker-compose";
+# Depending on docker-compose this may vari.
+#SCRIPT_PKGLIST_FOR_DOCKER="sudo docker.io docker-compose containerd git"; #debian11,12,Ubuntu2204
+SCRIPT_PKGLIST_FOR_DOCKER="sudo docker.io docker-compose containerd git";
+
+
+###
 # source config if exists to overwrite prev. defaults
 if [ -f "${SCRIPT_DIRECTORY_REAL}/.DIPA.sh.config" ]; then
     # shellcheck source=/dev/null
     . "${SCRIPT_DIRECTORY_REAL}/.DIPA.sh.config";
 fi
+
+# ###
+# # source custom modules if exists to add aditional functions/feature
+# if [ -f "${SCRIPT_DIRECTORY_REAL}/.DIPA.sh.modules" ]; then
+#     # shellcheck source=/dev/null
+#     . "${SCRIPT_DIRECTORY_REAL}/.DIPA.sh.modules";
+# fi
 
 ################################################################################
 # mapper for the configs to save custom configs
@@ -1354,6 +1786,16 @@ declare -A PRG_GLOBALS
 
         [DIPAS_XEXT_PHP_FIXDOMAIN_HOST]="$DIPAS_XEXT_PHP_FIXDOMAIN_HOST"
         [DIPAS_XEXT_PHP_FIXDOMAIN_PORT]="$DIPAS_XEXT_PHP_FIXDOMAIN_PORT"
+
+        [DIPAS_EXTS_CFG_PHP_MEMLIMIT]="$DIPAS_EXTS_CFG_PHP_MEMLIMIT"
+
+        [DIPAS_XEXT_REPO_DIPASnavigator_URL]="$DIPAS_XEXT_REPO_DIPASnavigator_URL"
+        [DIPAS_XEXT_REPO_DIPASnavigator_BRANCH]="$DIPAS_XEXT_REPO_DIPASnavigator_BRANCH"
+        [DIPAS_XEXT_REPO_DIPASnavigator_BRANCHDEFAULT]="$DIPAS_XEXT_REPO_DIPASnavigator_BRANCHDEFAULT"
+        [DIPAS_XEXT_REPO_DIPASnavigator_NODEVERSION]="$DIPAS_XEXT_REPO_DIPASnavigator_NODEVERSION"
+
+        [SCRIPT_CMD_DOCKERCOMPOSE]="$SCRIPT_CMD_DOCKERCOMPOSE"
+        [SCRIPT_PKGLIST_FOR_DOCKER]="$SCRIPT_PKGLIST_FOR_DOCKER"
     );
 
 # end YOUR default configs }}}
@@ -1422,7 +1864,7 @@ MENU_HLP[_IDX]="Execute all available PHP/dupal tests.
 $(txt_err "No tests available")";
 
 ((_IDX=_IDX+1)); # 8
-MENU_NAM[_IDX]="---";
+MENU_NAM[_IDX]="-----------------------";
 MENU_KEY[_IDX]="exec:do_noop";
 
 ((_IDX=_IDX+1)); # 9
@@ -1438,32 +1880,36 @@ MENU_NAM[_IDX]="PHP: Drush 2x cim + updb + cr";
 MENU_KEY[_IDX]="exec:goto_containerPhp_doDrushCimUpdbCr";
 
 ((_IDX=_IDX+1)); # 12
-MENU_NAM[_IDX]="PHP: Drush Imp. Translations";
+MENU_NAM[_IDX]="PHP: Drush Import i18n (*.po)";
 MENU_KEY[_IDX]="exec:goto_containerPhp_doDrushImpTrans";
 
 ((_IDX=_IDX+1)); # 13
-MENU_NAM[_IDX]="---";
-MENU_KEY[_IDX]="exec:do_noop";
+MENU_NAM[_IDX]="PHP: Drush Fix domain entries";
+MENU_KEY[_IDX]="exec:goto_containerPhp_doDrushFixDomainEntries";
 
 ((_IDX=_IDX+1)); # 14
+MENU_NAM[_IDX]="-----------------------";
+MENU_KEY[_IDX]="exec:do_noop";
+
+((_IDX=_IDX+1)); # 15
 MENU_NAM[_IDX]="Goto docker: PHP";
 MENU_KEY[_IDX]="exec:goto_containerPhp_do";
 MENU_HLP[_IDX]="Enter the php docker container to do individual actions e.g:
 DB dumps, 'composer install' 'drush abc xyz' and so on....";
 
-((_IDX=_IDX+1)); # 15
+((_IDX=_IDX+1)); # 16
 MENU_NAM[_IDX]="Goto docker: Vue";
 MENU_KEY[_IDX]="exec:goto_containerVue_do";
 MENU_HLP[_IDX]="Enter the Vue docker container to do individual actions e.g:
 'npm run lint', 'npm run test:unit' or 'npm run lint:fix'...";
 
-((_IDX=_IDX+1)); # 16
+((_IDX=_IDX+1)); # 17
 MENU_NAM[_IDX]="Goto docker: DB";
 MENU_KEY[_IDX]="exec:goto_containerDb_do";
 MENU_HLP[_IDX]="Enter the postgre database docker container to do individual actions";
 
-((_IDX=_IDX+1)); # 17
-MENU_NAM[_IDX]="---";
+((_IDX=_IDX+1)); # 18
+MENU_NAM[_IDX]="-----------------------";
 MENU_KEY[_IDX]="exec:do_noop";
 
 # ((_IDX=_IDX+1));
@@ -1535,8 +1981,8 @@ dont change the default settings or enter a custom export filename.
 # MENU_HLP[_IDX]="";
 
 
-((_IDX=_IDX+1)); #
-MENU_NAM[_IDX]="---";
+((_IDX=_IDX+1));
+MENU_NAM[_IDX]="-----------------------";
 MENU_KEY[_IDX]="exec:do_noop";
 
 # ((_IDX=_IDX+1));
@@ -1571,7 +2017,7 @@ MENU_KEY[_IDX]="exec:do_dockerServicesStop"
 
 
 ((_IDX=_IDX+1)); #
-MENU_NAM[_IDX]="---";
+MENU_NAM[_IDX]="-----------------------";
 MENU_KEY[_IDX]="exec:do_noop";
 
 ((_IDX=_IDX+1));
@@ -1586,14 +2032,32 @@ MENU_NAM[_IDX]="SYS: Install DIPAS enviroment";
 MENU_KEY[_IDX]="exec:do_installDipas";
 MENU_HLP[_IDX]="Install DIPAS from scratch.
 
-Services/ docker containers can be created, but:
-Your user must be in group 'docker' and the system service must be already ON
-or you have 'sudo' access to execute e.g: 'sudo service docker start' @see:
-'Docker service start' in menu.
+Make sure running 'setup custom config' first. Otherwise the script defaults
+will be used.
+
+First install:
+Asking you for 'root' privileges to install required software if not already
+available. Read carefully the output and make sure to logout after each step
+if the program ask you for it so that settings will be activ for the next step.
+When using 'wsl2' it mostly means your user password to become 'root'
+
+'sudo', 'docker' and 'git' are the most important packages which must be
+available. If all is already installed/ available the program skip's this first
+install step.
+
+!!! Details are in the help of 'setup custom config' from menu.!!!
+
+You should be in the group of 'docker' and 'sudo' for this setup. This install
+process will ask you to make it available. Otherwise: Admins: you need to know.
+
+If docker is not activ by default run: 'sudo service docker start'
+@see: 'Docker services start' in menu.
+
+Then follow all requested qustions to install the enviroment and DIPAS code.
 ";
 
-((_IDX=_IDX+1)); # 12
-MENU_NAM[_IDX]="---";
+((_IDX=_IDX+1));
+MENU_NAM[_IDX]="-----------------------";
 MENU_KEY[_IDX]="exec:do_noop";
 
 ((_IDX=_IDX+1));
@@ -1682,6 +2146,7 @@ $(ct_yellow "DIPAS_REPO_DOCKER_BRANCHDEFAULT")
 $(ct_yellow "DIPAS_REPO_DOCKER_URL")
 
 # Username for http authentication at the VC system. def: $(ct_yellow "''")
+# Optional if set in url
 $(ct_yellow "DIPAS_REPO_USERNAME")
 
 
@@ -1693,9 +2158,58 @@ $(ct_yellow "DIPAS_REPO_USERNAME")
 $(ct_yellow "DIPAS_XEXT_PHP_FIXDOMAIN_HOST")
 $(ct_yellow "DIPAS_XEXT_PHP_FIXDOMAIN_PORT")
 
+###
+# Configs in general:
+
+# In some case like db imports php needs more memory limit.
+# def: $(ct_yellow "512M") for 512 MB or 0 (zero) for no limit but depricated at this point
+$(ct_yellow "DIPAS_EXTS_CFG_PHP_MEMLIMIT")
+
+###
+# DIPAS navigator
+
+# Url to the DIPAS navigator repository for a development enviroment.
+# Don't replace UNKNOWN here! '$(ct_yellow "DIPAS_REPO_USERNAME")' will be used
+# if not empty, otherwise 'UNKNOWN@' will be automatically removed.
+# Optional: This can include credentials e.g: user:pass if
+# '$(ct_yellow "DIPAS_REPO_USERNAME")' stays empty.
+# stays empty. def: $(ct_yellow "https://UNKNOWN@bitbucket.org/geowerkstatt-hamburg/dipas-navigator.git")
+$(ct_yellow "DIPAS_XEXT_REPO_DIPASnavigator_URL")
+
+# Branch of the DIPAS navigator repository for a development enviroment to checkout/ or
+# pull (updates). def: $(ct_yellow "dev")
+$(ct_yellow "DIPAS_XEXT_REPO_DIPASnavigator_BRANCH")
+
+# Default branch of the DIPAS navigator repository. def: $(ct_yellow "dev")
+$(ct_yellow "DIPAS_XEXT_REPO_DIPASnavigator_BRANCHDEFAULT")
+
+# Node version to be used with nvm. def: $(ct_yellow "$DIPAS_XEXT_REPO_DIPASnavigator_NODEVERSION")
+$(ct_yellow "DIPAS_XEXT_REPO_DIPASnavigator_NODEVERSION")
+
+###
+# SCRIPT configs e.g. to run special commands
+
+# Depeding on the versions of your OS (debian, Ubuntu, WSL) and included
+# external packages (source.list), docker compose can come in different
+# flavors. eg:
+#  1. '/usr/bin/docker-compose' (debian 11, 12; Ubuntu 22.04; real OS's from origin)
+#  2. '/usr/local/bin/docker-compose' (probably manual install, WSL, debian, Ubuntu, mixed)
+#  3. 'docker compose' (builtin from docker.com which maybe dont work currently eg in WSL)
+# Current way: 2 (def: $(ct_yellow "/usr/local/bin/docker-compose")
+$(ct_yellow "SCRIPT_CMD_DOCKERCOMPOSE");
+
+# Depending on 'docker-compose' this may vari.
+# Current test OS: debian 11,12,2204, def: $(ct_yellow "sudo docker.io docker-compose containerd git")
+#SCRIPT_PKGLIST_FOR_DOCKER=\"sudo docker.io docker-compose containerd git\"; # debian 12
+$(ct_yellow "SCRIPT_PKGLIST_FOR_DOCKER")
+
+
 more to come...
 ";
+
+
 # end CFG: Setup custom config
+
 
 ((_IDX=_IDX+1));
 MENU_NAM[_IDX]="CFG: Delete custom config";
@@ -1705,7 +2219,7 @@ and exits the program.
 Start DIPA.sh new and our default config values will be used.";
 
 # ((_IDX=_IDX+1)); #
-# MENU_NAM[_IDX]="---";
+# MENU_NAM[_IDX]="-----------------------";
 # MENU_KEY[_IDX]="exec:do_noop";
 
 # ((_IDX=_IDX+1));
@@ -1726,45 +2240,47 @@ Start DIPA.sh new and our default config values will be used.";
 # MENU_KEY[_IDX]="exec:do_dockerShutdown";
 # MENU_HLP[_IDX]="Shutdown the services.";
 
+((_IDX=_IDX+1));
+MENU_NAM[_IDX]="--- DIPAS_navigator ---";
+MENU_KEY[_IDX]="exec:do_noop";
+
+((_IDX=_IDX+1));
+MENU_NAM[_IDX]="Install DIPAS_navigator";
+MENU_KEY[_IDX]="exec:do_installDipasNavigator";
+MENU_HLP[_IDX]="DIPAS navigator
+Install the navigator. The Vue app uses the existing dipas drupal installation.
+So you can checkout the navigator under the path where dipas exists. E.g:
+'$DIPAS_BASE_ROOT_PATH'.
+
+Keep docker up (min. db and drupal (docker_php) containers so this frontend
+can use the backend. Make sure to checkout the current branch of the backend
+for this project! Probably 'dev' like in '$DIPAS_BASE_ROOT_PATH/repository'
+
+Make sure to read the help of 'Setup custom config' first and run that step.
+The installer then will guide you to set the following steps:
+
+    cd $DIPAS_BASE_ROOT_PATH
+    git clone https://bitbucket.org/geowerkstatt-hamburg/dipas-navigator.git
+
+    cd dipas-navigator
+
+    # missing hints or documentation
+    cp src/example.config.local.js src/config.local.js
+
+    # Copy example file and edit the 'drupal: {' section.
+    # Port 8080, baseHost: localhost
+    cp example.vue.config.local.js vue.config.local.js
+
+    # make sure current required node version is available for this project. Or ask in
+    # the team. E.g:
+    echo $DIPAS_XEXT_REPO_DIPASnavigator_NODEVERSION > .nvmrc
+    nvm use
+
+    cd $DIPAS_BASE_ROOT_PATH
+";
+
 
 # End YOUR Menu config }}}
-
-
-
-################################################################################
-# {{{ ### Promotion for this program ###########################################
-################################################################################
-
-# its: ANSI Regular & Hand Made
-BANNER_INTRO_PRE=$(
-    cat <<'BANNER_INTRO'
-
-              ███████████████████████████████████████████
-              █                                         █
-              █                                         █
-                                                        █
-    ██████   ██\033[0m  \033[36m██████   █████      ███████  ██   ██\033[0m   █
-    ██   ██  ██\033[0m  \033[36m██   ██ ██   ██     ██       ██   ██\033[0m   █
-    ██   ██  ██\033[0m  \033[36m██████  ███████     ███████  ███████\033[0m   █
-    ██   ██  ██\033[0m  \033[36m██      ██   ██          ██  ██   ██\033[0m   █
-    ██████   ██\033[0m  \033[36m██      ██   ██  █  ███████  ██   ██\033[0m   █
-                                                        █
-              █          VERSION_STRING   █
-              █    ██████████████████████████████████████
-              █   █
-              █  █     Digitales Partizipationssystem
-              █ █      DIPAS - dipas.org
-              ██       Hamburg / Germany
-              █
-        [D]eep [I]nstall and [P]roject [A]ssistant [Sh]ellscript
-        For devlopment tasks: DIPA.sh
-
-BANNER_INTRO
-);
-
-BANNER_INTRO="${BANNER_INTRO_PRE/VERSION_STRING/${VERSION_STRING}}";
-
-# End promotion }}}
 
 
 
@@ -1786,10 +2302,12 @@ echo -e "${BANNER_INTRO}";
 
 echo
 if ! do_checkDipasExists ;then
-    txt_warn "Please run the 'setup' from menue to set some paths or";
-    txt_warn "credentials (or our script defaults will be used).";
+    txt_warn "Please run the 'Setup custom config' from menue to set some ";
+    txt_warn "paths or credentials and save them or our script defaults will be used.";
     echo
-    txt_warn "Run 'install' from menu to install DIPAS and to hide this message.";
+    txt_warn "Run 'install DIPAS...' from menu to install DIPAS and to hide this message.";
+    echo
+    txt_warn "Further infomations are located and the action docs. Enter 1 to get help details";
     echo
 else
     # this script to be run at this path as default and always to not conflict in paths!
@@ -1806,7 +2324,7 @@ else
 fi
 
 # end program pre checks
-##
+
 
 PS3="
 --------------------------------------------------------------------------------
@@ -1815,18 +2333,16 @@ choose an action number: ";
 
 # number of columns for the select stmt
 # COLUMNS=120;
-select CURRENT_DIPASH_MENUENAME in "${MENU_NAM[@]}"
+select SCRIPT_CURRENT_MENUENAME in "${MENU_NAM[@]}"
 do
     cd "${DIPAS_BASE_ROOT_PATH}" &> /dev/null || {
         echo
-        echo "Menu selected: ${CURRENT_DIPASH_MENUENAME} ($REPLY)";
+        echo "Menu selected: ${SCRIPT_CURRENT_MENUENAME} ($REPLY)";
         echo "Please run 'install' or 'setup' first.";
         echo "cd to dipas root path failt: '$DIPAS_BASE_ROOT_PATH'";
         echo
         cd "$(pwd)" || echo "cd pwd failt";
     }
-
-    # detect input
 
     # trim input first
     REPLY="$(trim "$REPLY")";
@@ -1872,7 +2388,7 @@ do
             do_exit
             ;;
 
-        ### to be removed! ################################################>>>>>
+        ### TODO to be removed! ############################################>>>>>
         "cr")
             # hidden feature
             goto_containerPhp_doDrushCr;
@@ -1887,7 +2403,7 @@ do
             # hidden feature
             goto_containerPhp_doDrushUpdb;
             ;;
-        ### to be removed! ################################################<<<<<
+        ### TODO to be removed! ###########################################<<<<<
 
         *)
             # All others which do not match
