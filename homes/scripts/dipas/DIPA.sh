@@ -90,7 +90,7 @@
 DEBUG=0;
 # Using Semver but for visual reasons: no two chars lenght of major, minor,
 # bugfix version: Just N.N.N, where N means only 1 digit!
-VERSION='2.5.0';
+VERSION='2.5.5';
 VERSION_STRING="DIPA.sh - Mode Version ${VERSION}";
 
 
@@ -229,7 +229,11 @@ function checkExitCode() {
     local mesg=$2;
     if [ "$code" -lt 129 ] && [ "$code" -gt 0 ] ; then
         txt_err "$code $mesg";
+
+        return $code;
     fi
+
+    return 0;
 }
 
 
@@ -291,7 +295,7 @@ function menuhelp () {
 
     ln=$((ln+$(echo -e "$txt" | wc -l)));
     if [ $ln -gt $l ]; then
-        { echo "$txtbanner";
+        { echo -e "$txtbanner";
         echo -e "$txt"; } | less -R
     else
         echo "$txtbanner";
@@ -656,10 +660,10 @@ function do_dbImport_extended() {
         echo
         echo "Fix domain entrys for development:";
         local cmdFixDomains="${cmdPhpMem512Drush} dipas-dev:fix-domain-entries \
-    --host=${DIPAS_XEXT_PHP_FIXDOMAIN_HOST} \
-    --port=${DIPAS_XEXT_PHP_FIXDOMAIN_PORT}";
+            --host=${DIPAS_XEXT_PHP_FIXDOMAIN_HOST} \
+            --port=${DIPAS_XEXT_PHP_FIXDOMAIN_PORT}";
         echo -n "Runs: Fix domain entrys ";
-            echo "--host=${DIPAS_XEXT_PHP_FIXDOMAIN_HOST} --port=${DIPAS_XEXT_PHP_FIXDOMAIN_PORT}";
+        echo "--host=${DIPAS_XEXT_PHP_FIXDOMAIN_HOST} --port=${DIPAS_XEXT_PHP_FIXDOMAIN_PORT}";
         goto_containerPhp_do "$cmdFixDomains";
     fi
 
@@ -768,13 +772,13 @@ function do_dockerServicesCheck() {
     return $check;
 }
 
-
+# plural version for service and containers
 function do_dockerServicesStart() {
     do_dockerServiceStart;
     do_dockerContainerStart;
 }
 
-
+# plural version for service and containers
 function do_dockerServicesStop() {
     do_dockerContainerStop;
     do_dockerServiceStop;
@@ -783,15 +787,17 @@ function do_dockerServicesStop() {
 
 # dockerStartDeamon
 function do_dockerServiceStart() {
-    if sudo service docker start; then
-        echo "$(mark_ok) Start successful";
+    if ! do_dockerServiceCheckIsUp; then
+        sudo service docker start;
+        if ! checkExitCode "$?" "Service failure"; then
+            txt_warn "$(mark_fail) Start failt";
 
-        return 0;
-    else
-        txt_warn "$(mark_fail) Start failt";
-
-        return 1;
+            return 1;
+        fi
     fi
+
+    echo "$(mark_ok) Service docker start successful";
+    return 0;
 }
 
 
@@ -1549,7 +1555,7 @@ MENU_KEY[_IDX]="exec:do_noop";
 ((_IDX=_IDX+1));
 MENU_NAM[_IDX]="SYS: Docker services check";
 MENU_KEY[_IDX]="exec:do_dockerServicesCheck"
-MENU_HLP[_IDX]="Checks if docker service is runing
+MENU_HLP[_IDX]="Checks if docker service is running
 and also if the docker containers exists and are activ";
 
 ((_IDX=_IDX+1));
@@ -1734,11 +1740,11 @@ BANNER_INTRO_PRE=$(
               █                                         █
               █                                         █
                                                         █
-    ██████   ██  ██████   █████      ███████  ██   ██   █
-    ██   ██  ██  ██   ██ ██   ██     ██       ██   ██   █
-    ██   ██  ██  ██████  ███████     ███████  ███████   █
-    ██   ██  ██  ██      ██   ██          ██  ██   ██   █
-    ██████   ██  ██      ██   ██  █  ███████  ██   ██   █
+    ██████   ██\033[0m  \033[36m██████   █████      ███████  ██   ██\033[0m   █
+    ██   ██  ██\033[0m  \033[36m██   ██ ██   ██     ██       ██   ██\033[0m   █
+    ██   ██  ██\033[0m  \033[36m██████  ███████     ███████  ███████\033[0m   █
+    ██   ██  ██\033[0m  \033[36m██      ██   ██          ██  ██   ██\033[0m   █
+    ██████   ██\033[0m  \033[36m██      ██   ██  █  ███████  ██   ██\033[0m   █
                                                         █
               █          VERSION_STRING   █
               █    ██████████████████████████████████████
@@ -1767,9 +1773,9 @@ BANNER_INTRO="${BANNER_INTRO_PRE/VERSION_STRING/${VERSION_STRING}}";
 # THESE SHOULD BE THE LAST CODE LINES IN THIS SCRIPT
 #
 
-tput reset;
+# tput reset;
 # print banner once at startup
-ct_green "${BANNER_INTRO}";
+echo -e "${BANNER_INTRO}";
 
 ##
 # program pre checks
