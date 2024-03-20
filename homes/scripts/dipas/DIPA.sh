@@ -380,7 +380,7 @@ function do_codeTestPhp() {
 
 # containerDatabaseImport
 function do_dbImport() {
-
+    cd "${DIPAS_BASE_ROOT_PATH}" || return 0;
     do_checkDipasExists || return 1;
     do_dockerServicesCheck || return 2;
 
@@ -404,9 +404,13 @@ function do_dbImport() {
     echo
     echo "Possible files (sql|gz dump files):";
     echo '---';
-    cd "${DIPAS_DB_DUMP_SUBPATH}" || return 3;
+    cd "${DIPAS_DB_DUMP_SUBPATH}" || {
+        return 3;
+    }
     ls *.{gz,sql} 2> /dev/null;
-    cd "${DIPAS_BASE_ROOT_PATH}" || return 4;
+    cd "${DIPAS_BASE_ROOT_PATH}" || {
+        return 4;
+    }
     echo '---';
 
     if [ -n "${_IMPORT_FILE}" ]; then
@@ -440,6 +444,7 @@ function do_dbImport() {
             || { echo >&2 \"Ooops missing...\"; exit 1; }";
         if ! goto_containerPhp_do "$checkPVAvailable"; then
             txt_warn "Command 'pv' not available. Cannot import. Abort";
+
             return 6;
         fi
 
@@ -465,7 +470,7 @@ function do_dbImport() {
         else
             echo "Dont know to handle the input file  '${dbDumpFile}'. Missing extension (gz|tgz|sql)";
 
-            return 6;
+            return 7;
         fi
 
         echo
@@ -479,24 +484,29 @@ function do_dbImport() {
 # extended containerDatabaseImport
 function do_dbImport_extended() {
 
-    do_dbImport || return $?;
+    if ! confirmCommand "Skip DB import? And run BE updates only?"; then
+        do_dbImport || return $?;
 
-    echo "Runs: 'composer install' to bind dependencies (if changed)...";
-    goto_containerPhp_do "cd /app/htdocs; composer install";
+        # Update credentials after a db import
 
-    echo "Runs: 'drush ucrt admin' ...";
-    goto_containerPhp_do "cd /app/htdocs; \
-        php -d memory_limit=512M ./vendor/bin/drush ucrt admin > /dev/null";
+        echo "Runs: 'composer install' to bind dependencies (if changed)...";
+        goto_containerPhp_do "cd /app/htdocs; composer install";
 
-    echo "Runs: 'drush upwd admin admin' ...";
-    goto_containerPhp_do "cd /app/htdocs; \
-        php -d memory_limit=512M ./vendor/bin/drush upwd admin admin > /dev/null";
+        echo "Runs: 'drush ucrt admin' ...";
+        goto_containerPhp_do "cd /app/htdocs; \
+            php -d memory_limit=512M ./vendor/bin/drush ucrt admin > /dev/null";
 
-    echo "Runs: 'drush urol siteadmin admin'...";
-    goto_containerPhp_do "cd /app/htdocs; \
-        php -d memory_limit=512M ./vendor/bin/drush urol siteadmin admin > /dev/null";
+        echo "Runs: 'drush upwd admin admin' ...";
+        goto_containerPhp_do "cd /app/htdocs; \
+            php -d memory_limit=512M ./vendor/bin/drush upwd admin admin > /dev/null";
 
-    echo -e "$(mark_ok) Drupal credentials done! Login with admin/admin";
+        echo "Runs: 'drush urol siteadmin admin'...";
+        goto_containerPhp_do "cd /app/htdocs; \
+            php -d memory_limit=512M ./vendor/bin/drush urol siteadmin admin > /dev/null";
+
+        echo -e "$(mark_ok) Drupal credentials done! Login with admin/admin";
+    fi
+
 
     # bring up the rest...
     echo "Runs: 'drush cim -y' ...";
@@ -518,11 +528,15 @@ function do_dbImport_extended() {
     goto_containerPhp_do "cd /app/htdocs; \
         php -d memory_limit=512M ./vendor/bin/drush locale:import de /app/config/de.po";
 
-    echo "Runs: 'drush en dipas_statistics' enable dipas statistics module...";
-    goto_containerPhp_do "cd /app/htdocs; ./vendor/bin/drush en dipas_statistics";
+    #echo "Runs: 'drush en dipas_statistics' enable dipas statistics module...";
+    #goto_containerPhp_do "cd /app/htdocs; ./vendor/bin/drush en dipas_statistics";
 
     echo "Runs: 'drush dipas-dev:fix-domain-entries' Fix domain entrys for development...";
-    goto_containerPhp_do "cd /app/htdocs; ./vendor/bin/drush dipas-dev:fix-domain-entries --port=8080";
+    local cmdFixDomains="cd /app/htdocs; \
+        ./vendor/bin/drush dipas-dev:fix-domain-entries \
+        --host=${DIPAS_XEXT_PHP_FIXDOMAIN_HOST} \
+        --port=${DIPAS_XEXT_PHP_FIXDOMAIN_PORT}";
+    goto_containerPhp_do "$cmdFixDomains";
 }
 
 
@@ -539,7 +553,7 @@ function do_dbExport() {
     echo "Export DB...";
 
     if [ "${fext}" = "gz" ] || [ "${fext}" = "tgz" ] ; then
-        echo 'Export gz sql dump. Please wait...';
+        echo 'Export gzip sql dump. Please wait...';
         goto_containerPhp_do "PGPASSWORD=${DIPAS_DB_PASSWORD} \
             pg_dump --username ${DIPAS_DB_USERNAME} -h ${DIPAS_DB_HOST} ${DIPAS_DB_NAME} \
             | pv --progress -N dumpfile -tea | gzip -9 > ${dmp}
@@ -709,6 +723,9 @@ function do_setupConfig() {
         [DIPAS_REPO_DIPAS_BRANCH]="$DIPAS_REPO_DIPAS_BRANCH"
         [DIPAS_REPO_DIPAS_BRANCHDEFAULT]="$DIPAS_REPO_DIPAS_BRANCHDEFAULT"
         [DIPAS_REPO_USERNAME]="$DIPAS_REPO_USERNAME"
+
+        [DIPAS_XEXT_PHP_FIXDOMAIN_HOST]="$DIPAS_XEXT_PHP_FIXDOMAIN_HOST"
+        [DIPAS_XEXT_PHP_FIXDOMAIN_PORT]="$DIPAS_XEXT_PHP_FIXDOMAIN_PORT"
     );
 
     ### bash 4.0 and a sort(1) with -z
@@ -874,6 +891,13 @@ function do_installDipas() {
 
     if [ -d "${DIPAS_BASE_ROOT_PATH}/repository/.git" ]; then
         txt_warn "Not cloning DIPAS code repo. Already exists.";
+
+        if confirmCommand "Pull updates of current branch of DIPAS code repo?"; then
+            cd "${DIPAS_BASE_ROOT_PATH}/repository" || txt_warn "Error cd 'repository'";
+            git pull || txt_warn "git pull failed";
+            cd "${DIPAS_BASE_ROOT_PATH}";
+        fi
+
     else
         local urlDipas="${DIPAS_REPO_DIPAS_URL/UNKNOWN@/${DIPAS_REPO_USERNAME:-""}}";
         echo "Cloning the DIPAS repository from '${urlDipas}'...";
@@ -1157,8 +1181,9 @@ This does the following actions:
 - Runs: 'drush en dipas_dev' enable dipas dev module
 - Runs: 'drush locale:import de /app/config/de.po' Import the de.po file
 - Runs: 'drush en dipas_statistics' Enables dipas statistics module
-- Runs: 'drush dipas-dev:fix-domain-entries' Fixs local domain entrys for
-        development
+Fixes local domain entrys for development (here: default values):
+- Runs: 'drush dipas-dev:fix-domain-entries --host=localhost --port=80'
+
 
 ... more to come if needed
 ";
@@ -1316,6 +1341,9 @@ DIPAS_REPO_DIPAS_BRANCHDEFAULT="dev";
 # Username on bitbucket to clone repos for the install process. Optional
 DIPAS_REPO_USERNAME="";
 
+DIPAS_XEXT_PHP_FIXDOMAIN_HOST="localhost";
+DIPAS_XEXT_PHP_FIXDOMAIN_PORT="8080";
+
 # source config if exists to overwrite prev. defaults
 if [ -f "${SCRIPT_DIRECTORY_REAL}/.DIPA.sh.config" ]; then
     # shellcheck source=/dev/null
@@ -1369,7 +1397,7 @@ Press <enter> for menu, CTRL+C or 'q' for 'exit',
 choose an action number: ";
 
 # number of columns for the select stmt
-#COLUMNS=120
+COLUMNS=120;
 select CURRENT_DIPASH_MENUENAME in "${MENU_NAM[@]}"
 do
     export CURRENT_DIPASH_MENUENAME;
