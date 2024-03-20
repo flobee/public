@@ -13,15 +13,19 @@
 #    ██   ██  ██  ██      ██   ██          ██  ██   ██   █
 #    ██████   ██  ██      ██   ██  █  ███████  ██   ██   █
 #                                                        █
-#              █          VERSION_STRING   █
+#              █                                         █
 #              █    ██████████████████████████████████████
 #              █   █
 #              █  █     Digitales Partizipationssystem
 #              █ █      DIPAS - dipas.org
 #              ██       Hamburg / Germany
 #              █
+#
+#        [D]eep [I]nstall and [P]roject [A]ssistant [Sh]ellscript
+#        For devlopment tasks: DIPA.sh
 
 #
+################################################################################
 # {{{ ### INTRO / README #######################################################
 ################################################################################
 #
@@ -65,8 +69,7 @@
 # (will asking you some questions) it stores the config at the real location of
 # this script (if a symlink) to `.DIPAS.sh.config`. Every time you use this tool
 # it loads this config (if exists) so that you dont need to care anymore.
-# Otherwise the script default settings will take affect. No futher requests
-# will be made (in most cases).
+# Otherwise the script default settings will take affect.
 #
 # Happy Development! See or hear from you from the know channels... ;)
 #
@@ -79,6 +82,8 @@
 ### }}}
 
 
+
+################################################################################
 # {{{ ### Script basics ########################################################
 ################################################################################
 
@@ -113,7 +118,9 @@ fi
 # End Script basics }}}
 
 
-# {{{ ### General functions ####################################################
+
+################################################################################
+# {{{ ### Script general functions #############################################
 ################################################################################
 
 # Color functions
@@ -143,14 +150,14 @@ function ctb_cyan()  { echo -e "\033[96m$1\033[0m"; }
 function ctb_grey()  { echo -e "\033[97m$1\033[0m"; }
 function ctb_white() { echo -e "\033[98m$1\033[0m"; }
 
-# color helpers: marker/icons
-function mark_ok()   { echo -e "$(ctb_green "\xE2\x9C\x94") "; }
-function mark_fail() { echo -e "$(ctb_red "\xE2\x9C\x96") "; }
-
 # color helpers: text
 function txt_ok()   { echo -e "$(ct_green "$1")"; }
 function txt_warn()  { echo -e "$(ct_yellow "$1")"; }
 function txt_err()   { echo -e "$(ctb_red "$1")"; }
+
+# color helpers: marker/icons
+function mark_ok()   { echo -e "$(ctb_green "\xE2\x9C\x94") "; }
+function mark_fail() { echo -e "$(ctb_red "\xE2\x9C\x96") "; }
 
 
 # trim string
@@ -212,6 +219,17 @@ function checkCommandAvailable() {
     fi
 
     return 0;
+}
+
+
+# $1 int string Exit code
+# $2 string Exit massage
+function checkExitCode() {
+    local code=$1;
+    local mesg=$2;
+    if [ "$code" -lt 129 ] && [ "$code" -gt 0 ] ; then
+        txt_err "$code $mesg";
+    fi
 }
 
 
@@ -281,428 +299,12 @@ function menuhelp () {
     fi
 }
 
-# End General functions }}}
+# End Script general functions }}}
 
 
-# {{{ ### Program default configs ##############################################
+
 ################################################################################
-
-DIPAS_BASE_ROOT_PATH="/home/${USER}/projects/DIPAS";
-DIPAS_DB_NAME='dipas';
-DIPAS_DB_HOST='database';
-DIPAS_DB_USERNAME='dipas';
-DIPAS_DB_PASSWORD='dipas';
-# Import file extension can be .sql, .gz or .tgz
-DIPAS_DB_DUMP_IMPORT='dipas-dump-import.sql.gz';
-# Export file extension can be .sql, .gz or .tgz
-DIPAS_DB_DUMP_EXPORT='dipas-dump-export.sql.gz';
-DIPAS_DB_DUMP_SUBPATH="transfer";
-
-# Don't replace UNKNOWN here! REPO_USERNAME will be used
-DIPAS_REPO_DOCKER_URL="https://UNKNOWN@bitbucket.org/geowerkstatt-hamburg/docker_for_dipas.git"
-DIPAS_REPO_DOCKER_BRANCH="DPS-1626-Base-Vue-Application-Cleanup"
-DIPAS_REPO_DOCKER_BRANCHDEFAULT="dev"
-
-# Don't replace UNKNOWN here! REPO_USERNAME will be used
-DIPAS_REPO_DIPAS_URL="https://UNKNOWN@bitbucket.org/geowerkstatt-hamburg/dipas_community.git";
-DIPAS_REPO_DIPAS_BRANCH="DPS-1626-Base-Vue-Application";
-DIPAS_REPO_DIPAS_BRANCHDEFAULT="dev";
-# Username on bitbucket to clone repos for the install process. Optional
-DIPAS_REPO_USERNAME="";
-
-DIPAS_XEXT_PHP_FIXDOMAIN_HOST="localhost";
-DIPAS_XEXT_PHP_FIXDOMAIN_PORT="8080";
-
-# source config if exists to overwrite prev. defaults
-if [ -f "${SCRIPT_DIRECTORY_REAL}/.DIPA.sh.config" ]; then
-    # shellcheck source=/dev/null
-    . "${SCRIPT_DIRECTORY_REAL}/.DIPA.sh.config";
-fi
-
-# end Program custom configs }}}
-
-
-# {{{ ### Menu config ##########################################################
-################################################################################
-#
-# Limits:
-#
-# MENU_NAM max. 30 chars!
-# MENU_KEY exec:abc -> invokes calling the function abc directly
-#                      whithout 'exec:' prefix you need to implement the
-#                      specials for that call
-# MENU_HLP max 80 chars colmns width on output. max 120chars at code level!
-# -------------------------->| <- 30
-# ---------------------------------------------------------------------------->| <- 80
-
-# init menu config
-
-declare -a MENU_NAM
-declare -a MENU_KEY
-declare -a MENU_HLP
-_IDX=0;
-
-# menu config
-
-((_IDX=_IDX+1)); # 1 help menu must stay at postion 1
-MENU_NAM[_IDX]="Help"; # Dont do it in menu, like: ❓ or using colors!
-MENU_KEY[_IDX]="exec:menuhelp";
-MENU_HLP[_IDX]="General help info... and to show all help";
-
-((_IDX=_IDX+1)); # 2
-MENU_NAM[_IDX]="Exit or 'q' for quit";
-MENU_KEY[_IDX]="exec:do_exit";
-MENU_HLP[_IDX]="Exit the program
-Press CTRL+C, 'q' or select '$_IDX' from the menu to exit the program";
-
-((_IDX=_IDX+1)); # 3
-MENU_NAM[_IDX]="Code: CS Check";
-MENU_KEY[_IDX]="exec:do_codeCSCheck";
-MENU_HLP[_IDX]="Run the coding style checks for all available parts (e.g: js/vue, php....)";
-
-((_IDX=_IDX+1)); # 4
-MENU_NAM[_IDX]="Code: CS Fix";
-MENU_KEY[_IDX]="exec:do_codeCSFix";
-MENU_HLP[_IDX]="Run the coding style fixer for all available parts (e.g: js/vue, php....)";
-
-((_IDX=_IDX+1)); # 5
-MENU_NAM[_IDX]="Code: Test (all)";
-MENU_KEY[_IDX]="exec:do_codeTestAll";
-MENU_HLP[_IDX]="Execute all available tests.
-Currently only some Vue tests exists... more to come....";
-
-((_IDX=_IDX+1)); # 6
-MENU_NAM[_IDX]="Code: Test (Js/Vue)";
-MENU_KEY[_IDX]="exec:do_codeTestJsVue";
-MENU_HLP[_IDX]="Executes all available Js/Vue tests.";
-
-((_IDX=_IDX+1)); # 7
-MENU_NAM[_IDX]="Code: Test (php)";
-MENU_KEY[_IDX]="exec:do_codeTestPhp";
-MENU_HLP[_IDX]="Execute all available PHP/dupal tests.
-$(txt_err "No tests available")";
-
-((_IDX=_IDX+1)); # 8
-MENU_NAM[_IDX]="---";
-MENU_KEY[_IDX]="exec:do_noop";
-
-((_IDX=_IDX+1)); # 9
-MENU_NAM[_IDX]="PHP: Composer Install";
-MENU_KEY[_IDX]="exec:goto_containerPhp_doComposerInstall";
-
-((_IDX=_IDX+1)); # 10
-MENU_NAM[_IDX]="PHP: Drush Clear Cache (cr)";
-MENU_KEY[_IDX]="exec:goto_containerPhp_doDrushCr";
-
-((_IDX=_IDX+1)); # 11
-MENU_NAM[_IDX]="PHP: Drush 2x cim + updb + cr";
-MENU_KEY[_IDX]="exec:goto_containerPhp_doDrushCimUpdbCr";
-
-((_IDX=_IDX+1)); # 12
-MENU_NAM[_IDX]="PHP: Drush Imp. Translations";
-MENU_KEY[_IDX]="exec:goto_containerPhp_doDrushImpTrans";
-
-((_IDX=_IDX+1)); # 13
-MENU_NAM[_IDX]="---";
-MENU_KEY[_IDX]="exec:do_noop";
-
-((_IDX=_IDX+1)); # 14
-MENU_NAM[_IDX]="Goto docker: PHP";
-MENU_KEY[_IDX]="exec:goto_containerPhp_do";
-MENU_HLP[_IDX]="Enter the php docker container to do individual actions e.g:
-DB dumps, 'composer install' 'drush abc xyz' and so on....";
-
-((_IDX=_IDX+1)); # 15
-MENU_NAM[_IDX]="Goto docker: Vue";
-MENU_KEY[_IDX]="exec:goto_containerVue_do";
-MENU_HLP[_IDX]="Enter the Vue docker container to do individual actions e.g:
-'npm run lint', 'npm run test:unit' or 'npm run lint:fix'...";
-
-((_IDX=_IDX+1)); # 16
-MENU_NAM[_IDX]="Goto docker: DB";
-MENU_KEY[_IDX]="exec:goto_containerDb_do";
-MENU_HLP[_IDX]="Enter the postgre database docker container to do individual actions";
-
-((_IDX=_IDX+1)); # 17
-MENU_NAM[_IDX]="---";
-MENU_KEY[_IDX]="exec:do_noop";
-
-# ((_IDX=_IDX+1));
-# MENU_NAM[_IDX]="PHP: Drush Change Password";
-# MENU_KEY[_IDX]="exec:containerPHPDrushUpdatePassword";
-
-# ((_IDX=_IDX+1));
-# MENU_NAM[_IDX]="SYS: Check Outdated Packages";
-# MENU_KEY[_IDX]="exec:devEnvironmentCheckOutdatedPackages";
-# MENU_HLP[_IDX]="Checks if there are outdated packages. This is usful for upgrading the core
-# software. Mostly a task for the product owners for a next release
-# ";
-
-((_IDX=_IDX+1));
-MENU_NAM[_IDX]="SYS: DB Import";
-MENU_KEY[_IDX]="exec:do_dbImport";
-MENU_HLP[_IDX]="This does only handle the database import of a sql dump file.
-All further actions needs to be made by hand.";
-
-((_IDX=_IDX+1));
-MENU_NAM[_IDX]="SYS: DB Import + BE upds";
-MENU_KEY[_IDX]="exec:do_dbImport_extended";
-MENU_HLP[_IDX]="DB Import + Backend updates
-Daily business:
-You get a new DB. Import it and you want upgrading it to the latest changes of
-the local 'drupal' installation to check for errors or for working on the
-current (newer) code base.
-
-This does the following actions:
-
-- Checks if services are up to go on
-- Request db file to import
-- Resets db (backup before exists?)
-- Runs: 'composer install' to bind php dependencies (if changed)
-- Imports the db file
-
-- Resets credential to the defaults: admin/admin
-    - Runs: 'drush ucrt admin'
-    - Runs: 'drush upwd admin admin'
-    - Runs: 'drush urol siteadmin admin'
-
-- Runs: 'drush cim -y' Imports configs from the config directory
-- Runs: 'drush cim -y' To veryfiy prev. run
-- Runs: 'drush updb -y' Apply any required db updates
-- Runs: 'drush updb -y' To veryfiy prev. run
-- Runs: 'drush cr' (Rebuild all caches)...
-- Runs: 'drush en dipas_dev' enable dipas dev module
-- Runs: 'drush locale:import de /app/config/de.po' Import the de.po file
-- Runs: 'drush en dipas_statistics' Enables dipas statistics module
-
-Fixes local domain entrys for development (here: default values):
-- Runs: 'drush dipas-dev:fix-domain-entries --host=localhost --port=80'
-
-
-... more to come if needed
-";
-
-((_IDX=_IDX+1));
-MENU_NAM[_IDX]="SYS: DB Export";
-MENU_KEY[_IDX]="exec:do_dbExport";
-MENU_HLP[_IDX]="Export/ backup current dipas database.
-It will be stored in 'DIPAS ROOT PATH/transfer/dipas-dump-export.sql' if you
-dont change the default settings or enter a custom export filename.
-";
-
-# ((_IDX=_IDX+1));
-# MENU_NAM[_IDX]="SYS: DB Delete";
-# MENU_KEY[_IDX]="exec:containerDatabaseDelete";
-# MENU_HLP[_IDX]="";
-
-((_IDX=_IDX+1)); #
-MENU_NAM[_IDX]="---";
-MENU_KEY[_IDX]="exec:do_noop";
-
-((_IDX=_IDX+1));
-MENU_NAM[_IDX]="SYS: Docker check services";
-MENU_KEY[_IDX]="exec:do_dockerServicesCheck"
-MENU_HLP[_IDX]="Checks if docker service is runing
-and also if the docker containers exists and are activ";
-
-((_IDX=_IDX+1));
-MENU_NAM[_IDX]="SYS: Docker containers start";
-MENU_KEY[_IDX]="exec:do_dockerContainerStart";
-MENU_HLP[_IDX]="Starts all available docker containers and reports it to the
-terminal";
-
-((_IDX=_IDX+1));
-MENU_NAM[_IDX]="SYS: Docker containers stop";
-MENU_KEY[_IDX]="exec:do_dockerContainerStop";
-MENU_HLP[_IDX]="Stops all available docker containers and reports it to the
-terminal";
-
-((_IDX=_IDX+1));
-MENU_NAM[_IDX]="SYS: Docker containers restart";
-MENU_KEY[_IDX]="exec:do_dockerContainerRestart";
-
-((_IDX=_IDX+1));
-MENU_NAM[_IDX]="SYS: Docker service start";
-MENU_KEY[_IDX]="exec:do_dockerServiceStart";
-MENU_HLP[_IDX]="Starts the major docker deamon to be able to start/stop docker
-containers.
-You need to have sudo rights for it.";
-
-((_IDX=_IDX+1)); #
-MENU_NAM[_IDX]="---";
-MENU_KEY[_IDX]="exec:do_noop";
-
-((_IDX=_IDX+1));
-MENU_NAM[_IDX]="SYS: Docker containers build";
-MENU_KEY[_IDX]="exec:do_dockerContainerBuild";
-MENU_HLP[_IDX]="Initial install job.
-Containers must be build (first time or on changes of the container setup)
-to be able to run the docker containers.";
-
-((_IDX=_IDX+1));
-MENU_NAM[_IDX]="SYS: Install DIPAS enviroment";
-MENU_KEY[_IDX]="exec:do_installDipas";
-MENU_HLP[_IDX]="Install DIPAS from scratch.
-
-Services/ docker containers can be created, but:
-Your user must be in group 'docker' and the system service must be already ON
-or you have 'sudo' access to execute e.g: 'sudo service docker start' @see:
-'Docker service start' in menu.
-";
-
-((_IDX=_IDX+1)); # 12
-MENU_NAM[_IDX]="---";
-MENU_KEY[_IDX]="exec:do_noop";
-
-((_IDX=_IDX+1));
-MENU_NAM[_IDX]="CFG: Setup custom config";
-MENU_KEY[_IDX]="exec:do_setupConfig";
-MENU_HLP[_IDX]="Show and change custom config values.
-
-This 'Setup' first shows the current config and then will request each
-parameter for changes and to save them to a config file (.DIPA.sh.config') for
-the usage of this program. If the config does not exists our defaults will be
-used and shown. Eg: user and passwords for DB or locations where all the code,
-reositories will go to.
-
-Make sure this script exists only once in your user account and you dont run
-setup at the same time in e.g. two shells. Saving config may fail behinde the
-scene: If another running instance of this program or any other program
-modifies the config, it will be overwritten at this point, losing any previous
-changes made by the other program(s).
-
-To restore back to our defaults just remove this config file or select
-'Delete custom config' and start the script again.
-
-Details of the config keys and usage:
-
-# DIPAS root path for the installation
-# e.g.: /home/${USER}/projects/DIPAS | '/www/dipas' (no tailing /)
-$(ct_yellow "DIPAS_BASE_ROOT_PATH")
-
-# Default db export/import filenames.
-# The file extension is important here. For lower file sizes of the dumps use
-# 'gz' for gzip compression. Each time you want to import or export the db you
-# will be asked for an individual filename.
-# def: $(ct_yellow "dipas-dump-export.sql.gz") and
-# def: $(ct_yellow "dipas-dump-import.sql.gz")
-$(ct_yellow "DIPAS_DB_DUMP_EXPORT")
-$(ct_yellow "DIPAS_DB_DUMP_IMPORT")
-
-# Subpath (after DIPAS ROOT PATH) for sharing data/files cross docker containers
-# def: $(ct_yellow "transfer")
-$(ct_yellow "DIPAS_DB_DUMP_SUBPATH")
-
-# Hostname or ip address to connect to the db server. def: $(ct_yellow "database")
-$(ct_yellow "DIPAS_DB_HOST")
-
-# Name of DIPAS database. def: $(ct_yellow "dipas")
-$(ct_yellow "DIPAS_DB_NAME")
-
-# Password to connect to the db. def: $(ct_yellow "dipas")
-$(ct_yellow "DIPAS_DB_PASSWORD")
-
-# Username to connect to the db. def: $(ct_yellow "dipas")
-$(ct_yellow "DIPAS_DB_USERNAME")
-
-
-###
-# Repos's: we have a 'dipas' and the 'docker' repository.
-
-# Branch of the dipas repo to checkout/ or pull (updates). def: $(ct_yellow "''")
-$(ct_yellow "DIPAS_REPO_DIPAS_BRANCH")
-
-# Default branch of the dipas repo and to be used if
-# '$(ct_yellow "DIPAS_REPO_DIPAS_BRANCH")' is empty. def: $(ct_yellow "dev")
-$(ct_yellow "DIPAS_REPO_DIPAS_BRANCHDEFAULT")
-
-# Url to the dipas repository.
-# Don't replace UNKNOWN here! '$(ct_yellow "DIPAS_REPO_USERNAME")' will be used
-# if not empty, otherwise 'UNKNOWN@' will be automatically removed.
-# Optional: This can include credentials e.g: user:pass if
-# '$(ct_yellow "DIPAS_REPO_USERNAME")' stays empty.
-# def: $(ct_yellow "https://UNKNOWN@bitbucket.org/geowerkstatt-hamburg/dipas_community.git")
-$(ct_yellow "DIPAS_REPO_DIPAS_URL")
-
-# Branch of the docker repository for a development enviroment to checkout/ or
-# pull (updates). def: $(ct_yellow "''")
-$(ct_yellow "DIPAS_REPO_DOCKER_BRANCH")
-
-# Default branch of the docker repo. def: $(ct_yellow "dev")
-$(ct_yellow "DIPAS_REPO_DOCKER_BRANCHDEFAULT")
-
-# Url to the docker repository for a development enviroment.
-# Don't replace UNKNOWN here! '$(ct_yellow "DIPAS_REPO_USERNAME")' will be used
-# if not empty, otherwise 'UNKNOWN@' will be automatically removed.
-# Optional: This can include credentials e.g: user:pass if
-# '$(ct_yellow "DIPAS_REPO_USERNAME")' stays empty.
-# stays empty. def: $(ct_yellow "https://UNKNOWN@bitbucket.org/geowerkstatt-hamburg/docker_for_dipas.git")
-$(ct_yellow "DIPAS_REPO_DOCKER_URL")
-
-# Username for http authentication at the VC system. def: $(ct_yellow "''")
-$(ct_yellow "DIPAS_REPO_USERNAME")
-
-
-###
-# Configs for extensions:
-
-# Hostname/ip and port where 'Verfahren' are located at the local development
-# enviroment. def: $(ct_yellow "localhost") and def: $(ct_yellow "80")
-$(ct_yellow "DIPAS_XEXT_PHP_FIXDOMAIN_HOST")
-$(ct_yellow "DIPAS_XEXT_PHP_FIXDOMAIN_PORT")
-
-more to come...
-";
-# end CFG: Setup custom config
-
-
-((_IDX=_IDX+1));
-MENU_NAM[_IDX]="CFG: Delete custom config";
-MENU_KEY[_IDX]="exec:do_setupReset";
-MENU_HLP[_IDX]="This will delete your custom config '.DIPA.sh.config'
-and exits the program.
-Start DIPA.sh new and our default config values will be used.";
-
-
-# End Menu config }}}
-
-
-# {{{ ### Promotion for this program ###########################################
-################################################################################
-
-# its: ANSI Regular & Hand Made
-BANNER_INTRO_PRE=$(
-    cat <<'BANNER_INTRO'
-
-              ███████████████████████████████████████████
-              █                                         █
-              █                                         █
-                                                        █
-    ██████   ██  ██████   █████      ███████  ██   ██   █
-    ██   ██  ██  ██   ██ ██   ██     ██       ██   ██   █
-    ██   ██  ██  ██████  ███████     ███████  ███████   █
-    ██   ██  ██  ██      ██   ██          ██  ██   ██   █
-    ██████   ██  ██      ██   ██  █  ███████  ██   ██   █
-                                                        █
-              █          VERSION_STRING   █
-              █    ██████████████████████████████████████
-              █   █
-              █  █     Digitales Partizipationssystem
-              █ █      DIPAS - dipas.org
-              ██       Hamburg / Germany
-              █
-        [D]eep [I]nstall and [P]roject [A]ssistant [Sh]ellscript
-        For devlopment tasks: DIPA.sh
-
-BANNER_INTRO
-);
-
-BANNER_INTRO="${BANNER_INTRO_PRE/VERSION_STRING/${VERSION_STRING}}";
-
-# End promotion }}}
-
-
-# ### {{{ Custom program functions #############################################
+# {{{ ### YOUR program functions ###############################################
 ################################################################################
 
 # do no operation
@@ -744,31 +346,37 @@ function do_checkDipasExists() {
 
 # @param string $1 optional action to pipe in
 function goto_containerPhp_do() {
-   if [ "$1" = "" ]; then
-      docker exec -it dipas_php /bin/bash
-   else
-      docker exec -it dipas_php /bin/bash -c "$1"
-   fi
+    if [ "$1" = "" ]; then
+        docker exec -it dipas_php /bin/bash;
+    else
+        docker exec -it dipas_php /bin/bash -c "$1";
+    fi
+
+    checkExitCode "$?" "Container not available?"
 }
 
 
 # @param string $1 optional action to pipe in
 function goto_containerVue_do() {
-   if [ "$1" = "" ]; then
-      docker exec -it dipas_vue /bin/bash
-   else
-      docker exec -it dipas_vue /bin/bash -c "$1"
-   fi
+    if [ "$1" = "" ]; then
+        docker exec -it dipas_vue /bin/bash;
+    else
+        docker exec -it dipas_vue /bin/bash -c "$1";
+    fi
+
+    checkExitCode "$?" "Container not available?"
 }
 
 
 # @param string $1 optional action to pipe in
 function goto_containerDb_do() {
     if [ "$1" = "" ]; then
-        docker exec -it dipas_postgres /bin/bash
+        docker exec -it dipas_postgres /bin/bash;
     else
-        docker exec -it dipas_postgres /bin/bash -c "$1"
+        docker exec -it dipas_postgres /bin/bash -c "$1";
     fi
+
+    checkExitCode "$?" "Container not available?"
 }
 
 
@@ -870,7 +478,7 @@ function do_dbImport() {
     do_dockerServicesCheck || return 2;
 
     echo
-    echo "Check if '${DIPAS_DB_DUMP_SUBPATH}/' exists...";
+    echo -n "Check if '${DIPAS_DB_DUMP_SUBPATH}/' exists... ";
     if [ ! -d "${DIPAS_BASE_ROOT_PATH}/${DIPAS_DB_DUMP_SUBPATH}/" ]; then
         mkdir "${DIPAS_BASE_ROOT_PATH}/${DIPAS_DB_DUMP_SUBPATH}/" || {
             txt_warn "Error creating '${DIPAS_DB_DUMP_SUBPATH}'. Check permissions. Abort";
@@ -878,6 +486,7 @@ function do_dbImport() {
             return 1;
         }
     fi
+    echo "ok";
 
     local _IMPORT_FILE="${DIPAS_DB_DUMP_IMPORT}";
     local check=0;
@@ -1160,6 +769,18 @@ function do_dockerServicesCheck() {
 }
 
 
+function do_dockerServicesStart() {
+    do_dockerServiceStart;
+    do_dockerContainerStart;
+}
+
+
+function do_dockerServicesStop() {
+    do_dockerContainerStop;
+    do_dockerServiceStop;
+}
+
+
 # dockerStartDeamon
 function do_dockerServiceStart() {
     if sudo service docker start; then
@@ -1171,6 +792,25 @@ function do_dockerServiceStart() {
 
         return 1;
     fi
+}
+
+
+function do_dockerServiceStop() {
+    if sudo service docker stop; then
+        echo "$(mark_ok) Stopped";
+
+        return 0;
+    else
+        txt_warn "$(mark_fail) Stop failt";
+
+        return 1;
+    fi
+}
+
+
+function do_dockerShutdown() {
+    do_dockerContainerStop;
+    do_dockerServiceStop;
 }
 
 
@@ -1297,31 +937,6 @@ function do_setupConfig() {
 
         return 1;
     }
-
-    declare -A PRG_GLOBALS
-    # ignore the order of entrys here.
-    PRG_GLOBALS=(
-        [DIPAS_BASE_ROOT_PATH]="$DIPAS_BASE_ROOT_PATH"
-        [DIPAS_DB_DUMP_SUBPATH]="$DIPAS_DB_DUMP_SUBPATH"
-
-        [DIPAS_DB_NAME]="$DIPAS_DB_NAME"
-        [DIPAS_DB_HOST]="$DIPAS_DB_HOST"
-        [DIPAS_DB_USERNAME]="$DIPAS_DB_USERNAME"
-        [DIPAS_DB_PASSWORD]="$DIPAS_DB_PASSWORD"
-        [DIPAS_DB_DUMP_IMPORT]="$DIPAS_DB_DUMP_IMPORT"
-        [DIPAS_DB_DUMP_EXPORT]="$DIPAS_DB_DUMP_EXPORT"
-
-        [DIPAS_REPO_DOCKER_URL]="$DIPAS_REPO_DOCKER_URL"
-        [DIPAS_REPO_DOCKER_BRANCH]="$DIPAS_REPO_DOCKER_BRANCH"
-        [DIPAS_REPO_DOCKER_BRANCHDEFAULT]="$DIPAS_REPO_DOCKER_BRANCHDEFAULT"
-        [DIPAS_REPO_DIPAS_URL]="$DIPAS_REPO_DIPAS_URL"
-        [DIPAS_REPO_DIPAS_BRANCH]="$DIPAS_REPO_DIPAS_BRANCH"
-        [DIPAS_REPO_DIPAS_BRANCHDEFAULT]="$DIPAS_REPO_DIPAS_BRANCHDEFAULT"
-        [DIPAS_REPO_USERNAME]="$DIPAS_REPO_USERNAME"
-
-        [DIPAS_XEXT_PHP_FIXDOMAIN_HOST]="$DIPAS_XEXT_PHP_FIXDOMAIN_HOST"
-        [DIPAS_XEXT_PHP_FIXDOMAIN_PORT]="$DIPAS_XEXT_PHP_FIXDOMAIN_PORT"
-    );
 
     ### bash 4.0 and a sort(1) with -z
     ## Sort a little better to request changes
@@ -1554,7 +1169,7 @@ function do_installDipas() {
     # fix db auth
     local TEXT_FINISHING="";
     TEXT_FINISHING=$(
-        cat <<'BANNER_INTRO'
+        cat <<'INSTALLHINTS'
 General or first install:
 
 1. get repos/ code, branches in place or do manually
@@ -1564,7 +1179,7 @@ General or first install:
     4.1. Import a database or follow the docs e.g 'INSTALL.md')
     4.2. and run update tasks (see menu:'DB Import + BE upds')
 
-BANNER_INTRO
+INSTALLHINTS
 );
 
     echo "${TEXT_FINISHING}";
@@ -1664,9 +1279,487 @@ BANNER_INTRO
     echo "4.1 and 4.2: Import a database or check the docs to go on.";
 }
 
-# End Custom program functions }}}
+# End YOUR program functions }}}
 
 
+
+################################################################################
+# {{{ ### YOUR default configs #################################################
+################################################################################
+
+DIPAS_BASE_ROOT_PATH="/home/${USER}/projects/DIPAS";
+DIPAS_DB_NAME='dipas';
+DIPAS_DB_HOST='database';
+DIPAS_DB_USERNAME='dipas';
+DIPAS_DB_PASSWORD='dipas';
+# Import file extension can be .sql, .gz or .tgz
+DIPAS_DB_DUMP_IMPORT='dipas-dump-import.sql.gz';
+# Export file extension can be .sql, .gz or .tgz
+DIPAS_DB_DUMP_EXPORT='dipas-dump-export.sql.gz';
+DIPAS_DB_DUMP_SUBPATH="transfer";
+
+# Don't replace UNKNOWN here! REPO_USERNAME will be used
+DIPAS_REPO_DOCKER_URL="https://UNKNOWN@bitbucket.org/geowerkstatt-hamburg/docker_for_dipas.git"
+DIPAS_REPO_DOCKER_BRANCH="DPS-1626-Base-Vue-Application-Cleanup"
+DIPAS_REPO_DOCKER_BRANCHDEFAULT="dev"
+
+# Don't replace UNKNOWN here! REPO_USERNAME will be used
+DIPAS_REPO_DIPAS_URL="https://UNKNOWN@bitbucket.org/geowerkstatt-hamburg/dipas_community.git";
+DIPAS_REPO_DIPAS_BRANCH="DPS-1626-Base-Vue-Application";
+DIPAS_REPO_DIPAS_BRANCHDEFAULT="dev";
+# Username on bitbucket to clone repos for the install process. Optional
+DIPAS_REPO_USERNAME="";
+
+DIPAS_XEXT_PHP_FIXDOMAIN_HOST="localhost";
+DIPAS_XEXT_PHP_FIXDOMAIN_PORT="8080";
+
+# source config if exists to overwrite prev. defaults
+if [ -f "${SCRIPT_DIRECTORY_REAL}/.DIPA.sh.config" ]; then
+    # shellcheck source=/dev/null
+    . "${SCRIPT_DIRECTORY_REAL}/.DIPA.sh.config";
+fi
+
+################################################################################
+# mapper for the configs to save custom configs
+#
+declare -A PRG_GLOBALS
+    # ignore the order of entrys here. a-z by var name counts
+    PRG_GLOBALS=(
+        [DIPAS_BASE_ROOT_PATH]="$DIPAS_BASE_ROOT_PATH"
+        [DIPAS_DB_DUMP_SUBPATH]="$DIPAS_DB_DUMP_SUBPATH"
+
+        [DIPAS_DB_NAME]="$DIPAS_DB_NAME"
+        [DIPAS_DB_HOST]="$DIPAS_DB_HOST"
+        [DIPAS_DB_USERNAME]="$DIPAS_DB_USERNAME"
+        [DIPAS_DB_PASSWORD]="$DIPAS_DB_PASSWORD"
+        [DIPAS_DB_DUMP_IMPORT]="$DIPAS_DB_DUMP_IMPORT"
+        [DIPAS_DB_DUMP_EXPORT]="$DIPAS_DB_DUMP_EXPORT"
+
+        [DIPAS_REPO_DOCKER_URL]="$DIPAS_REPO_DOCKER_URL"
+        [DIPAS_REPO_DOCKER_BRANCH]="$DIPAS_REPO_DOCKER_BRANCH"
+        [DIPAS_REPO_DOCKER_BRANCHDEFAULT]="$DIPAS_REPO_DOCKER_BRANCHDEFAULT"
+        [DIPAS_REPO_DIPAS_URL]="$DIPAS_REPO_DIPAS_URL"
+        [DIPAS_REPO_DIPAS_BRANCH]="$DIPAS_REPO_DIPAS_BRANCH"
+        [DIPAS_REPO_DIPAS_BRANCHDEFAULT]="$DIPAS_REPO_DIPAS_BRANCHDEFAULT"
+        [DIPAS_REPO_USERNAME]="$DIPAS_REPO_USERNAME"
+
+        [DIPAS_XEXT_PHP_FIXDOMAIN_HOST]="$DIPAS_XEXT_PHP_FIXDOMAIN_HOST"
+        [DIPAS_XEXT_PHP_FIXDOMAIN_PORT]="$DIPAS_XEXT_PHP_FIXDOMAIN_PORT"
+    );
+
+# end YOUR default configs }}}
+
+
+
+################################################################################
+# {{{ ### YOUR Menu config #####################################################
+################################################################################
+#
+# Limits:
+#
+# MENU_NAM max. 30 chars!
+# MENU_KEY exec:abc -> invokes calling the function abc directly
+#                      whithout 'exec:' prefix you need to implement the
+#                      specials for that call
+# MENU_HLP max 80 chars colmns width on output. max 120chars at code level!
+# -------------------------->| <- 30
+# ---------------------------------------------------------------------------->| <- 80
+
+# init menu config
+
+declare -a MENU_NAM
+declare -a MENU_KEY
+declare -a MENU_HLP
+_IDX=0;
+
+# menu config
+
+((_IDX=_IDX+1)); # 1 help menu must stay at postion 1
+MENU_NAM[_IDX]="Help"; # Dont do it in menu, like: ❓ or using colors!
+MENU_KEY[_IDX]="exec:menuhelp";
+MENU_HLP[_IDX]="General help info... and to show all help";
+
+((_IDX=_IDX+1)); # 2
+MENU_NAM[_IDX]="Exit or 'q' for quit";
+MENU_KEY[_IDX]="exec:do_exit";
+MENU_HLP[_IDX]="Exit the program
+Press CTRL+C, 'q' or select '$_IDX' from the menu to exit the program";
+
+((_IDX=_IDX+1)); # 3
+MENU_NAM[_IDX]="Code: CS Check";
+MENU_KEY[_IDX]="exec:do_codeCSCheck";
+MENU_HLP[_IDX]="Run the coding style checks for all available parts (e.g: js/vue, php....)";
+
+((_IDX=_IDX+1)); # 4
+MENU_NAM[_IDX]="Code: CS Fix";
+MENU_KEY[_IDX]="exec:do_codeCSFix";
+MENU_HLP[_IDX]="Run the coding style fixer for all available parts (e.g: js/vue, php....)";
+
+((_IDX=_IDX+1)); # 5
+MENU_NAM[_IDX]="Code: Test (all)";
+MENU_KEY[_IDX]="exec:do_codeTestAll";
+MENU_HLP[_IDX]="Execute all available tests.
+Currently only some Vue tests exists... more to come....";
+
+((_IDX=_IDX+1)); # 6
+MENU_NAM[_IDX]="Code: Test (Js/Vue)";
+MENU_KEY[_IDX]="exec:do_codeTestJsVue";
+MENU_HLP[_IDX]="Executes all available Js/Vue tests.";
+
+((_IDX=_IDX+1)); # 7
+MENU_NAM[_IDX]="Code: Test (php)";
+MENU_KEY[_IDX]="exec:do_codeTestPhp";
+MENU_HLP[_IDX]="Execute all available PHP/dupal tests.
+$(txt_err "No tests available")";
+
+((_IDX=_IDX+1)); # 8
+MENU_NAM[_IDX]="---";
+MENU_KEY[_IDX]="exec:do_noop";
+
+((_IDX=_IDX+1)); # 9
+MENU_NAM[_IDX]="PHP: Composer Install";
+MENU_KEY[_IDX]="exec:goto_containerPhp_doComposerInstall";
+
+((_IDX=_IDX+1)); # 10
+MENU_NAM[_IDX]="PHP: Drush Clear Cache (cr)";
+MENU_KEY[_IDX]="exec:goto_containerPhp_doDrushCr";
+
+((_IDX=_IDX+1)); # 11
+MENU_NAM[_IDX]="PHP: Drush 2x cim + updb + cr";
+MENU_KEY[_IDX]="exec:goto_containerPhp_doDrushCimUpdbCr";
+
+((_IDX=_IDX+1)); # 12
+MENU_NAM[_IDX]="PHP: Drush Imp. Translations";
+MENU_KEY[_IDX]="exec:goto_containerPhp_doDrushImpTrans";
+
+((_IDX=_IDX+1)); # 13
+MENU_NAM[_IDX]="---";
+MENU_KEY[_IDX]="exec:do_noop";
+
+((_IDX=_IDX+1)); # 14
+MENU_NAM[_IDX]="Goto docker: PHP";
+MENU_KEY[_IDX]="exec:goto_containerPhp_do";
+MENU_HLP[_IDX]="Enter the php docker container to do individual actions e.g:
+DB dumps, 'composer install' 'drush abc xyz' and so on....";
+
+((_IDX=_IDX+1)); # 15
+MENU_NAM[_IDX]="Goto docker: Vue";
+MENU_KEY[_IDX]="exec:goto_containerVue_do";
+MENU_HLP[_IDX]="Enter the Vue docker container to do individual actions e.g:
+'npm run lint', 'npm run test:unit' or 'npm run lint:fix'...";
+
+((_IDX=_IDX+1)); # 16
+MENU_NAM[_IDX]="Goto docker: DB";
+MENU_KEY[_IDX]="exec:goto_containerDb_do";
+MENU_HLP[_IDX]="Enter the postgre database docker container to do individual actions";
+
+((_IDX=_IDX+1)); # 17
+MENU_NAM[_IDX]="---";
+MENU_KEY[_IDX]="exec:do_noop";
+
+# ((_IDX=_IDX+1));
+# MENU_NAM[_IDX]="PHP: Drush Change Password";
+# MENU_KEY[_IDX]="exec:containerPHPDrushUpdatePassword";
+
+# ((_IDX=_IDX+1));
+# MENU_NAM[_IDX]="SYS: Check Outdated Packages";
+# MENU_KEY[_IDX]="exec:devEnvironmentCheckOutdatedPackages";
+# MENU_HLP[_IDX]="Checks if there are outdated packages. This is usful for upgrading the core
+# software. Mostly a task for the product owners for a next release
+# ";
+
+((_IDX=_IDX+1));
+MENU_NAM[_IDX]="SYS: DB Import";
+MENU_KEY[_IDX]="exec:do_dbImport";
+MENU_HLP[_IDX]="This does only handle the database import of a sql dump file.
+All further actions needs to be made by hand.";
+
+((_IDX=_IDX+1));
+MENU_NAM[_IDX]="SYS: DB Import + BE upds";
+MENU_KEY[_IDX]="exec:do_dbImport_extended";
+MENU_HLP[_IDX]="DB Import + Backend updates
+Daily business:
+You get a new DB. Import it and you want upgrading it to the latest changes of
+the local 'drupal' installation to check for errors or for working on the
+current (newer) code base.
+
+This does the following actions:
+
+- Checks if services are up to go on
+- Request db file to import
+- Resets db (backup before exists?)
+- Runs: 'composer install' to bind php dependencies (if changed)
+- Imports the db file
+
+- Resets credential to the defaults: admin/admin
+    - Runs: 'drush ucrt admin'
+    - Runs: 'drush upwd admin admin'
+    - Runs: 'drush urol siteadmin admin'
+
+- Runs: 'drush cim -y' Imports configs from the config directory
+- Runs: 'drush cim -y' To veryfiy prev. run
+- Runs: 'drush updb -y' Apply any required db updates
+- Runs: 'drush updb -y' To veryfiy prev. run
+- Runs: 'drush cr' (Rebuild all caches)...
+- Runs: 'drush en dipas_dev' enable dipas dev module
+- Runs: 'drush locale:import de /app/config/de.po' Import the de.po file
+- Runs: 'drush en dipas_statistics' Enables dipas statistics module
+
+Fixes local domain entrys for development (here: default values):
+- Runs: 'drush dipas-dev:fix-domain-entries --host=localhost --port=80'
+
+
+... more to come if needed
+";
+
+((_IDX=_IDX+1));
+MENU_NAM[_IDX]="SYS: DB Export";
+MENU_KEY[_IDX]="exec:do_dbExport";
+MENU_HLP[_IDX]="Export/ backup current dipas database.
+It will be stored in 'DIPAS ROOT PATH/transfer/dipas-dump-export.sql' if you
+dont change the default settings or enter a custom export filename.
+";
+
+# ((_IDX=_IDX+1));
+# MENU_NAM[_IDX]="SYS: DB Delete";
+# MENU_KEY[_IDX]="exec:do_noop";
+# MENU_HLP[_IDX]="";
+
+
+((_IDX=_IDX+1)); #
+MENU_NAM[_IDX]="---";
+MENU_KEY[_IDX]="exec:do_noop";
+
+# ((_IDX=_IDX+1));
+# MENU_NAM[_IDX]="SYS: Docker containers start";
+# MENU_KEY[_IDX]="exec:do_dockerContainerStart";
+# MENU_HLP[_IDX]="Starts all available docker containers and reports it to the
+# terminal";
+
+# ((_IDX=_IDX+1));
+# MENU_NAM[_IDX]="SYS: Docker containers stop";
+# MENU_KEY[_IDX]="exec:do_dockerContainerStop";
+# MENU_HLP[_IDX]="Stops all available docker containers and reports it to the
+# terminal";
+
+# ((_IDX=_IDX+1));
+# MENU_NAM[_IDX]="SYS: Docker containers restart";
+# MENU_KEY[_IDX]="exec:do_dockerContainerRestart";
+
+((_IDX=_IDX+1));
+MENU_NAM[_IDX]="SYS: Docker services check";
+MENU_KEY[_IDX]="exec:do_dockerServicesCheck"
+MENU_HLP[_IDX]="Checks if docker service is runing
+and also if the docker containers exists and are activ";
+
+((_IDX=_IDX+1));
+MENU_NAM[_IDX]="SYS: Docker services start";
+MENU_KEY[_IDX]="exec:do_dockerServicesStart"
+
+((_IDX=_IDX+1));
+MENU_NAM[_IDX]="SYS: Docker services stop";
+MENU_KEY[_IDX]="exec:do_dockerServicesStop"
+
+
+((_IDX=_IDX+1)); #
+MENU_NAM[_IDX]="---";
+MENU_KEY[_IDX]="exec:do_noop";
+
+((_IDX=_IDX+1));
+MENU_NAM[_IDX]="SYS: Docker containers build";
+MENU_KEY[_IDX]="exec:do_dockerContainerBuild";
+MENU_HLP[_IDX]="Initial install job.
+Containers must be build (first time or on changes of the container setup)
+to be able to run the docker containers.";
+
+((_IDX=_IDX+1));
+MENU_NAM[_IDX]="SYS: Install DIPAS enviroment";
+MENU_KEY[_IDX]="exec:do_installDipas";
+MENU_HLP[_IDX]="Install DIPAS from scratch.
+
+Services/ docker containers can be created, but:
+Your user must be in group 'docker' and the system service must be already ON
+or you have 'sudo' access to execute e.g: 'sudo service docker start' @see:
+'Docker service start' in menu.
+";
+
+((_IDX=_IDX+1)); # 12
+MENU_NAM[_IDX]="---";
+MENU_KEY[_IDX]="exec:do_noop";
+
+((_IDX=_IDX+1));
+MENU_NAM[_IDX]="CFG: Setup custom config";
+MENU_KEY[_IDX]="exec:do_setupConfig";
+MENU_HLP[_IDX]="Show and change custom config values.
+
+This 'Setup' first shows the current config and then will request each
+parameter for changes and to save them to a config file (.DIPA.sh.config') for
+the usage of this program. If the config does not exists our defaults will be
+used and shown. Eg: user and passwords for DB or locations where all the code,
+reositories will go to.
+
+Make sure this script exists only once in your user account and you dont run
+setup at the same time in e.g. two shells. Saving config may fail behinde the
+scene: If another running instance of this program or any other program
+modifies the config, it will be overwritten at this point, losing any previous
+changes made by the other program(s).
+
+To restore back to our defaults just remove this config file or select
+'Delete custom config' and start the script again.
+
+Details of the config keys and usage:
+
+# DIPAS root path for the installation
+# e.g.: /home/${USER}/projects/DIPAS | '/www/dipas' (no tailing /)
+$(ct_yellow "DIPAS_BASE_ROOT_PATH")
+
+# Default db export/import filenames.
+# The file extension is important here. For lower file sizes of the dumps use
+# 'gz' for gzip compression. Each time you want to import or export the db you
+# will be asked for an individual filename.
+# def: $(ct_yellow "dipas-dump-export.sql.gz") and
+# def: $(ct_yellow "dipas-dump-import.sql.gz")
+$(ct_yellow "DIPAS_DB_DUMP_EXPORT")
+$(ct_yellow "DIPAS_DB_DUMP_IMPORT")
+
+# Subpath (after DIPAS ROOT PATH) for sharing data/files cross docker containers
+# def: $(ct_yellow "transfer")
+$(ct_yellow "DIPAS_DB_DUMP_SUBPATH")
+
+# Hostname or ip address to connect to the db server. def: $(ct_yellow "database")
+$(ct_yellow "DIPAS_DB_HOST")
+
+# Name of DIPAS database. def: $(ct_yellow "dipas")
+$(ct_yellow "DIPAS_DB_NAME")
+
+# Password to connect to the db. def: $(ct_yellow "dipas")
+$(ct_yellow "DIPAS_DB_PASSWORD")
+
+# Username to connect to the db. def: $(ct_yellow "dipas")
+$(ct_yellow "DIPAS_DB_USERNAME")
+
+
+###
+# Repos's: we have a 'dipas' and the 'docker' repository.
+
+# Branch of the dipas repo to checkout/ or pull (updates). def: $(ct_yellow "''")
+$(ct_yellow "DIPAS_REPO_DIPAS_BRANCH")
+
+# Default branch of the dipas repo and to be used if
+# '$(ct_yellow "DIPAS_REPO_DIPAS_BRANCH")' is empty. def: $(ct_yellow "dev")
+$(ct_yellow "DIPAS_REPO_DIPAS_BRANCHDEFAULT")
+
+# Url to the dipas repository.
+# Don't replace UNKNOWN here! '$(ct_yellow "DIPAS_REPO_USERNAME")' will be used
+# if not empty, otherwise 'UNKNOWN@' will be automatically removed.
+# Optional: This can include credentials e.g: user:pass if
+# '$(ct_yellow "DIPAS_REPO_USERNAME")' stays empty.
+# def: $(ct_yellow "https://UNKNOWN@bitbucket.org/geowerkstatt-hamburg/dipas_community.git")
+$(ct_yellow "DIPAS_REPO_DIPAS_URL")
+
+# Branch of the docker repository for a development enviroment to checkout/ or
+# pull (updates). def: $(ct_yellow "''")
+$(ct_yellow "DIPAS_REPO_DOCKER_BRANCH")
+
+# Default branch of the docker repo. def: $(ct_yellow "dev")
+$(ct_yellow "DIPAS_REPO_DOCKER_BRANCHDEFAULT")
+
+# Url to the docker repository for a development enviroment.
+# Don't replace UNKNOWN here! '$(ct_yellow "DIPAS_REPO_USERNAME")' will be used
+# if not empty, otherwise 'UNKNOWN@' will be automatically removed.
+# Optional: This can include credentials e.g: user:pass if
+# '$(ct_yellow "DIPAS_REPO_USERNAME")' stays empty.
+# stays empty. def: $(ct_yellow "https://UNKNOWN@bitbucket.org/geowerkstatt-hamburg/docker_for_dipas.git")
+$(ct_yellow "DIPAS_REPO_DOCKER_URL")
+
+# Username for http authentication at the VC system. def: $(ct_yellow "''")
+$(ct_yellow "DIPAS_REPO_USERNAME")
+
+
+###
+# Configs for extensions:
+
+# Hostname/ip and port where 'Verfahren' are located at the local development
+# enviroment. def: $(ct_yellow "localhost") and def: $(ct_yellow "80")
+$(ct_yellow "DIPAS_XEXT_PHP_FIXDOMAIN_HOST")
+$(ct_yellow "DIPAS_XEXT_PHP_FIXDOMAIN_PORT")
+
+more to come...
+";
+# end CFG: Setup custom config
+
+((_IDX=_IDX+1));
+MENU_NAM[_IDX]="CFG: Delete custom config";
+MENU_KEY[_IDX]="exec:do_setupReset";
+MENU_HLP[_IDX]="This will delete your custom config '.DIPA.sh.config'
+and exits the program.
+Start DIPA.sh new and our default config values will be used.";
+
+# ((_IDX=_IDX+1)); #
+# MENU_NAM[_IDX]="---";
+# MENU_KEY[_IDX]="exec:do_noop";
+
+# ((_IDX=_IDX+1));
+# MENU_NAM[_IDX]="SYS: Docker service start";
+# MENU_KEY[_IDX]="exec:do_dockerServiceStart";
+# MENU_HLP[_IDX]="Starts the major docker deamon to be able to start/stop docker
+# containers.
+# You need to have sudo rights for it.";
+
+# ((_IDX=_IDX+1));
+# MENU_NAM[_IDX]="SYS: Docker service stop";
+# MENU_KEY[_IDX]="exec:do_dockerServiceStop";
+# MENU_HLP[_IDX]="Stops the major docker deamon.
+# containers are will be not available.";
+
+# ((_IDX=_IDX+1));
+# MENU_NAM[_IDX]="SYS: shutdown, feierabend";
+# MENU_KEY[_IDX]="exec:do_dockerShutdown";
+# MENU_HLP[_IDX]="Shutdown the services.";
+
+
+# End YOUR Menu config }}}
+
+
+
+################################################################################
+# {{{ ### Promotion for this program ###########################################
+################################################################################
+
+# its: ANSI Regular & Hand Made
+BANNER_INTRO_PRE=$(
+    cat <<'BANNER_INTRO'
+
+              ███████████████████████████████████████████
+              █                                         █
+              █                                         █
+                                                        █
+    ██████   ██  ██████   █████      ███████  ██   ██   █
+    ██   ██  ██  ██   ██ ██   ██     ██       ██   ██   █
+    ██   ██  ██  ██████  ███████     ███████  ███████   █
+    ██   ██  ██  ██      ██   ██          ██  ██   ██   █
+    ██████   ██  ██      ██   ██  █  ███████  ██   ██   █
+                                                        █
+              █          VERSION_STRING   █
+              █    ██████████████████████████████████████
+              █   █
+              █  █     Digitales Partizipationssystem
+              █ █      DIPAS - dipas.org
+              ██       Hamburg / Germany
+              █
+        [D]eep [I]nstall and [P]roject [A]ssistant [Sh]ellscript
+        For devlopment tasks: DIPA.sh
+
+BANNER_INTRO
+);
+
+BANNER_INTRO="${BANNER_INTRO_PRE/VERSION_STRING/${VERSION_STRING}}";
+
+# End promotion }}}
+
+
+
+################################################################################
 # {{{ ### Action handling start ################################################
 ################################################################################
 
@@ -1676,7 +1769,7 @@ BANNER_INTRO
 
 tput reset;
 # print banner once at startup
-echo "${BANNER_INTRO}";
+ct_green "${BANNER_INTRO}";
 
 ##
 # program pre checks
@@ -1768,16 +1861,34 @@ do
         "q")
             do_exit
             ;;
+
+        ### to be removed! ################################################>>>>>
+        "cr")
+            # hidden feature
+            goto_containerPhp_doDrushCr;
+            ;;
+
+        "cim")
+            # hidden feature
+            goto_containerPhp_doDrushCim;
+            ;;
+
+        "updb")
+            # hidden feature
+            goto_containerPhp_doDrushUpdb;
+            ;;
+        ### to be removed! ################################################<<<<<
+
         *)
             # All others which do not match
             echo "Ooops - Option '$REPLY' not implemented";
-            break
+            # break
             ;;
         esac
 
         # fallback if not break'ed before
         #echo "Ooops - Option '$REPLY' not exists";
-        echo "Ooops - Option '$REPLY' not exists, exit"; break;
+        #echo "Ooops - Option '$REPLY' not exists, exit"; break;
     fi
 done
 
