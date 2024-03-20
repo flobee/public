@@ -1712,12 +1712,12 @@ DIPAS_DB_DUMP_SUBPATH="transfer";
 
 # Don't replace UNKNOWN here! REPO_USERNAME will be used
 DIPAS_REPO_DOCKER_URL="https://UNKNOWN@bitbucket.org/geowerkstatt-hamburg/docker_for_dipas.git"
-DIPAS_REPO_DOCKER_BRANCH="DPS-1626-Base-Vue-Application-Cleanup"
+DIPAS_REPO_DOCKER_BRANCH="dev"
 DIPAS_REPO_DOCKER_BRANCHDEFAULT="dev"
 
 # Don't replace UNKNOWN here! REPO_USERNAME will be used
 DIPAS_REPO_DIPAS_URL="https://UNKNOWN@bitbucket.org/geowerkstatt-hamburg/dipas_community.git";
-DIPAS_REPO_DIPAS_BRANCH="DPS-1626-Base-Vue-Application";
+DIPAS_REPO_DIPAS_BRANCH="dev";
 DIPAS_REPO_DIPAS_BRANCHDEFAULT="dev";
 # Username on vc system to clone repos for the install process.
 # Optional if set in url
