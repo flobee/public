@@ -2,7 +2,7 @@
 
 # shellcheck disable=SC2016
 
-# {{{ INTRO / README
+# {{{ ### INTRO / README #######################################################
 #
 # DIPA.sh - (D)eep (I)nstall and (P)roject (A)ssistant (Sh)ellscript
 #
@@ -51,6 +51,9 @@
 # Hint: Enable 'fold'ing in you vimrc for improved reading of this file.
 ### }}}
 
+
+# {{{ ### Script basics ########################################################
+
 # its: ANSI Regular & Hand Made & (c) Florian Blasel
 BANNER_INTRO_PRE=$(
     cat <<'BANNER_INTRO'
@@ -78,8 +81,6 @@ BANNER_INTRO_PRE=$(
 BANNER_INTRO
 );
 
-# {{{ Script basics
-
 DEBUG=0;
 # Using Semver but for visual reasons: no two chars lenght of major, minor,
 # bugfix version: Just N.N.N, where N means only 1 digit!
@@ -92,7 +93,11 @@ VERSION_STRING="DIPA.sh - Mode Version ${VERSION}";
 # typical use case for set -x: printing every command as it is executed may
 # help you to visualize the control flow of the script if it is not functioning
 # as expected. set +x disables it. E.g: [ "$DEBUG" = 'true' ] && set -x
-if [ $DEBUG = 1 ]; then set -x; else set +x; fi;
+if [ $DEBUG = 1 ]; then
+    set -x;
+else
+    set +x;
+fi;
 
 SCRIPT_DIRECTORY_REAL="$(dirname "$(readlink -f "$0")")";
 SCRIPT_FILENAME=$(basename "$0");
@@ -106,7 +111,7 @@ fi
 # End Script basics }}}
 
 
-# {{{ General functions
+# {{{ ### General functions ####################################################
 
 # Color functions
 # 'ct_' prefix = color text
@@ -149,6 +154,7 @@ function trim() {
    echo "$1" | xargs;
 }
 
+
 # confirm command.
 # confirm means: do the next thing and this is return code 0
 # only 'Y', 'n' or 'N' possible.
@@ -156,7 +162,8 @@ function trim() {
 # returns 0 for "yes confirm the request", 1 for 'do (n)otting'/ else case
 function confirmCommand() {
     local opts="y/N";
-    local defstr="" def="";
+    local defstr=""
+    # local def="";
     # if [ "$2" != "" ]; then
     #     def="${2:0:1}";
     #     defstr=" (def:${2:0:1})";
@@ -189,6 +196,7 @@ function eval_command() {
   "$@";
 }
 
+
 # @param string $1 Command to be checked
 function checkCommandAvailable() {
 
@@ -213,6 +221,7 @@ function menuhelpitem() {
     echo
     echo "$3";
 }
+
 
 # Help menu
 # $1 = second param (123) eg from '1 123' for a concrete help menu entry
@@ -275,22 +284,29 @@ function menuhelp () {
     fi
 }
 
-
 # End General functions }}}
 
 
-# {{{ Promotion functions and variables for this program
+# {{{ ### Promotion functions and variables for this program ###################
 
 BANNER_INTRO="${BANNER_INTRO_PRE/VERSION_STRING/${VERSION_STRING}}";
 
 # End promotion }}}
 
 
-# Custom program functions {{{
+# ### {{{ Custom program functions #############################################
 
 function do_exit() {
-   echo
-   echo "Have a good day! ;) Exiting...";
+    local b="";
+    b=$(cat <<'EOTXT'
+       _\|/_
+       (o o)
++---oOO-{_}-OOo----+
+| Have a good day /
+
+EOTXT
+);
+   echo "$b";
    echo
 
    exit;
@@ -365,6 +381,7 @@ function do_codeTestAll() {
     do_codeTestPhp
 }
 
+
 # containerVueRunTest
 function do_codeTestJsVue() {
     echo "Run Js/Vue tests...";
@@ -380,7 +397,7 @@ function do_codeTestPhp() {
 
 # containerDatabaseImport
 function do_dbImport() {
-
+    cd "${DIPAS_BASE_ROOT_PATH}" || return 0;
     do_checkDipasExists || return 1;
     do_dockerServicesCheck || return 2;
 
@@ -404,9 +421,13 @@ function do_dbImport() {
     echo
     echo "Possible files (sql|gz dump files):";
     echo '---';
-    cd "${DIPAS_DB_DUMP_SUBPATH}" || return 3;
-    ls *.{gz,sql} 2> /dev/null;
-    cd "${DIPAS_BASE_ROOT_PATH}" || return 4;
+    cd "${DIPAS_DB_DUMP_SUBPATH}" || {
+        return 3;
+    }
+    ls ./*.{gz,sql} 2> /dev/null;
+    cd "${DIPAS_BASE_ROOT_PATH}" || {
+        return 4;
+    }
     echo '---';
 
     if [ -n "${_IMPORT_FILE}" ]; then
@@ -414,7 +435,7 @@ function do_dbImport() {
     else
         echo "Enter file to import: ";
     fi
-    read IMPORT_FILE;
+    read -r IMPORT_FILE;
     IMPORT_FILE=${IMPORT_FILE:-$_IMPORT_FILE};
 
     #echo "imp file: '${IMPORT_FILE}'";
@@ -440,6 +461,7 @@ function do_dbImport() {
             || { echo >&2 \"Ooops missing...\"; exit 1; }";
         if ! goto_containerPhp_do "$checkPVAvailable"; then
             txt_warn "Command 'pv' not available. Cannot import. Abort";
+
             return 6;
         fi
 
@@ -465,7 +487,7 @@ function do_dbImport() {
         else
             echo "Dont know to handle the input file  '${dbDumpFile}'. Missing extension (gz|tgz|sql)";
 
-            return 6;
+            return 7;
         fi
 
         echo
@@ -479,24 +501,28 @@ function do_dbImport() {
 # extended containerDatabaseImport
 function do_dbImport_extended() {
 
-    do_dbImport || return $?;
+    if ! confirmCommand "Skip DB import? And run BE updates only?"; then
+        do_dbImport || return $?;
 
-    echo "Runs: 'composer install' to bind dependencies (if changed)...";
-    goto_containerPhp_do "cd /app/htdocs; composer install";
+        # Update credentials after a db import
 
-    echo "Runs: 'drush ucrt admin' ...";
-    goto_containerPhp_do "cd /app/htdocs; \
-        php -d memory_limit=512M ./vendor/bin/drush ucrt admin > /dev/null";
+        echo "Runs: 'composer install' to bind dependencies (if changed)...";
+        goto_containerPhp_do "cd /app/htdocs; composer install";
 
-    echo "Runs: 'drush upwd admin admin' ...";
-    goto_containerPhp_do "cd /app/htdocs; \
-        php -d memory_limit=512M ./vendor/bin/drush upwd admin admin > /dev/null";
+        echo "Runs: 'drush ucrt admin' ...";
+        goto_containerPhp_do "cd /app/htdocs; \
+            php -d memory_limit=512M ./vendor/bin/drush ucrt admin > /dev/null";
 
-    echo "Runs: 'drush urol siteadmin admin'...";
-    goto_containerPhp_do "cd /app/htdocs; \
-        php -d memory_limit=512M ./vendor/bin/drush urol siteadmin admin > /dev/null";
+        echo "Runs: 'drush upwd admin admin' ...";
+        goto_containerPhp_do "cd /app/htdocs; \
+            php -d memory_limit=512M ./vendor/bin/drush upwd admin admin > /dev/null";
 
-    echo -e "$(mark_ok) Drupal credentials done! Login with admin/admin";
+        echo "Runs: 'drush urol siteadmin admin'...";
+        goto_containerPhp_do "cd /app/htdocs; \
+            php -d memory_limit=512M ./vendor/bin/drush urol siteadmin admin > /dev/null";
+
+        echo -e "$(mark_ok) Drupal credentials done! Login with admin/admin";
+    fi
 
     # bring up the rest...
     echo "Runs: 'drush cim -y' ...";
@@ -518,58 +544,99 @@ function do_dbImport_extended() {
     goto_containerPhp_do "cd /app/htdocs; \
         php -d memory_limit=512M ./vendor/bin/drush locale:import de /app/config/de.po";
 
-    echo "Runs: 'drush en dipas_statistics' enable dipas statistics module...";
-    goto_containerPhp_do "cd /app/htdocs; ./vendor/bin/drush en dipas_statistics";
+    #echo "Runs: 'drush en dipas_statistics' enable dipas statistics module...";
+    #goto_containerPhp_do "cd /app/htdocs; ./vendor/bin/drush en dipas_statistics";
 
     echo "Runs: 'drush dipas-dev:fix-domain-entries' Fix domain entrys for development...";
-    goto_containerPhp_do "cd /app/htdocs; ./vendor/bin/drush dipas-dev:fix-domain-entries --port=8080";
+    local cmdFixDomains="cd /app/htdocs; \
+        ./vendor/bin/drush dipas-dev:fix-domain-entries \
+        --host=${DIPAS_XEXT_PHP_FIXDOMAIN_HOST} \
+        --port=${DIPAS_XEXT_PHP_FIXDOMAIN_PORT}";
+    goto_containerPhp_do "$cmdFixDomains";
 }
 
 
 # extended containerDatabaseExport
 function do_dbExport() {
-    do_checkDipasExists || return 1;
-    do_dockerServicesCheck || return 2;
-
-    # dipas root dir as base path, then:
-    local dmp="${DIPAS_DB_DUMP_SUBPATH}/${DIPAS_DB_DUMP_EXPORT}";
-    local fext="${DIPAS_DB_DUMP_EXPORT##*\.}";
+    echo "Running pre-checks first...";
+    do_checkDipasExists || {
+        echo
+        txt_warn "DIPAS installation not found. Abort";
+        return 1;
+    }
+    do_dockerServicesCheck || {
+        echo
+        txt_warn "DIPAS docker container down. Abort";
+        return 2;
+    }
+    echo "Pre-checks done.";
 
     echo
+    echo "Existing files (sql|gz dump files). You can choose one to replace or";
+    echo "choose you own export filename:";
+    echo '---';
+    cd "${DIPAS_DB_DUMP_SUBPATH}" || {
+        return 3;
+    }
+    ls ./*.{gz,sql} 2> /dev/null;
+    cd "${DIPAS_BASE_ROOT_PATH}" || {
+        return 4;
+    }
+    echo '---';
+    local uid=""; uid="$(id -u "$USER")";
+    local _EXPORT_FILE="${DIPAS_DB_DUMP_EXPORT}";
+    if [ -n "${_EXPORT_FILE}" ]; then
+        echo "Enter file to export (or press <enter> to use: '${_EXPORT_FILE}'): ";
+    else
+        echo "Enter file to export: ";
+    fi
+    read -r EXPORT_FILE;
+    EXPORT_FILE=${EXPORT_FILE:-$_EXPORT_FILE};
     echo "Export DB...";
+    local dmp="${DIPAS_DB_DUMP_SUBPATH}/${EXPORT_FILE}";
+    local fext="${EXPORT_FILE##*\.}";
 
     if [ "${fext}" = "gz" ] || [ "${fext}" = "tgz" ] ; then
-        echo 'Export gz sql dump. Please wait...';
+        echo 'Export gzip sql dump. Please wait...';
         goto_containerPhp_do "PGPASSWORD=${DIPAS_DB_PASSWORD} \
             pg_dump --username ${DIPAS_DB_USERNAME} -h ${DIPAS_DB_HOST} ${DIPAS_DB_NAME} \
-            | pv --progress -N dumpfile -tea | gzip -9 > ${dmp}
-        ";
+            | pv -cN 'sql dump' | gzip -9 | pv -cN 'gzip' | cat > ${dmp}";
+        #     | pv --progress -N dumpfile -tea | gzip -9 > ${dmp}
+        # ";
 
     elif [ "${fext}" = "sql" ] ; then
         echo 'Export sql dump. Please wait...';
         goto_containerPhp_do "PGPASSWORD=${DIPAS_DB_PASSWORD} \
             pg_dump --username ${DIPAS_DB_USERNAME} -h ${DIPAS_DB_HOST} ${DIPAS_DB_NAME} \
-            | pv --progress -N dumpfile -tea > ${dmp}
-        ";
+            | pv --progress -N dumpfile -tea > ${dmp}";
     else
         txt_warn "Dont know to handle the export filename '${dmp}'. Check config";
 
         return 1;
     fi
+    # fix file permission
+    goto_containerPhp_do "chown  ${uid}:${uid} ${dmp}";
 
     echo
     echo "$(mark_ok) Exported to '${DIPAS_BASE_ROOT_PATH}/${dmp}'"
 }
 
 
+# Plural checks if services are available.
 # devEnvironmentCheckIfDockerIsRunning
 # devEnvironmentCheckIfContainersExists
 function do_dockerServicesCheck() {
     local check=0;
     do_dockerServiceCheckIsUp || check=1;
-    do_dockerContainerCheckExists  || check=1;
+    do_dockerContainerCheckExists || check=1;
 
     return $check;
+}
+
+
+# dockerStartDeamon
+function do_dockerServiceStart() {
+    sudo service docker start;
 }
 
 
@@ -587,6 +654,7 @@ function do_dockerServiceCheckIsUp() {
         return 1;
     fi
 }
+
 
 # devEnvironmentCheckIfContainersExists
 function do_dockerContainerCheckExists() {
@@ -637,6 +705,7 @@ function do_dockerContainerCheckExists() {
     return $check;
 }
 
+
 # dockerComposeRestart
 function do_dockerContainerRestart() {
     cd "${DIPAS_BASE_ROOT_PATH}/docker/" || {
@@ -649,6 +718,7 @@ function do_dockerContainerRestart() {
     docker-compose up --detach;
 }
 
+
 # dockerComposeStart
 function do_dockerContainerStart() {
     cd "${DIPAS_BASE_ROOT_PATH}/docker/" || {
@@ -658,6 +728,7 @@ function do_dockerContainerStart() {
     echo "Start containers...";
     docker-compose up --detach;
 }
+
 
 # dockerComposeStop
 function do_dockerContainerStop() {
@@ -709,6 +780,9 @@ function do_setupConfig() {
         [DIPAS_REPO_DIPAS_BRANCH]="$DIPAS_REPO_DIPAS_BRANCH"
         [DIPAS_REPO_DIPAS_BRANCHDEFAULT]="$DIPAS_REPO_DIPAS_BRANCHDEFAULT"
         [DIPAS_REPO_USERNAME]="$DIPAS_REPO_USERNAME"
+
+        [DIPAS_XEXT_PHP_FIXDOMAIN_HOST]="$DIPAS_XEXT_PHP_FIXDOMAIN_HOST"
+        [DIPAS_XEXT_PHP_FIXDOMAIN_PORT]="$DIPAS_XEXT_PHP_FIXDOMAIN_PORT"
     );
 
     ### bash 4.0 and a sort(1) with -z
@@ -727,7 +801,7 @@ function do_setupConfig() {
         echo
         echo "Config: '$(ct_yellow "$itemKey")' = '$(ct_green "${PRG_GLOBALS[$itemKey]}")'";
         echo -n "Enter new value or <enter> for no change: ";
-        read TMP_VAR;
+        read -r TMP_VAR;
 
         eval "${itemKey}=\"${TMP_VAR:-${PRG_GLOBALS[$itemKey]}}\"";
     done
@@ -735,9 +809,7 @@ function do_setupConfig() {
     echo
     echo "---";
     if confirmCommand "Save the config to be used from now on?"; then
-
         typeset -p "${prg_sorted[@]}" > "${SCRIPT_DIRECTORY_REAL}/.DIPA.sh.config";
-
         echo
         echo "$(mark_ok) Config saved to:";
         echo "  '${SCRIPT_DIRECTORY_REAL}/.DIPA.sh.config'";
@@ -749,12 +821,13 @@ function do_setupConfig() {
         echo "...until you exit the program or choose 'setup' again from";
         echo "menu to change the values.";
     fi
-    # if changed, cd to
-    cd "$DIPAS_BASE_ROOT_PATH";
+    cd "$DIPAS_BASE_ROOT_PATH" || {
+        txt_warn "Oops cd to dipas root path '$DIPAS_BASE_ROOT_PATH' failt.";
+    }
 }
 
 
- # delete config and exit on success
+# delete config and exit on success
 function do_setupReset() {
     if [ -f "${SCRIPT_DIRECTORY_REAL}/.DIPA.sh.config" ]; then
         echo
@@ -844,7 +917,13 @@ function do_installDipas() {
     if [ -d "${DIPAS_BASE_ROOT_PATH}/docker/.git" ]; then
         txt_warn "Not cloning 'docker' repo. Already exists.";
     else
-        local urlDocker="${DIPAS_REPO_DOCKER_URL/UNKNOWN@/${DIPAS_REPO_USERNAME}}";
+        local urlDocker="";
+        if [ "${DIPAS_REPO_USERNAME}" = "" ]; then
+            urlDocker="${DIPAS_REPO_DOCKER_URL/UNKNOWN@/${DIPAS_REPO_USERNAME}}";
+        else
+            urlDocker="${DIPAS_REPO_DOCKER_URL/UNKNOWN/${DIPAS_REPO_USERNAME}}";
+        fi
+
         echo "Cloning docker repo from '${urlDocker}'...";
         if ! git clone "${urlDocker}" docker; then
             txt_err "Error cloning url. Check url or permissions. Abort";
@@ -874,8 +953,23 @@ function do_installDipas() {
 
     if [ -d "${DIPAS_BASE_ROOT_PATH}/repository/.git" ]; then
         txt_warn "Not cloning DIPAS code repo. Already exists.";
+
+        if confirmCommand "Pull updates of current branch of DIPAS code repo?"; then
+            cd "${DIPAS_BASE_ROOT_PATH}/repository" || txt_warn "Error cd 'repository'";
+            git pull || txt_warn "git pull failed";
+            cd "${DIPAS_BASE_ROOT_PATH}" || {
+                txt_warn "Error cd to dipas root path";
+            }
+        fi
+
     else
-        local urlDipas="${DIPAS_REPO_DIPAS_URL/UNKNOWN@/${DIPAS_REPO_USERNAME:-""}}";
+        local urlDipas="";
+        if [ "${DIPAS_REPO_USERNAME}" = "" ]; then
+            urlDipas="${DIPAS_REPO_DIPAS_URL/UNKNOWN@/${DIPAS_REPO_USERNAME}}";
+        else
+            urlDipas="${DIPAS_REPO_DIPAS_URL/UNKNOWN/${DIPAS_REPO_USERNAME}}";
+        fi
+
         echo "Cloning the DIPAS repository from '${urlDipas}'...";
         if ! git clone "${urlDipas}" repository; then
             txt_err "Error cloning url. Check url or permissions. Abort";
@@ -905,7 +999,8 @@ function do_installDipas() {
     echo "$(mark_ok) The code loaded and prepared now.";
     echo
 
-    local TEXT_FINISHING=$(
+    local TEXT_FINISHING="";
+    TEXT_FINISHING=$(
         cat <<'BANNER_INTRO'
 General or first install:
 
@@ -926,6 +1021,22 @@ BANNER_INTRO
     echo "If you have access to 'sudo' command and if you are already in the";
     echo "group 'docker' you can go on to build the docker containers now.";
     echo
+
+    do_dockerServiceCheckIsUp || {
+        if confirmCommand "Try starting docker service now?"; then
+            do_dockerServiceStart || {
+                echo
+                txt_warn "Failt. Abort.";
+
+                return 10;
+            }
+            echo "$(mark_ok) Docker service started";
+        else
+            txt_warn "Abort.";
+
+            return 10;
+        fi
+    }
 
     if confirmCommand "Start build process for the docker containers?"; then
 
@@ -953,7 +1064,6 @@ BANNER_INTRO
     #
     # TODO is this internal or is it a public case?
     #
-
     # 1. get repos/ code in place                           done
     # 2. build the docker container (see menu)              done
     # 3. start the containers (see menu)                    done
@@ -1009,23 +1119,22 @@ BANNER_INTRO
     echo "$(mark_ok) So far: 'SYS: Install DIPAS enviroment' done";
     echo
     echo "${TEXT_FINISHING}";
-
 }
-
 
 # End Custom program functions }}}
 
 
-# {{{ Menu init
-declare -a MENU_KEY
+# {{{ ### Menu init ############################################################
 declare -a MENU_NAM
+declare -a MENU_KEY
+declare -a MENU_HLP
 _IDX=0;
 # End Menu init }}}
 
 
-# {{{ Menu config
+# {{{ ### Menu config ##########################################################
 
-# Limits!: MENU_NAM MAX 30 chars!
+# Limits!: MENU_NAM max. 30 chars!
 
 ((_IDX=_IDX+1)); # 1
 MENU_NAM[_IDX]="Help"; # Dont do it in menu, like: ❓
@@ -1083,8 +1192,6 @@ MENU_KEY[_IDX]="exec:goto_containerDb_do";
 MENU_HLP[_IDX]="Enter the postgre database docker container to do individual actions";
 
 
-
-
 # ((_IDX=_IDX+1));
 # MENU_NAM[_IDX]="PHP: Drush Clear Cache";
 # MENU_KEY[_IDX]="exec:containerPHPDrushClearCache";
@@ -1120,13 +1227,11 @@ MENU_HLP[_IDX]="Enter the postgre database docker container to do individual act
 # software. Mostly a task for the product owners for a next release
 # ";
 
-
 ((_IDX=_IDX+1));
 MENU_NAM[_IDX]="SYS: DB Import";
 MENU_KEY[_IDX]="exec:do_dbImport";
 MENU_HLP[_IDX]="This does only handle the database import of a sql dump file.
 All further actions needs to be made by hand.";
-
 
 ((_IDX=_IDX+1));
 MENU_NAM[_IDX]="SYS: DB Import + BE upds";
@@ -1157,8 +1262,9 @@ This does the following actions:
 - Runs: 'drush en dipas_dev' enable dipas dev module
 - Runs: 'drush locale:import de /app/config/de.po' Import the de.po file
 - Runs: 'drush en dipas_statistics' Enables dipas statistics module
-- Runs: 'drush dipas-dev:fix-domain-entries' Fixs local domain entrys for
-        development
+Fixes local domain entrys for development (here: default values):
+- Runs: 'drush dipas-dev:fix-domain-entries --host=localhost --port=80'
+
 
 ... more to come if needed
 ";
@@ -1183,16 +1289,20 @@ MENU_HLP[_IDX]="Checks if docker service is runing
 and also if the docker containers exists and activ";
 
 ((_IDX=_IDX+1));
-MENU_NAM[_IDX]="SYS: Docker containers restart";
-MENU_KEY[_IDX]="exec:do_dockerContainerRestart";
-
-((_IDX=_IDX+1));
 MENU_NAM[_IDX]="SYS: Docker containers start";
 MENU_KEY[_IDX]="exec:do_dockerContainerStart";
 
 ((_IDX=_IDX+1));
 MENU_NAM[_IDX]="SYS: Docker containers stop";
 MENU_KEY[_IDX]="exec:do_dockerContainerStop";
+
+((_IDX=_IDX+1));
+MENU_NAM[_IDX]="SYS: Docker containers restart";
+MENU_KEY[_IDX]="exec:do_dockerContainerRestart";
+
+((_IDX=_IDX+1));
+MENU_NAM[_IDX]="SYS: Docker service start";
+MENU_KEY[_IDX]="exec:do_dockerServiceStart";
 
 ((_IDX=_IDX+1));
 MENU_NAM[_IDX]="SYS: Docker containers build";
@@ -1279,7 +1389,6 @@ DIPAS_REPO_DIPAS_BRANCHDEFAULT=\"dev\"
 ";
 # end help text: CFG: Setup custom config
 
-
 ((_IDX=_IDX+1));
 MENU_NAM[_IDX]="CFG: Delete setup custom config";
 MENU_KEY[_IDX]="exec:do_setupReset";
@@ -1291,7 +1400,7 @@ Start DIPA.sh new and our default config values will be used.";
 # End Menu config }}}
 
 
-# {{{ Program default configs
+# {{{ ### Program default configs ##############################################
 
 DIPAS_BASE_ROOT_PATH="/home/${USER}/projects/DIPAS";
 DIPAS_DB_NAME='dipas';
@@ -1307,7 +1416,7 @@ DIPAS_DB_DUMP_SUBPATH="transfer";
 # Don't replace UNKNOWN here! REPO_USERNAME will be used
 DIPAS_REPO_DOCKER_URL="https://UNKNOWN@bitbucket.org/geowerkstatt-hamburg/docker_for_dipas.git"
 DIPAS_REPO_DOCKER_BRANCH="DPS-1626-Base-Vue-Application-Cleanup"
-DIPAS_REPO_DOCKER_BRANCHDEFAULT="dockerd9"
+DIPAS_REPO_DOCKER_BRANCHDEFAULT="dev"
 
 # Don't replace UNKNOWN here! REPO_USERNAME will be used
 DIPAS_REPO_DIPAS_URL="https://UNKNOWN@bitbucket.org/geowerkstatt-hamburg/dipas_community.git";
@@ -1316,17 +1425,19 @@ DIPAS_REPO_DIPAS_BRANCHDEFAULT="dev";
 # Username on bitbucket to clone repos for the install process. Optional
 DIPAS_REPO_USERNAME="";
 
+DIPAS_XEXT_PHP_FIXDOMAIN_HOST="localhost";
+DIPAS_XEXT_PHP_FIXDOMAIN_PORT="8080";
+
 # source config if exists to overwrite prev. defaults
 if [ -f "${SCRIPT_DIRECTORY_REAL}/.DIPA.sh.config" ]; then
     # shellcheck source=/dev/null
     . "${SCRIPT_DIRECTORY_REAL}/.DIPA.sh.config";
 fi
 
+# end Program default/custom configs }}}
 
-# Program default/custom configs }}}
 
-
-# {{{ Action handling start
+# {{{ ### Action handling start ################################################
 
 #
 # THESE SHOULD BE THE LAST CODE LINE IN THIS SCRIPT
@@ -1369,10 +1480,18 @@ Press <enter> for menu, CTRL+C or 'q' for 'exit',
 choose an action number: ";
 
 # number of columns for the select stmt
-#COLUMNS=120
+COLUMNS=120;
 select CURRENT_DIPASH_MENUENAME in "${MENU_NAM[@]}"
 do
-    export CURRENT_DIPASH_MENUENAME;
+    # echo -n "${CURRENT_DIPASH_MENUENAME}";
+    cd "${DIPAS_BASE_ROOT_PATH}" &> /dev/null || {
+        echo
+        echo "Menu selected: ${CURRENT_DIPASH_MENUENAME} ($REPLY)";
+        echo "Please run 'install' or 'setup' first.";
+        echo "cd to dipas root path failt: '$DIPAS_BASE_ROOT_PATH'";
+        echo
+        cd "$(pwd)" || echo "ch pwd failt";
+    }
 
     # after a valid number, but menu above
     #echo "${BANNER}";
