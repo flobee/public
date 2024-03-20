@@ -522,7 +522,7 @@ function do_dbImport_extended() {
     goto_containerPhp_do "cd /app/htdocs; ./vendor/bin/drush en dipas_statistics";
 
     echo "Runs: 'drush dipas-dev:fix-domain-entries' Fix domain entrys for development...";
-    goto_containerPhp_do "cd /app/htdocs; ./vendor/bin/drush dipas-dev:fix-domain-entries";
+    goto_containerPhp_do "cd /app/htdocs; ./vendor/bin/drush dipas-dev:fix-domain-entries --port=8080";
 }
 
 
@@ -749,8 +749,8 @@ function do_setupConfig() {
         echo "...until you exit the program or choose 'setup' again from";
         echo "menu to change the values.";
     fi
-
-    # echo
+    # if changed, cd to
+    cd "$DIPAS_BASE_ROOT_PATH";
 }
 
 
