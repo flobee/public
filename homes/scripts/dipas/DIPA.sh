@@ -21,7 +21,6 @@
 #
 #        [D]eep [I]nstall and [P]roject [A]ssistant [Sh]ellscript
 #        For devlopment tasks: DIPA.sh
-
 #
 ################################################################################
 # {{{ ### INTRO / README #######################################################
@@ -50,26 +49,27 @@
 # bash ± 5.1.* (lower versions not tested, probably it will work nowadays 2024+)
 #
 # What this script does:
-# It is an interactiv script which shows you a menu to select tasks where you
-# can create your enviroment until some daily bussiness tasks you may need if
-# you dont know all the special shell commands.
+# It is an interactiv bash script which shows you a menu to select tasks where
+# you can create your enviroment until some daily bussiness tasks you may need
+# if you dont know all the special shell commands.
 #
 # Install:
 # PUT this script to your PATH or create a symlink of this file to your PATH
-# and make it executable (chmod +x ./DIPA.sh) Otherwise call it like:
+# and make it executable. Otherwise call it like:
 # `bash /path/to/DIPA.sh` or just `./DIPA.sh`. Other calls like from `zsh` or
 # `sh ./DIPA.sh` may fail if you use a different interactiv shell than `bash`
 # as your default shell. E.g.: `zsh` is very pupular because of it's power for
 # simple things inside but its another script dialect which causes this script
 # to fail in some details.
 #
-# When using the "setup"/ "configure this script" task to setup this program
-# (will asking you some questions) it stores the config at the real location of
-# this script (if a symlink) to `.DIPAS.sh.config`. Every time you use this tool
-# it loads this config (if exists) so that you dont need to care anymore.
+# When using the "Setup custom config" task to setup this program (will asking
+# you some questions about configuration variables) it stores the config at the
+# real location of this script (if a symlink) to `.DIPAS.sh.config`. Every time
+# you use this tool it loads this config (if exists) so that you dont need to
+# care anymore.
 # Otherwise the script default settings will take affect.
 #
-# Happy Development! See or hear from you from the know channels... ;)
+# Happy development and the usage of this script!
 #
 # Hint: Enable 'fold'ing in you vimrc for improved reading of this file.
 # " Enable folding by fold markers
@@ -86,16 +86,14 @@
 
 DEBUG=0;
 # Using Semver but for visual reasons: no two chars lenght of major, minor,
-# bugfix version: Just N.N.N, where N means only 1 digit!
+# bugfix versions: Just N.N.N, where N means only 1 digit!
 VERSION='2.7.3';
 VERSION_STRING="DIPA.sh - Mode Version ${VERSION}";
 
 
 # set -x enables a mode of the shell where all executed commands are printed
-# to the terminal. In your case it's clearly used for debugging, which is a
-# typical use case for set -x: printing every command as it is executed may
-# help you to visualize the control flow of the script if it is not functioning
-# as expected. set +x disables it. E.g: [ "$DEBUG" = 'true' ] && set -x
+# to the terminal. It's used for debugging, which is a typical use case for
+# printing every command as it is executed as expected. set +x disables it.
 if [ $DEBUG = 1 ]; then
     set -x;
 else
@@ -112,7 +110,6 @@ if [ -z "$BASH" ]; then
    exit 1;
 fi
 
-
 # End Script basics }}}
 
 
@@ -122,8 +119,11 @@ fi
 ################################################################################
 
 # Color functions
+#
+# Standard colors which nearly work on every shell.
+#
 # 'ct_' prefix = color text
-# 'ctb_' prefix = color text bright
+# 'ctb_' prefix = color text bright/bold
 # 'cb_' prefix = text color background
 #
 # Options and example:
@@ -157,19 +157,24 @@ function txt_err()   { echo -e "$(ctb_red "$1")"; }
 function mark_ok()   { echo -e "$(ctb_green "\xE2\x9C\x94") "; }
 function mark_fail() { echo -e "$(ctb_red "\xE2\x9C\x96") "; }
 
-
-# trim string
+###
+# trim string.
+#
 # @param string $1 Input string to be trimmed
 function trim() {
    echo "$1" | xargs;
 }
 
 
-# confirm command.
-# confirm means: do the next thing and this is returns code 0
-# only 'YyjJ', 'nN' possible.
+###
+# confirm a command.
+#
+# confirm means: do the next thing and this returns code 0
+# only 'YyjJ', 'nN' are possible.
+#
 # $1 string Request message
-# returns 0 for "yes confirm the request", 1 for 'do (n)othing'/ else case
+#
+# returns 0 for "yes" to confirm the request", 1 for 'do (n)othing'/ else case
 function confirmCommand() {
     local opts="y/N";
     local defstr=""
@@ -194,7 +199,7 @@ function confirmCommand() {
     done
 }
 
-
+###
 # The regular bash eval works by jamming all its arguments into a string then
 # evaluating the string. This function treats its arguments as individual
 # arguments to be passed to the command being run.
@@ -204,6 +209,7 @@ function eval_command() {
 }
 
 
+###
 # @param string $1 Command to be checked
 function checkCommandAvailable() {
     if ! command -v "$1" &> /dev/null; then
@@ -216,6 +222,7 @@ function checkCommandAvailable() {
 }
 
 
+###
 # $1 int string Exit code
 # $2 string Exit massage
 function checkExitCode() {
@@ -231,7 +238,9 @@ function checkExitCode() {
 }
 
 
-# Shows a help item. Format template
+###
+# Shows a help item. Format template.
+#
 # $1 string menu item index
 # $2 string menu item subject/headline
 # $3 string menu item help message
@@ -244,10 +253,11 @@ function menuhelpitem() {
     echo "$3";
 }
 
-
+###
 # Help menu.
+#
 # $1 = second param (123) eg from '1 123' for a concrete help menu entry
-#      (if exists, available)
+#      (if exists/ available)
 function menuhelp () {
     tput reset;
     local txt="";
@@ -256,7 +266,6 @@ function menuhelp () {
     local l=$(($(tput lines)+0));
 
     if [ "$1" = "" ]; then
-        # general help info
         txt+="---\n"
         txt+="Help: General help.\n"
         txt+="Description:\n"
@@ -296,7 +305,6 @@ function menuhelp () {
     fi
 }
 
-
 # End Script general functions }}}
 
 
@@ -305,12 +313,14 @@ function menuhelp () {
 # {{{ ### YOUR program functions ###############################################
 ################################################################################
 
+###
 # do no operation
 function do_noop() {
     return 0;
 }
 
-
+###
+# Do exit the program.
 function do_exit() {
    echo "$BANNER_OUTRO";
    echo
@@ -319,7 +329,9 @@ function do_exit() {
 }
 
 
-# Check if DIPAS ROOT PATH exists
+###
+# Check if DIPAS ROOT PATH exists.
+#
 # @returns int 1=not exists/missing, 0=exists/ok
 function do_checkDipasExists() {
     if [ ! -d "${DIPAS_BASE_ROOT_PATH}/" ]; then
@@ -333,6 +345,7 @@ function do_checkDipasExists() {
 }
 
 
+###
 # @param string $1 optional action to pipe in
 function goto_containerPhp_do() {
     if [ "$1" = "" ]; then
@@ -345,6 +358,7 @@ function goto_containerPhp_do() {
 }
 
 
+###
 # @param string $1 optional action to pipe in
 function goto_containerVue_do() {
     if [ "$1" = "" ]; then
@@ -412,6 +426,7 @@ function goto_containerPhp_doDrushCimUpdbCr() {
     goto_containerPhp_doDrushCr;
 }
 
+
 # Import translation file
 function goto_containerPhp_doDrushImpTrans() {
     echo
@@ -431,7 +446,7 @@ function goto_containerPhp_doDrushFixDomainEntries() {
     goto_containerPhp_do "$cmdFixDomains";
 }
 
-# containerVueRunLint
+
 function do_codeCSCheck() {
     echo "Run Vue lint + CS checks...";
     goto_containerVue_do "npm run lint";
@@ -443,7 +458,7 @@ function do_codeCSCheck() {
 
 # containerVueRunLintFix
 function do_codeCSFix() {
-    echo "Run Vue lint + CS fixes...";
+    echo "Run Vue CS fixes (lint fixes)...";
     goto_containerVue_do 'npm run lint:fix';
 
     txt_warn "Run PHP lint + CS fixes... not implemented :-(";
@@ -590,7 +605,6 @@ function do_dbImport() {
 }
 
 
-# extended containerDatabaseImport
 function do_dbImport_extended() {
     local cmdPhpMem512Drush="";
     cmdPhpMem512Drush="php -d memory_limit=${DIPAS_EXTS_CFG_PHP_MEMLIMIT} /app/htdocs/vendor/bin/drush";
@@ -661,7 +675,6 @@ function do_dbImport_extended() {
 }
 
 
-# extended containerDatabaseExport
 function do_dbExport() {
     echo "Running pre-checks first...";
     do_checkDipasExists || {
@@ -751,8 +764,6 @@ function do_dbExport() {
 
 
 # Plural checks if services are available.
-# devEnvironmentCheckIfDockerIsRunning
-# devEnvironmentCheckIfContainersExists
 function do_dockerServicesCheck() {
     local check=0;
     do_dockerServiceCheckIsUp || check=1;
@@ -776,7 +787,6 @@ function do_dockerServicesStop() {
 }
 
 
-# dockerStartDeamon
 function do_dockerServiceStart() {
     if ! do_dockerServiceCheckIsUp; then
         sudo service docker start;
@@ -815,7 +825,6 @@ function do_dockerShutdown() {
 }
 
 
-# devEnvironmentCheckIfDockerIsRunning
 function do_dockerServiceCheckIsUp() {
     FILE=/var/run/docker.pid;
     if [ -f "$FILE" ]; then
@@ -831,7 +840,6 @@ function do_dockerServiceCheckIsUp() {
 }
 
 
-# devEnvironmentCheckIfContainersExists
 function do_dockerContainerCheckExists() {
     local check=0;
     #  php
@@ -881,7 +889,6 @@ function do_dockerContainerCheckExists() {
 }
 
 
-# dockerComposeRestart
 function do_dockerContainerRestart() {
     cd "${DIPAS_BASE_ROOT_PATH}/docker/" || {
         txt_warn "cd to path: '${DIPAS_BASE_ROOT_PATH}/docker/' failt";
@@ -894,7 +901,6 @@ function do_dockerContainerRestart() {
 }
 
 
-# dockerComposeStart
 function do_dockerContainerStart() {
     cd "${DIPAS_BASE_ROOT_PATH}/docker/" || {
         txt_warn "cd to path: '${DIPAS_BASE_ROOT_PATH}/docker/' failt";
@@ -905,7 +911,6 @@ function do_dockerContainerStart() {
 }
 
 
-# dockerComposeStop
 function do_dockerContainerStop() {
     cd "${DIPAS_BASE_ROOT_PATH}/docker/" || {
         txt_warn "cd to path: '${DIPAS_BASE_ROOT_PATH}/docker/' failt";
@@ -916,7 +921,6 @@ function do_dockerContainerStop() {
 }
 
 
-# dockerBuildContainer
 function do_dockerContainerBuild() {
     cd "${DIPAS_BASE_ROOT_PATH}/docker/" || {
         txt_warn "cd to path: '${DIPAS_BASE_ROOT_PATH}/docker/' failt";
@@ -930,8 +934,7 @@ function do_setupConfig() {
    # global variables to ask for:
    # see menu help info
 
-    #local check=0;
-    local failmesg="Required value. Please install it. Abort!";
+    local failmesg="Required value. Please install. Abort!";
 
     checkCommandAvailable "git" || {
         txt_err "$failmesg";
@@ -940,8 +943,7 @@ function do_setupConfig() {
     }
 
     ### bash 4.0 and a sort(1) with -z
-    ## Sort a little better to request changes
-    #
+    ## Sort a little better to request changes depending on var names
     local prg_sorted=()
     while IFS= read -rd '' key; do
         prg_sorted+=( "$key" )
@@ -1120,7 +1122,6 @@ function do_installEnviroment() {
 }
 
 
-# devEnvironmentCreate
 function do_installDipas() {
 
     do_installEnviroment;
@@ -1469,21 +1470,21 @@ function do_installDipasNavigator() {
     echo -e "$(mark_ok) Code installation done";
     echo
     echo "Make sure current required node version is available for this project.";
-    echo -e "Required node version (from current config): '$(txt_warn "$DIPAS_XEXT_REPO_DIPASnavigator_NODEVERSION")'";
+    echo -e "Required node version (from current config): '$(txt_warn "$DIPAS_XEXT_REPO_DIPASnavigator_NODEVERSION_NVM")'";
     echo "Or ask in the team.";
     echo
     echo "Setup DIPAS navigator now? 'nvm' should be available but can be done later";
 
     if [ -f ".nvmrc" ]; then
         echo -e "'$(txt_warn ".nvmrc")' file found.";
-        echo "Configured version: '$DIPAS_XEXT_REPO_DIPASnavigator_NODEVERSION '";
+        echo "Configured version: '$DIPAS_XEXT_REPO_DIPASnavigator_NODEVERSION_NVM '";
         echo "Found version currently in .nvmrc file: '$(cat .nvmrc)'";
     else
         echo -e "Add $(txt_warn ".nvmrc") to current project?";
     fi
     if confirmCommand "Add/ Update .nvmrc file?"; then
-        # echo -n "echo '$DIPAS_XEXT_REPO_DIPASnavigator_NODEVERSION' > .nvmrc ... ";
-        echo $DIPAS_XEXT_REPO_DIPASnavigator_NODEVERSION > .nvmrc;
+        # echo -n "echo '$DIPAS_XEXT_REPO_DIPASnavigator_NODEVERSION_NVM' > .nvmrc ... ";
+        echo $DIPAS_XEXT_REPO_DIPASnavigator_NODEVERSION_NVM > .nvmrc;
         echo -e "$(mark_ok) done";
     fi
 
@@ -1635,8 +1636,8 @@ BANNER_OUTRO_PRE_BUG=$(
                         ,::: ;   ; :::,
                        ':::::::::::::::'
     +--------------c42-----/_ __ _\----------------------+
-    |                 BAD, BAD, BUG HERE.                |
-    |          HAPPY XMAS and a HAPPY NEW YEAR           |
+    |    BAD, BAD, BUG HERE. CHECK THE DATE AND TIME     |
+    |     HAPPY XMAS and a HAPPY NEW YEAR, DARLING !     |
     +----------------------------------------------------+
 
 BANNER_OUTRO_BUG
@@ -1732,7 +1733,7 @@ DIPAS_EXTS_CFG_PHP_MEMLIMIT="512M";
 DIPAS_XEXT_REPO_DIPASnavigator_URL="https://UNKNOWN@bitbucket.org/geowerkstatt-hamburg/dipas-navigator.git";
 DIPAS_XEXT_REPO_DIPASnavigator_BRANCH="dev";
 DIPAS_XEXT_REPO_DIPASnavigator_BRANCHDEFAULT="dev";
-DIPAS_XEXT_REPO_DIPASnavigator_NODEVERSION="v10.24.1";
+DIPAS_XEXT_REPO_DIPASnavigator_NODEVERSION_NVM="v10.24.1";
 
 # Depeding on the versions of your OS (debian, Ubuntu, WSL) and included
 # external packages (source.list), docker compose can come in different
@@ -1742,7 +1743,7 @@ DIPAS_XEXT_REPO_DIPASnavigator_NODEVERSION="v10.24.1";
 #  3. 'docker compose' (builtin from docker.com which maybe dont work currently eg in WSL)
 SCRIPT_CMD_DOCKERCOMPOSE="/usr/local/bin/docker-compose";
 # Depending on docker-compose this may vari.
-#SCRIPT_PKGLIST_FOR_DOCKER="sudo docker.io docker-compose containerd git"; #debian11,12,Ubuntu2204
+#SCRIPT_PKGLIST_FOR_DOCKER="sudo docker.io docker-compose containerd git"; #debian11,12,Ubuntu2[0|2].04
 SCRIPT_PKGLIST_FOR_DOCKER="sudo docker.io docker-compose containerd git";
 
 
@@ -1792,7 +1793,7 @@ declare -A PRG_GLOBALS
         [DIPAS_XEXT_REPO_DIPASnavigator_URL]="$DIPAS_XEXT_REPO_DIPASnavigator_URL"
         [DIPAS_XEXT_REPO_DIPASnavigator_BRANCH]="$DIPAS_XEXT_REPO_DIPASnavigator_BRANCH"
         [DIPAS_XEXT_REPO_DIPASnavigator_BRANCHDEFAULT]="$DIPAS_XEXT_REPO_DIPASnavigator_BRANCHDEFAULT"
-        [DIPAS_XEXT_REPO_DIPASnavigator_NODEVERSION]="$DIPAS_XEXT_REPO_DIPASnavigator_NODEVERSION"
+        [DIPAS_XEXT_REPO_DIPASnavigator_NODEVERSION_NVM]="$DIPAS_XEXT_REPO_DIPASnavigator_NODEVERSION_NVM"
 
         [SCRIPT_CMD_DOCKERCOMPOSE]="$SCRIPT_CMD_DOCKERCOMPOSE"
         [SCRIPT_PKGLIST_FOR_DOCKER]="$SCRIPT_PKGLIST_FOR_DOCKER"
@@ -1826,7 +1827,7 @@ _IDX=0;
 # menu config
 
 ((_IDX=_IDX+1)); # 1 help menu must stay at postion 1
-MENU_NAM[_IDX]="Help"; # Dont do it in menu, like: ❓ or using colors!
+MENU_NAM[_IDX]="Help"; # Dont do it in menu like: ❓ or using colors!
 MENU_KEY[_IDX]="exec:menuhelp";
 MENU_HLP[_IDX]="General help info... and to show all help";
 
@@ -1912,18 +1913,7 @@ MENU_HLP[_IDX]="Enter the postgre database docker container to do individual act
 MENU_NAM[_IDX]="-----------------------";
 MENU_KEY[_IDX]="exec:do_noop";
 
-# ((_IDX=_IDX+1));
-# MENU_NAM[_IDX]="PHP: Drush Change Password";
-# MENU_KEY[_IDX]="exec:containerPHPDrushUpdatePassword";
-
-# ((_IDX=_IDX+1));
-# MENU_NAM[_IDX]="SYS: Check Outdated Packages";
-# MENU_KEY[_IDX]="exec:devEnvironmentCheckOutdatedPackages";
-# MENU_HLP[_IDX]="Checks if there are outdated packages. This is usful for upgrading the core
-# software. Mostly a task for the product owners for a next release
-# ";
-
-((_IDX=_IDX+1));
+((_IDX=_IDX+1)); # 19
 MENU_NAM[_IDX]="SYS: DB Import";
 MENU_KEY[_IDX]="exec:do_dbImport";
 MENU_HLP[_IDX]="This does only handle the database import of a sql dump file.
@@ -1975,31 +1965,9 @@ It will be stored in 'DIPAS ROOT PATH/transfer/dipas-dump-export.sql' if you
 dont change the default settings or enter a custom export filename.
 ";
 
-# ((_IDX=_IDX+1));
-# MENU_NAM[_IDX]="SYS: DB Delete";
-# MENU_KEY[_IDX]="exec:do_noop";
-# MENU_HLP[_IDX]="";
-
-
 ((_IDX=_IDX+1));
 MENU_NAM[_IDX]="-----------------------";
 MENU_KEY[_IDX]="exec:do_noop";
-
-# ((_IDX=_IDX+1));
-# MENU_NAM[_IDX]="SYS: Docker containers start";
-# MENU_KEY[_IDX]="exec:do_dockerContainerStart";
-# MENU_HLP[_IDX]="Starts all available docker containers and reports it to the
-# terminal";
-
-# ((_IDX=_IDX+1));
-# MENU_NAM[_IDX]="SYS: Docker containers stop";
-# MENU_KEY[_IDX]="exec:do_dockerContainerStop";
-# MENU_HLP[_IDX]="Stops all available docker containers and reports it to the
-# terminal";
-
-# ((_IDX=_IDX+1));
-# MENU_NAM[_IDX]="SYS: Docker containers restart";
-# MENU_KEY[_IDX]="exec:do_dockerContainerRestart";
 
 ((_IDX=_IDX+1));
 MENU_NAM[_IDX]="SYS: Docker services check";
@@ -2015,8 +1983,7 @@ MENU_KEY[_IDX]="exec:do_dockerServicesStart"
 MENU_NAM[_IDX]="SYS: Docker services stop";
 MENU_KEY[_IDX]="exec:do_dockerServicesStop"
 
-
-((_IDX=_IDX+1)); #
+((_IDX=_IDX+1));
 MENU_NAM[_IDX]="-----------------------";
 MENU_KEY[_IDX]="exec:do_noop";
 
@@ -2183,8 +2150,8 @@ $(ct_yellow "DIPAS_XEXT_REPO_DIPASnavigator_BRANCH")
 # Default branch of the DIPAS navigator repository. def: $(ct_yellow "dev")
 $(ct_yellow "DIPAS_XEXT_REPO_DIPASnavigator_BRANCHDEFAULT")
 
-# Node version to be used with nvm. def: $(ct_yellow "$DIPAS_XEXT_REPO_DIPASnavigator_NODEVERSION")
-$(ct_yellow "DIPAS_XEXT_REPO_DIPASnavigator_NODEVERSION")
+# Node version to be used with nvm. def: $(ct_yellow "$DIPAS_XEXT_REPO_DIPASnavigator_NODEVERSION_NVM")
+$(ct_yellow "DIPAS_XEXT_REPO_DIPASnavigator_NODEVERSION_NVM")
 
 ###
 # SCRIPT configs e.g. to run special commands
@@ -2206,10 +2173,7 @@ $(ct_yellow "SCRIPT_PKGLIST_FOR_DOCKER")
 
 more to come...
 ";
-
-
 # end CFG: Setup custom config
-
 
 ((_IDX=_IDX+1));
 MENU_NAM[_IDX]="CFG: Delete custom config";
@@ -2218,27 +2182,9 @@ MENU_HLP[_IDX]="This will delete your custom config '.DIPA.sh.config'
 and exits the program.
 Start DIPA.sh new and our default config values will be used.";
 
-# ((_IDX=_IDX+1)); #
+# ((_IDX=_IDX+1));
 # MENU_NAM[_IDX]="-----------------------";
 # MENU_KEY[_IDX]="exec:do_noop";
-
-# ((_IDX=_IDX+1));
-# MENU_NAM[_IDX]="SYS: Docker service start";
-# MENU_KEY[_IDX]="exec:do_dockerServiceStart";
-# MENU_HLP[_IDX]="Starts the major docker deamon to be able to start/stop docker
-# containers.
-# You need to have sudo rights for it.";
-
-# ((_IDX=_IDX+1));
-# MENU_NAM[_IDX]="SYS: Docker service stop";
-# MENU_KEY[_IDX]="exec:do_dockerServiceStop";
-# MENU_HLP[_IDX]="Stops the major docker deamon.
-# containers are will be not available.";
-
-# ((_IDX=_IDX+1));
-# MENU_NAM[_IDX]="SYS: shutdown, feierabend";
-# MENU_KEY[_IDX]="exec:do_dockerShutdown";
-# MENU_HLP[_IDX]="Shutdown the services.";
 
 ((_IDX=_IDX+1));
 MENU_NAM[_IDX]="--- DIPAS_navigator ---";
@@ -2273,7 +2219,7 @@ The installer then will guide you to set the following steps:
 
     # make sure current required node version is available for this project. Or ask in
     # the team. E.g:
-    echo $DIPAS_XEXT_REPO_DIPASnavigator_NODEVERSION > .nvmrc
+    echo $DIPAS_XEXT_REPO_DIPASnavigator_NODEVERSION_NVM > .nvmrc
     nvm use
 
     cd $DIPAS_BASE_ROOT_PATH
