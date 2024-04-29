@@ -101,14 +101,21 @@ else
 fi;
 
 SCRIPT_DIRECTORY_REAL="$(dirname "$(readlink -f "$0")")";
-SCRIPT_FILENAME=$(basename "$0");
+SCRIPT_FILENAME_REAL="$(basename "$(readlink -f "$0")")";
+SCRIPT_FILENAME_CURRENT=$(basename "$0");
 
 if [ -z "$BASH" ]; then
    echo "Please run this script '$0' with bash";
-   echo "Call it like './${SCRIPT_FILENAME}' or 'bash ${SCRIPT_FILENAME}";
+   echo "Call it like:"
+   echo "   cd \"$SCRIPT_DIRECTORY_REAL\"";
+   echo "   ./${SCRIPT_FILENAME_REAL}";
+   echo "   # or from PATH";
+   echo "   ${SCRIPT_FILENAME_CURRENT}";
 
    exit 1;
 fi
+
+USER="${USER:-$LOGNAME}";
 
 # End Script basics }}}
 
@@ -157,6 +164,7 @@ function txt_err()   { echo -e "$(ctb_red "$1")"; }
 function mark_ok()   { echo -e "$(ctb_green "\xE2\x9C\x94") "; }
 function mark_fail() { echo -e "$(ctb_red "\xE2\x9C\x96") "; }
 
+
 ###
 # trim string.
 #
@@ -198,6 +206,7 @@ function confirmCommand() {
         esac
     done
 }
+
 
 ###
 # The regular bash eval works by jamming all its arguments into a string then
@@ -252,6 +261,7 @@ function menuhelpitem() {
     echo
     echo "$3";
 }
+
 
 ###
 # Help menu.
@@ -318,6 +328,7 @@ function menuhelp () {
 function do_noop() {
     return 0;
 }
+
 
 ###
 # Do exit the program.
@@ -605,6 +616,8 @@ function do_dbImport() {
 }
 
 
+# extended containerDatabaseImport
+# DB Import + BE upds
 function do_dbImport_extended() {
     local cmdPhpMem512Drush="";
     cmdPhpMem512Drush="php -d memory_limit=${DIPAS_EXTS_CFG_PHP_MEMLIMIT} /app/htdocs/vendor/bin/drush";
@@ -833,7 +846,7 @@ function do_dockerServiceCheckIsUp() {
         return 0;
     else
         echo -e "$(mark_fail) $(txt_warn "Docker service is NOT running")";
-        echo -e "Please start the docker service with $(ct_grey 'sudo service docker start')";
+        echo -e "Please start the docker service with '$(ct_grey 'sudo service docker start')'";
 
         return 1;
     fi
@@ -974,13 +987,14 @@ function do_setupConfig() {
 
     echo
     echo "---";
-    if confirmCommand "Save the config to be used from now on?"; then
-        typeset -p "${prg_sorted[@]}" > "${SCRIPT_DIRECTORY_REAL}/.DIPA.sh.config";
+    echo "Can save config to \"${SCRIPT_CONFIGFILE_CURRENT}\"";
+    if confirmCommand "Save the config to be used for this session?"; then
+        typeset -p "${prg_sorted[@]}" > "${SCRIPT_CONFIGFILE_CURRENT}";
         echo
         echo "$(mark_ok) Config saved to:";
-        echo "  '${SCRIPT_DIRECTORY_REAL}/.DIPA.sh.config'";
+        echo "  '${SCRIPT_CONFIGFILE_CURRENT}'";
         echo
-        echo "This config will be used from now on.";
+        echo "This config will be currently used.";
     else
         echo
         txt_warn "Config not saved but changes are now activ!...";
@@ -995,13 +1009,15 @@ function do_setupConfig() {
 
 # delete config and exit on success
 function do_setupReset() {
-    if [ -f "${SCRIPT_DIRECTORY_REAL}/.DIPA.sh.config" ]; then
+    echo
+    echo "Delete \"${SCRIPT_CONFIGFILE_CURRENT}\"?";
+    if [ -f "${SCRIPT_CONFIGFILE_CURRENT}" ]; then
         echo
         if confirmCommand "Please confirm removing your custom config"; then
-            rm "${SCRIPT_DIRECTORY_REAL}/.DIPA.sh.config";
+            rm "${SCRIPT_CONFIGFILE_CURRENT}";
             echo
-            echo "$(mark_ok) Setup/ custom config '.DIPA.sh.config' was removed.";
-            echo "  Please start this script again.";
+            echo "$(mark_ok) Setup/ custom config '${SCRIPT_CONFIGFILE_CURRENT}'";
+            echo "was removed. Please start this script again.";
             do_exit;
         else
             echo
@@ -1378,16 +1394,38 @@ INSTALLHINTS
     echo
     echo "Make sure the configs are verified before using drupal!";
 
+    echo
+    # mk upload paths available
+    cd "${DIPAS_BASE_ROOT_PATH}/repository/htdocs/drupal/sites/default" || {
+        txt_warn "cd to repository/htdocs/drupal/sites/default failed";
+    }
+    if confirmCommand "Create and modify upload paths with correct permissions?"; then
+        if [ ! -d "./files/dipas" ]; then
+            mkdir -p "./files/dipas";
+        fi
+
+        if [ ! -d "./files/languages" ]; then
+            mkdir "./files/languages";
+        fi
+
+        if [ ! -d "./files/translations" ]; then
+            mkdir "./files/translations";
+        fi
+        sudo chown -R daemon:daemon ./files;
+    fi
+
+    #####
+
+
     cd "${DIPAS_BASE_ROOT_PATH}" || txt_warn "cd to dipas root failed";
 
     echo
     echo "$(mark_ok) So far: 'SYS: Install DIPAS enviroment' done";
     echo
     echo "${TEXT_FINISHING}";
-
+    echo
     echo "Your TO-DOs now:";
     echo "4.1 and 4.2: Import a database or check the docs to go on.";
-
     echo
     echo "--- break ---";
     echo
@@ -1403,7 +1441,6 @@ INSTALLHINTS
             return 11;
         }
     fi
-
 }
 
 
@@ -1745,13 +1782,21 @@ SCRIPT_CMD_DOCKERCOMPOSE="/usr/local/bin/docker-compose";
 # Depending on docker-compose this may vari.
 #SCRIPT_PKGLIST_FOR_DOCKER="sudo docker.io docker-compose containerd git"; #debian11,12,Ubuntu2[0|2].04
 SCRIPT_PKGLIST_FOR_DOCKER="sudo docker.io docker-compose containerd git";
-
+SCRIPT_CONFIGFILE_CURRENT="${SCRIPT_DIRECTORY_REAL}/.DIPA.sh.config";
 
 ###
 # source config if exists to overwrite prev. defaults
-if [ -f "${SCRIPT_DIRECTORY_REAL}/.DIPA.sh.config" ]; then
+if [ -f "${SCRIPT_CONFIGFILE_CURRENT}" ]; then
     # shellcheck source=/dev/null
-    . "${SCRIPT_DIRECTORY_REAL}/.DIPA.sh.config";
+    . "${SCRIPT_CONFIGFILE_CURRENT}";
+fi
+
+if [ -f "$1" ]; then
+    # overload custom config
+    echo "Custom config overload detected for '$1'";
+    SCRIPT_CONFIGFILE_CURRENT="$1"; # TODO! real location? script dir? what if same name?
+    # shellcheck source=/dev/null
+    . "${SCRIPT_CONFIGFILE_CURRENT}";
 fi
 
 # ###
@@ -1765,39 +1810,40 @@ fi
 # mapper for the configs to save custom configs
 #
 declare -A PRG_GLOBALS
-    # ignore the order of entrys here. a-z by var name counts
-    PRG_GLOBALS=(
-        [DIPAS_BASE_ROOT_PATH]="$DIPAS_BASE_ROOT_PATH"
-        [DIPAS_DB_DUMP_SUBPATH]="$DIPAS_DB_DUMP_SUBPATH"
+# ignore the order of entrys here. a-z by var name counts in real.
+PRG_GLOBALS=(
+    [DIPAS_BASE_ROOT_PATH]="$DIPAS_BASE_ROOT_PATH"
+    [DIPAS_DB_DUMP_SUBPATH]="$DIPAS_DB_DUMP_SUBPATH"
 
-        [DIPAS_DB_NAME]="$DIPAS_DB_NAME"
-        [DIPAS_DB_HOST]="$DIPAS_DB_HOST"
-        [DIPAS_DB_USERNAME]="$DIPAS_DB_USERNAME"
-        [DIPAS_DB_PASSWORD]="$DIPAS_DB_PASSWORD"
-        [DIPAS_DB_DUMP_IMPORT]="$DIPAS_DB_DUMP_IMPORT"
-        [DIPAS_DB_DUMP_EXPORT]="$DIPAS_DB_DUMP_EXPORT"
+    [DIPAS_DB_NAME]="$DIPAS_DB_NAME"
+    [DIPAS_DB_HOST]="$DIPAS_DB_HOST"
+    [DIPAS_DB_USERNAME]="$DIPAS_DB_USERNAME"
+    [DIPAS_DB_PASSWORD]="$DIPAS_DB_PASSWORD"
+    [DIPAS_DB_DUMP_IMPORT]="$DIPAS_DB_DUMP_IMPORT"
+    [DIPAS_DB_DUMP_EXPORT]="$DIPAS_DB_DUMP_EXPORT"
 
-        [DIPAS_REPO_DOCKER_URL]="$DIPAS_REPO_DOCKER_URL"
-        [DIPAS_REPO_DOCKER_BRANCH]="$DIPAS_REPO_DOCKER_BRANCH"
-        [DIPAS_REPO_DOCKER_BRANCHDEFAULT]="$DIPAS_REPO_DOCKER_BRANCHDEFAULT"
-        [DIPAS_REPO_DIPAS_URL]="$DIPAS_REPO_DIPAS_URL"
-        [DIPAS_REPO_DIPAS_BRANCH]="$DIPAS_REPO_DIPAS_BRANCH"
-        [DIPAS_REPO_DIPAS_BRANCHDEFAULT]="$DIPAS_REPO_DIPAS_BRANCHDEFAULT"
-        [DIPAS_REPO_USERNAME]="$DIPAS_REPO_USERNAME"
+    [DIPAS_REPO_DOCKER_URL]="$DIPAS_REPO_DOCKER_URL"
+    [DIPAS_REPO_DOCKER_BRANCH]="$DIPAS_REPO_DOCKER_BRANCH"
+    [DIPAS_REPO_DOCKER_BRANCHDEFAULT]="$DIPAS_REPO_DOCKER_BRANCHDEFAULT"
+    [DIPAS_REPO_DIPAS_URL]="$DIPAS_REPO_DIPAS_URL"
+    [DIPAS_REPO_DIPAS_BRANCH]="$DIPAS_REPO_DIPAS_BRANCH"
+    [DIPAS_REPO_DIPAS_BRANCHDEFAULT]="$DIPAS_REPO_DIPAS_BRANCHDEFAULT"
+    [DIPAS_REPO_USERNAME]="$DIPAS_REPO_USERNAME"
 
-        [DIPAS_XEXT_PHP_FIXDOMAIN_HOST]="$DIPAS_XEXT_PHP_FIXDOMAIN_HOST"
-        [DIPAS_XEXT_PHP_FIXDOMAIN_PORT]="$DIPAS_XEXT_PHP_FIXDOMAIN_PORT"
+    [DIPAS_XEXT_PHP_FIXDOMAIN_HOST]="$DIPAS_XEXT_PHP_FIXDOMAIN_HOST"
+    [DIPAS_XEXT_PHP_FIXDOMAIN_PORT]="$DIPAS_XEXT_PHP_FIXDOMAIN_PORT"
 
-        [DIPAS_EXTS_CFG_PHP_MEMLIMIT]="$DIPAS_EXTS_CFG_PHP_MEMLIMIT"
+    [DIPAS_EXTS_CFG_PHP_MEMLIMIT]="$DIPAS_EXTS_CFG_PHP_MEMLIMIT"
 
-        [DIPAS_XEXT_REPO_DIPASnavigator_URL]="$DIPAS_XEXT_REPO_DIPASnavigator_URL"
-        [DIPAS_XEXT_REPO_DIPASnavigator_BRANCH]="$DIPAS_XEXT_REPO_DIPASnavigator_BRANCH"
-        [DIPAS_XEXT_REPO_DIPASnavigator_BRANCHDEFAULT]="$DIPAS_XEXT_REPO_DIPASnavigator_BRANCHDEFAULT"
-        [DIPAS_XEXT_REPO_DIPASnavigator_NODEVERSION_NVM]="$DIPAS_XEXT_REPO_DIPASnavigator_NODEVERSION_NVM"
+    [DIPAS_XEXT_REPO_DIPASnavigator_URL]="$DIPAS_XEXT_REPO_DIPASnavigator_URL"
+    [DIPAS_XEXT_REPO_DIPASnavigator_BRANCH]="$DIPAS_XEXT_REPO_DIPASnavigator_BRANCH"
+    [DIPAS_XEXT_REPO_DIPASnavigator_BRANCHDEFAULT]="$DIPAS_XEXT_REPO_DIPASnavigator_BRANCHDEFAULT"
+    [DIPAS_XEXT_REPO_DIPASnavigator_NODEVERSION_NVM]="$DIPAS_XEXT_REPO_DIPASnavigator_NODEVERSION_NVM"
 
-        [SCRIPT_CMD_DOCKERCOMPOSE]="$SCRIPT_CMD_DOCKERCOMPOSE"
-        [SCRIPT_PKGLIST_FOR_DOCKER]="$SCRIPT_PKGLIST_FOR_DOCKER"
-    );
+    [SCRIPT_CMD_DOCKERCOMPOSE]="$SCRIPT_CMD_DOCKERCOMPOSE"
+    [SCRIPT_PKGLIST_FOR_DOCKER]="$SCRIPT_PKGLIST_FOR_DOCKER"
+    [SCRIPT_CONFIGFILE_CURRENT]="$SCRIPT_CONFIGFILE_CURRENT"
+);
 
 # end YOUR default configs }}}
 
@@ -2033,19 +2079,26 @@ MENU_KEY[_IDX]="exec:do_setupConfig";
 MENU_HLP[_IDX]="Show and change custom config values.
 
 This 'Setup' first shows the current config and then will request each
-parameter for changes and to save them to a config file (.DIPA.sh.config') for
-the usage of this program. If the config does not exists our defaults will be
-used and shown. Eg: user and passwords for DB or locations where all the code,
-reositories will go to.
+parameter for changes and to save them to a config file
+current: (${SCRIPT_CONFIGFILE_CURRENT}')
+for the usage of this program. If the config does not exists the script defaults
+will be used and shown. Eg: user and passwords for DB or locations where all the
+code, reositories will go to.
 
 Make sure this script exists only once in your user account and you dont run
-setup at the same time in e.g. two shells. Saving config may fail behinde the
+setup at the same time in e.g. two shells. Saving config may fail behind the
 scene: If another running instance of this program or any other program
 modifies the config, it will be overwritten at this point, losing any previous
 changes made by the other program(s).
 
 To restore back to our defaults just remove this config file or select
 'Delete custom config' and start the script again.
+
+Another option is to use custom configs, which are probably it the best usecase
+for the DIPAS project and all its forks!
+
+run: $(ct_yellow "DIPA.sh /path/to/other/project/.DIPA.sh.config"); to load and
+work with that config.
 
 Details of the config keys and usage:
 
@@ -2178,8 +2231,9 @@ more to come...
 ((_IDX=_IDX+1));
 MENU_NAM[_IDX]="CFG: Delete custom config";
 MENU_KEY[_IDX]="exec:do_setupReset";
-MENU_HLP[_IDX]="This will delete your custom config '.DIPA.sh.config'
-and exits the program.
+MENU_HLP[_IDX]="This will delete your custom config, currently:
+'${SCRIPT_CONFIGFILE_CURRENT}'
+default: '.DIPA.sh.config' and exits the program.
 Start DIPA.sh new and our default config values will be used.";
 
 # ((_IDX=_IDX+1));
@@ -2253,7 +2307,7 @@ if ! do_checkDipasExists ;then
     echo
     txt_warn "Run 'install DIPAS...' from menu to install DIPAS and to hide this message.";
     echo
-    txt_warn "Further infomations are located and the action docs. Enter 1 to get help details";
+    txt_warn "Further infomations are located in the help menu: Enter 1 to get help details";
     echo
 else
     # this script to be run at this path as default and always to not conflict in paths!
