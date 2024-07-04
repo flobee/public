@@ -5,7 +5,10 @@
 /.vscode/*
 node_modules/
 vdr_updowntime.php.cfg.php
+shell/2FA/2fa-config.sh
 shell/git/fix-author.cfg
 shell/screenrc/.screenrc.m*
-shell/2FA/2fa-config.sh
+shell/wsl/services_config_custom.sh
+
+# configs
 .DIPA*

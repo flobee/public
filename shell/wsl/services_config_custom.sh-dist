@@ -1,0 +1,33 @@
+#!/bin/bash
+
+# This is the place for your custom config to configure your individual services
+# The file 'services_config.sh' will be sourced first to init the functionality
+#
+# The start order is important and a reverse order will be used for a stop.
+#
+###
+# Some possible options for your custom config:
+#
+# configure your services you want to start.
+# The start ORDER is important and a reverse order will be used for a stop.
+#
+#((_IDX=_IDX+1)); # idx 0 now (if activ)
+# SERVICES_LIST_START[_IDX]="rsyslog";
+#
+# ((_IDX=_IDX+1)); # idx 1 now (if activ)
+# SERVICES_LIST_START[_IDX]="syslog-ng";
+#
+# ((_IDX=_IDX+1));
+# SERVICES_LIST_START[_IDX]="ssh";
+#
+# ((_IDX=_IDX+1));
+# SERVICES_LIST_START[_IDX]="cron";
+#
+# ((_IDX=_IDX+1));
+# SERVICES_LIST_START[_IDX]="docker";
+#
+# ((_IDX=_IDX+1));
+# SERVICES_LIST_START[_IDX]="nginx";
+#
+# ... other service configs...
+#

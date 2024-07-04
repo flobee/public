@@ -1,5 +1,7 @@
 #!/bin/bash
 
+SCRIPT_DIRECTORY_REAL="$(dirname "$(readlink -f "$0")")";
+
 ###
 # WSL services start/stop/status helper.
 #
@@ -30,26 +32,48 @@
 # chmod 0755 services_start.sh      # run start
 # chmod 0755 services_stop.sh       # run stop
 # chmod 0755 services_status.sh     # run status
+#
+#
+# load configs: core and custom
+#
+# The lines make variable $SERVICES_LIST_START available
+# shellcheck disable=SC1091
+source "services_config.sh";
 
-action=$(echo $0 | cut -d '_' -f2 | cut -d '.' -f1);
+if [ -f "${SCRIPT_DIRECTORY_REAL}/services_config_custom.sh" ]; then
+    # shellcheck disable=SC1091
+    source "services_config_custom.sh";
+else
+    echo "File 'services_config_custom.sh' not found.";
+    echo "Please create and setup (check 'services_config.sh')! Exit";
+    exit 1;
+fi
 
+
+# $1 string service name
+# $2 string action to perform
+function do_check_run_service() {
+    service=$(sudo which "$1");
+    if [ "$service" != "" ]; then
+        echo "Do $2 service: $1";
+        sudo service "$1" "$2";
+    fi;
+}
+
+
+action=$(echo "$0" | cut -d '_' -f2 | cut -d '.' -f1);
+
+echo "Using 'sudo' command. You may will be asked for your password several times";
 if [ "$action" = "start" ] || [ "$action" = "status" ]; then
-    sudo service rsyslog "$action"
-    #sudo service syslog-ng "$action"; # eg. for wsl2/Ubuntu2204++
-    sudo service ssh "$action";
-    sudo service cron "$action";
-    sudo service docker "$action";
-    sudo service nginx "$action";
-
+    # forward loop
+    for ((i=0; i<=${#SERVICES_LIST_START[@]}-1; i++)); do
+        do_check_run_service "${SERVICES_LIST_START[$i]}" "$action";
+    done;
 elif [ "$action" = "stop" ]; then
-    # reverse order
-    sudo service nginx "$action";
-    sudo service docker "$action";
-    sudo service cron "$action";
-    sudo service ssh "$action";
-    #sudo service syslog-ng "$action";
-    sudo service rsyslog "$action"
-
+    # reverse loop
+    for ((i=${#SERVICES_LIST_START[@]}-1; i>=0; i--)); do
+        do_check_run_service "${SERVICES_LIST_START[$i]}" "$action";
+    done;
 else
     echo "Action '$action' not in.";
 fi
