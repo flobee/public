@@ -2,11 +2,23 @@
 
 # shellcheck disable=SC2016
 
-#        ██   ██████   █████  ███████ ██   ██    ███   ███  ██████  ██████  ███████
-#        ██   ██   ██ ██   ██ ██      ██   ██    ████ ████ ██    ██ ██   ██ ██
-#    ██████   ██████  ███████ ███████ ███████    ██ ███ ██ ██    ██ ██   ██ █████
-#   ██   ██   ██   ██ ██   ██      ██ ██   ██    ██  █  ██ ██    ██ ██   ██ ██
-#    █████ ██ ██████  ██   ██ ███████ ██   ██ ██ ██     ██  ██████  ██████  ███████
+#        ██    ██████     █████   ███████  ██    ██
+#        ██    ██   ██   ██   ██  ██       ██    ██
+#        ██    ██   ██   ██   ██  ██       ██    ██
+#    ██████    ██████    ███████  ███████  ████████
+#   ██   ██    ██    ██  ██   ██       ██  ██    ██
+#   ██   ██    ██    ██  ██   ██       ██  ██    ██
+#    █████  ██ ███████   ██   ██  ███████  ██    ██
+#
+#
+#        ███     ███   ██████   ██████   ███████
+#        █████ █████  ██    ██  ██   ██  ██
+#        ██   █   ██  ██    ██  ██   ██  ██
+#        ██  ███  ██  ██    ██  ██   ██  █████
+#        ██   █   ██  ██    ██  ██   ██  ██
+#        ██   █   ██  ██    ██  ██   ██  ██
+#        ██       ██  ██    ██  ██   ██  ██
+#    ██  ██       ██   ██████   ██████   ███████
 
 ################################################################################
 # {{{ ### INTRO / README #######################################################
@@ -15,7 +27,6 @@
 # d.Bash Mode - BASH menu prototype shell script for trd party usage
 #
 # @autor Florian Blasel
-# @version 1.0.0
 # @since 2024-01
 #
 #####
@@ -35,7 +46,7 @@
 # `bash /path/to/dBashMode.sh` or just `./dBashMode.sh`. Other calls like
 # from `zsh` or `sh ./dBashMode.sh` may fail if you use a different
 # interactiv shell than `bash` as your default shell. E.g.: `zsh` is very
-# pupular because of it's power for simple things inside but its another
+# popular because of it's power for simple things inside but its another
 # script dialect which causes this script to fail in some details.
 #
 # When using the "setup"/ "configure task, this script, this program
@@ -55,16 +66,15 @@
 # {{{ ### Script basics ########################################################
 ################################################################################
 
-SCRIPT_DIRECTORY_REAL="$(dirname "$(readlink -f "$0")")";
-SCRIPT_FILENAME=$(basename "$0");
 DEBUG=0;
+SCRIPT_DIRECTORY_REAL="$(dirname "$(readlink -f "$0")")";
+SCRIPT_FILENAME_REAL="$(basename "$(readlink -f "$0")")";
+SCRIPT_FILENAME_CURRENT=$(basename "$0"); # may comes from a renamed symlink from PATH
+SCRIPT_FILENAME="";
 
 # set -x enables a mode of the shell where all executed commands are printed
-# to the terminal. In your case it's clearly used for debugging, which is a
-# typical use case for set -x: printing every command as it is executed may
-# help you to visualize the control flow of the script if it is not functioning
-# as expected. set +x disables it. E.g: [ "$DEBUG" = 'true' ] && set -x
-
+# to the terminal. It's used for debugging, which is a typical use case for
+# printing every command as it is executed as expected. set +x disables it.
 if [ $DEBUG = 1 ]; then
     set -x;
 else
@@ -72,20 +82,30 @@ else
 fi;
 
 if [ -z "$BASH" ]; then
-   echo "Please run this script '$0' with the bash shell.";
-   echo "Call it like (from PATH) '${SCRIPT_FILENAME}' or (from current ";
-   echo "directory): './${SCRIPT_FILENAME}' or 'bash ~/path/${SCRIPT_FILENAME}";
+   echo "Please run this script '$0' with bash";
+   echo "Call it like:"
+   echo "   cd $SCRIPT_DIRECTORY_REAL";
+   echo "   ./${SCRIPT_FILENAME_REAL}";
+   echo "   # or from PATH";
+   echo "   ${SCRIPT_FILENAME_CURRENT}";
 
    exit 1;
 fi
 
 # TODO check when it comes empty!!! eg in PATH?
-if [ "$SCRIPT_FILENAME" = "" ]; then
-    txt_warn "SCRIPT_FILENAME: $SCRIPT_FILENAME emtpy";
+if [ "$SCRIPT_FILENAME_CURRENT" = "" ]; then
+    txt_warn "SCRIPT_FILENAME_CURRENT: $SCRIPT_FILENAME_CURRENT is emtpy";
     txt_warn "\$0: $0";
-    echo "check call, debug here";
+    echo "check the call, debug here";
 
     exit 1;
+fi
+
+# fixes the usage to use SCRIPT_FILENAME from no on.
+if [ "$SCRIPT_FILENAME_CURRENT" = "$SCRIPT_FILENAME_REAL" ]; then
+    SCRIPT_FILENAME="$SCRIPT_FILENAME_REAL";
+else
+    SCRIPT_FILENAME="$SCRIPT_FILENAME_CURRENT";
 fi
 
 # Using Semver but for visual reasons: no two chars lenght of major, minor,
@@ -146,10 +166,15 @@ function trim() {
 }
 
 
-# confirm command.
+# Confirm a command or ask for futher action.
+#
 # confirm means: do the next thing and this is return code 0
 # only 'Y', 'n' or 'N' possible.
-# $1 string Request message
+#
+# Usage e.g.: if confirmCommand("Confirm?"); then echo "do something"; fi
+#
+# @param $1 string Request message
+#
 # returns 0 for "yes confirm the request", 1 for 'do (n)otting'/ else case
 function confirmCommand() {
     local opts="y/N";

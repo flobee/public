@@ -40,6 +40,10 @@ fi
 
 # apend new value:      ACTIONLIST+=(["new_key"]="new_value")
 #
+#
+#_IDX=0;
+# ((_IDX=_IDX+1)); # idx 1 now
+#
 # Iterate Over an Array:
 #for key in ${!ACTIONLIST[@]}
 #do

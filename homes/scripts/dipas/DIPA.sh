@@ -38,7 +38,7 @@
 # solutions for development and bring up your enviroment.
 #
 # @autor Florian Blasel
-# @version 2.7.3
+# @version 2.7.4
 # @since 2024-01
 #
 #####
@@ -87,7 +87,7 @@
 DEBUG=0;
 # Using Semver but for visual reasons: no two chars lenght of major, minor,
 # bugfix versions: Just N.N.N, where N means only 1 digit!
-VERSION='2.7.3';
+VERSION='2.7.4';
 VERSION_STRING="DIPA.sh - Mode Version ${VERSION}";
 
 
