@@ -3,7 +3,7 @@ Type=Service
 X-KDE-ServiceTypes=KonqPopupMenu/Plugin
 Icon=black_sum
 MimeType=application/octet-stream;inode/directory;
-Actions=2mp4comp21batch;2mp4comp28batch;ts2mpg;ts2mpgb;imgresize800;imgresize1600;imgresize1920;media2flacComp8;media2flacComp8batch;
+Actions=2mp4comp21batch;2mp4comp28batch;ts2mpg;ts2mpgb;imgresize800;imgresize1600;imgresize1920;media2flacComp8;media2flacComp8batch;audioNormalizeSox;
 Encoding=UTF-8
 #X-KDE-Submenu=Compress and Resize
 
@@ -53,5 +53,9 @@ Name=media2flac.sh -c 8 -b
 Icon=black_sum
 Exec=(if [ -f "%f" ]; then ~/scripts/media2flac.sh -c 8 -f "%f" -b; fi)
 
-
+[Desktop Action audioNormalizeSox]
+Name=audio Normalize sox
+Icon=black_sum
+Exec=(if [ -f "%f" ]; then ~/scripts/audioNormalize.sh "%f"; fi)
+# sox --norm src.mp3 target.mp3 # works for normalize, audacity does better!
 
