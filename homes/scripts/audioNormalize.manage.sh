@@ -2,7 +2,7 @@
 
 ###
 # manager to scan a directory and execute ./audioNormalize.sh
-# to convert/ normalize audio files using (probably) sox
+# to convert/ normalize audio files using (probably) sox for *.mp3 files
 #
 
 SCRIPT_DIRECTORY_REAL="$(dirname "$(readlink -f "$0")")";
