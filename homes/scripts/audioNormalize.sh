@@ -25,6 +25,8 @@ FILE_EXTENSION="${FILE##*\.}";
 FILE_NAME=$(basename "${FILE%.*}");
 FILE_DIR=$(dirname "$FILE");
 
+FILE_TARGET_LOC="$FILE_DIR/$FILE_NAME""_norm.$FILE_EXTENSION"
+
 if [ "$FILE_EXTENSION" != "mp3" ]; then
     echo "Wrong file extension. Only for 'mp3'";
     exit 1;
@@ -48,12 +50,13 @@ checkCommandAvailable() {
 # echo "$FILE";
 # echo "$FILE_DIR";
 
-if ! checkCommandAvailable "$CONVERTER_BIN"; then
+if ! checkCommandAvailable "$CONVERTER_BIN" >/dev/null 2>&1; then
     echo "Please install '$CONVERTER_BIN'. E.g: apt install $CONVERTER_BIN";
 
     exit 1;
 fi
 
-
-$CONVERTER_BIN --norm "$FILE" "$FILE_DIR/$FILE_NAME""_norm.$FILE_EXTENSION";
-#echo "$FILE_DIR/$FILE_NAME""_norm.$FILE_EXTENSION";
+if [ ! -f "$FILE_TARGET_LOC" ]; then
+    $CONVERTER_BIN --norm "$FILE" "$FILE_DIR/$FILE_NAME""_norm.$FILE_EXTENSION";
+    # echo "$FILE_TARGET_LOC";
+fi
