@@ -9,6 +9,10 @@
 # not all are in here.
 # chmod set x flag to plugins probably for all/world, if world, use absolute links
 # enjoy!
+#
+# Hotkeys, Keyboard Shortcuts, e.g:
+# https://www.gnu.org/software/screen/manual/screen.html
+# http://www.pixelbeat.org/lkdb/screen.html
 
 
 # ------------------------------------------------------------------------------
@@ -88,7 +92,8 @@ hardstatus alwayslastline
 # demo: hardstatus string '%{= kG}%-Lw%{= kW}%50> %n*%f %t%{= kG}%+Lw%< %{= kG}%-=%D %m/%d/%y | %C:%s %A | %1`%{-} %2`%{-} '
 #hardstatus alwayslastline "%{Gb}%c:%s | %d %M | %-Lw%{= BG} %50>%n%f+ %t %{-}%+Lw  %= |Host: %H%? |LAvg: %l%?"
 # hardstatus string '%{Gb}%c:%s | %d %M | %-Lw%{= BG} %50>%n%f+ %t %{-}%+Lw  %= |Host:%H%? |LAvg:%l%? |Cpu:%3`%{-}?'
-hardstatus string "%{Gb} %-Lw%{= Gb} %40>%n%f+ %t %{-}%+Lw %= |%l%?|%{Gb}%1`/%2`MB|Cpu:%5`%% %3` %7`|%6` %4`%{Gb}MB|$USER@%H%?|%d%M|%{Gb}%c:%s"
+#hardstatus string "%{Gb} %-Lw%{= Gb} %40>%n%f+ %t %{-}%+Lw %= |%l%?|%{Gb}%1`/%2`MB|Cpu:%5`%% %3` %7`|%6`swp:%4`%{Gb}MB|$USER@%H%?|%d%M|%{Gb}%c:%s"
+hardstatus string "%{Gb} %-Lw%{= Gb} %40>%n%f+ %t %{-}%+Lw %= |%l%?|%{Gb}%1`/%2`MB|CPU:%5`%%|%3`|%6`SWP:%{Gr}%4`%{Gb}MB|$USER@%H%?|%d%M|%{Gb}%c:%s"
 
 
 # Set the hardstatus prop on gui terms to set the titlebar/icon title
@@ -121,29 +126,21 @@ termcapinfo xterm 'is=\E[r\E[m\E[2J\E[H\E[?7h\E[?1;4;6l'
 # ------------------------------------------------------------------------------
 
 # Example of automatically running some programs in windows on screen startup.
-#screen -t monkey ssh monkey
-#
+
 #chdir /home/USER/some/path
 #screen -t tbx 2 zsh
 #
 #chdir /var/www/html/owncloud-current
 #screen -t owncloud 3 zsh
 #
-# screen -t monkey ssh monkey
 #screen -t process 11 htop
 #screen -t syslog 9 tail -f -n100 /var/log/syslog
-# screen -t mail 10 mutt
+#screen -t mail 10 mutt
 #
 # this screen i want to see frist when i start the screen cmd, so this goes to the last line
 #screen -t zsh 0 zsh
 #
 #
-#
 # Now at ~/.screenrc.local, other options to source
 source ~/.screenrc.local
-
-
-
-
-
 

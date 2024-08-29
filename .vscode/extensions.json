@@ -7,6 +7,7 @@
         "foxundermoon.shell-format",
         "formulahendry.auto-rename-tag",
         "donjayamanne.githistory",
-        "jeanp413.open-remote-ssh"
+        "jeanp413.open-remote-ssh",
+        "danielroedl.meld-diff"
     ]
 }

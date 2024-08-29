@@ -38,11 +38,11 @@ SCRIPT_DIRECTORY_REAL="$(dirname "$(readlink -f "$0")")";
 #
 # The lines make variable $SERVICES_LIST_START available
 # shellcheck disable=SC1091
-source "services_config.sh";
+source "${SCRIPT_DIRECTORY_REAL}/services_config.sh";
 
 if [ -f "${SCRIPT_DIRECTORY_REAL}/services_config_custom.sh" ]; then
     # shellcheck disable=SC1091
-    source "services_config_custom.sh";
+    source "${SCRIPT_DIRECTORY_REAL}/services_config_custom.sh";
 else
     echo "File 'services_config_custom.sh' not found.";
     echo "Please create and setup (check 'services_config.sh')! Exit";
@@ -53,10 +53,12 @@ fi
 # $1 string service name
 # $2 string action to perform
 function do_check_run_service() {
-    service=$(sudo which "$1");
+    service=$(sudo service "$1" status);
     if [ "$service" != "" ]; then
         echo "Do $2 service: $1";
         sudo service "$1" "$2";
+    else
+        echo "Error service: $1 not found";
     fi;
 }
 
