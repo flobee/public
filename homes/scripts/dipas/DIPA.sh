@@ -20,7 +20,7 @@
 #              █
 #
 #        [D]eep [I]nstall and [P]roject [A]ssistant [Sh]ellscript
-#        For devlopment tasks: DIPA.sh
+#        For development tasks: DIPA.sh
 #
 ################################################################################
 # {{{ ### INTRO / README #######################################################
@@ -1397,9 +1397,9 @@ INSTALLHINTS
     echo
     # mk upload paths available
     cd "${DIPAS_BASE_ROOT_PATH}/repository/htdocs/drupal/sites/default" || {
-        txt_warn "cd to repository/htdocs/drupal/sites/default failed";
+        txt_warn "cd to 'repository/htdocs/drupal/sites/default' failed";
     }
-    if confirmCommand "Create and modify upload paths with correct permissions?"; then
+    #if confirmCommand "Create and modify upload paths with correct permissions?"; then
         if [ ! -d "./files/dipas" ]; then
             mkdir -p "./files/dipas";
         fi
@@ -1412,12 +1412,12 @@ INSTALLHINTS
             mkdir "./files/translations";
         fi
         sudo chown -R daemon:daemon ./files;
-    fi
+    #fi
 
     #####
 
 
-    cd "${DIPAS_BASE_ROOT_PATH}" || txt_warn "cd to dipas root failed";
+    cd "${DIPAS_BASE_ROOT_PATH}" || txt_warn "cd to dipas root failed (L:$LINENO)";
 
     echo
     echo "$(mark_ok) So far: 'SYS: Install DIPAS enviroment' done";
@@ -1436,7 +1436,7 @@ INSTALLHINTS
     if confirmCommand "Confirm to start installing DIPAS navigator..."; then
         do_installDipasNavigator || {
             echo
-            txt_warn "Failt. Abort.";
+            txt_warn "Failt. Abort. (L:$LINENO)";
 
             return 11;
         }
@@ -1594,7 +1594,7 @@ BANNER_INTRO_PRE=$(
               ██       Hamburg / Germany
               █
         [D]eep [I]nstall and [P]roject [A]ssistant [Sh]ellscript
-        For devlopment tasks: DIPA.sh
+        For development tasks: DIPA.sh
 
 BANNER_INTRO
 );
