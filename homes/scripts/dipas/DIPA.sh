@@ -508,7 +508,7 @@ function do_dbImport() {
     echo -n "Check if '${DIPAS_DB_DUMP_SUBPATH}/' exists... ";
     if [ ! -d "${DIPAS_BASE_ROOT_PATH}/${DIPAS_DB_DUMP_SUBPATH}/" ]; then
         mkdir "${DIPAS_BASE_ROOT_PATH}/${DIPAS_DB_DUMP_SUBPATH}/" || {
-            txt_warn "Error creating '${DIPAS_DB_DUMP_SUBPATH}'. Check permissions. Abort";
+            txt_warn "Error creating '${DIPAS_DB_DUMP_SUBPATH}'. Check permissions. Abort (L:$LINENO)";
 
             return 1;
         }
@@ -693,13 +693,13 @@ function do_dbExport() {
     echo "Running pre-checks first...";
     do_checkDipasExists || {
         echo
-        txt_warn "DIPAS installation not found. Abort";
+        txt_warn "DIPAS installation not found. Abort (L:$LINENO)";
 
         return 1;
     }
     do_dockerServicesCheck || {
         echo
-        txt_warn "DIPAS docker container down. Abort";
+        txt_warn "DIPAS docker container down. Abort (L:$LINENO)";
 
         return 2;
     }
@@ -905,7 +905,7 @@ function do_dockerContainerCheckExists() {
 
 function do_dockerContainerRestart() {
     cd "${DIPAS_BASE_ROOT_PATH}/docker/" || {
-        txt_warn "cd to path: '${DIPAS_BASE_ROOT_PATH}/docker/' failt";
+        txt_warn "cd to path: '${DIPAS_BASE_ROOT_PATH}/docker/' failt (L:$LINENO)";
     }
 
     echo "Stop containers...";
@@ -917,7 +917,7 @@ function do_dockerContainerRestart() {
 
 function do_dockerContainerStart() {
     cd "${DIPAS_BASE_ROOT_PATH}/docker/" || {
-        txt_warn "cd to path: '${DIPAS_BASE_ROOT_PATH}/docker/' failt";
+        txt_warn "cd to path: '${DIPAS_BASE_ROOT_PATH}/docker/' failt  (L:$LINENO)";
     }
 
     echo "Start containers...";
@@ -937,7 +937,7 @@ function do_dockerContainerStop() {
 
 function do_dockerContainerBuild() {
     cd "${DIPAS_BASE_ROOT_PATH}/docker/" || {
-        txt_warn "cd to path: '${DIPAS_BASE_ROOT_PATH}/docker/' failt";
+        txt_warn "cd to path: '${DIPAS_BASE_ROOT_PATH}/docker/' failt  (L:$LINENO)";
     }
     echo "Building containers. This may take some time...";
     $SCRIPT_CMD_DOCKERCOMPOSE build --no-cache
@@ -951,7 +951,7 @@ function do_setupConfig() {
     local failmesg="Required value. Please install. Abort!";
 
     checkCommandAvailable "git" || {
-        txt_err "$failmesg";
+        txt_err "$failmesg  (L:$LINENO)";
 
         return 1;
     }
@@ -1003,7 +1003,7 @@ function do_setupConfig() {
         echo "menu to change the values.";
     fi
     cd "$DIPAS_BASE_ROOT_PATH" || {
-        txt_warn "Oops cd to dipas root path '$DIPAS_BASE_ROOT_PATH' failt.";
+        txt_warn "Oops cd to dipas root path '$DIPAS_BASE_ROOT_PATH' failt (L:$LINENO)";
     }
 }
 
@@ -1121,7 +1121,7 @@ function do_installEnviroment() {
             if [ $inDocker -eq 1 ]; then
                 echo "Add user '$USER' to docker group...";
                 sudo adduser "$USER" docker || {
-                    txt_warn "Abort. Error adding user to docker group";
+                    txt_warn "Abort. Error adding user to docker group  (L:$LINENO)";
 
                     return 1;
                 }
@@ -1192,7 +1192,7 @@ function do_installDipas() {
     fi
 
     cd "${DIPAS_BASE_ROOT_PATH}" || {
-        echo "Failed to cd '${DIPAS_BASE_ROOT_PATH}' path. Abort";
+        echo "Failed to cd '${DIPAS_BASE_ROOT_PATH}' path. Abort (L:$LINENO)";
 
         return 2;
     }
@@ -1239,7 +1239,7 @@ function do_installDipas() {
     # end repo docker
 
     cd "${DIPAS_BASE_ROOT_PATH}" || {
-        txt_warn "Error changing to path '${DIPAS_BASE_ROOT_PATH}'. Please check. Abort";
+        txt_warn "Error changing to path '${DIPAS_BASE_ROOT_PATH}'. Please check. Abort (L:$LINENO)";
         # other process in the background? permisions problem? This should not happen.
 
         return 6;
@@ -1276,7 +1276,7 @@ function do_installDipas() {
     # end repo dipas
 
     cd "${DIPAS_BASE_ROOT_PATH}" || {
-        txt_warn "Error changing to path '${DIPAS_BASE_ROOT_PATH}'. Please check. Abort";
+        txt_warn "Error changing to path '${DIPAS_BASE_ROOT_PATH}'. Please check. Abort (L:$LINENO)";
         # other process in the background? permisions problem? This should not happen.
 
         return 9;
@@ -2324,7 +2324,7 @@ if ! do_checkDipasExists ;then
 else
     # this script to be run at this path as default and always to not conflict in paths!
     cd "${DIPAS_BASE_ROOT_PATH}" || {
-        txt_err "DIPAS exists but cd to the path failed exception....";
+        txt_err "DIPAS exists but cd to the path failed (L:$LINENO)";
 
         exit 1;
     };
@@ -2353,7 +2353,7 @@ do
         echo "Please run 'install' or 'setup' first.";
         echo "cd to dipas root path failt: '$DIPAS_BASE_ROOT_PATH'";
         echo
-        cd "$(pwd)" || echo "cd pwd failt";
+        cd "$(pwd)" || echo "cd pwd failt (L:$LINENO)";
     }
 
     # trim input first
