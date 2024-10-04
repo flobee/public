@@ -38,7 +38,7 @@
 # solutions for development and bring up your enviroment.
 #
 # @autor Florian Blasel
-# @version 2.7.4
+# @version 2.8.7
 # @since 2024-01
 #
 #####
@@ -85,9 +85,10 @@
 ################################################################################
 
 DEBUG=0;
+
 # Using Semver but for visual reasons: no two chars lenght of major, minor,
 # bugfix versions: Just N.N.N, where N means only 1 digit!
-VERSION='2.7.4';
+VERSION='2.8.7';
 VERSION_STRING="DIPA.sh - Mode Version ${VERSION}";
 
 
@@ -1054,7 +1055,7 @@ function do_installEnviroment() {
     then
         echo
         echo "Core software exists an is available. Asuming this is not the"
-        echo "first install case. Skip core install process...";
+        echo "first install case. Skip software install process...";
 
         return 0;
     else
@@ -1145,30 +1146,30 @@ function do_installDipas() {
     # Todo for complet purge and reinstall? Good idea? no|yes ?
     # rm ~/projects/DIPAS/*
 
-    echo
-    if do_checkDipasExists ;then
-        ctb_yellow "DIPAS installation exists.";
-
-        # txt_warn "DANGER: This asks you to delete all existing code.";
-        # echo "This is not a good idea if you haven't checked if you still";
-        # echo "have some open branches or some git stashes you may need later.";
-        # echo
-        # txt_warn "Please check carefully branches and stashes before you go on.";
-        # echo "Path: '${DIPAS_BASE_ROOT_PATH}'";
-        # echo
-        # txt_warn "DELETE ALL OF THE CODE? There is no undo!";
-
-        # if confirmCommand "Please confirm"; then
-        #     # confirmed (0): y selected...
-        #     echo -n "Will delete existing code now... ";
-        #     #rm "${DIPAS_BASE_ROOT_PATH}/.... no good idea here!
-        #     echo "Done!";
-        # else
-        #     echo "Skip deletion of code";
-        # fi
-    else
-        echo "Good, we can go on...";
-    fi
+    # echo
+    # if do_checkDipasExists ;then
+    #     ctb_yellow "DIPAS installation exists.";
+    #
+    #     # txt_warn "DANGER: This asks you to delete all existing code.";
+    #     # echo "This is not a good idea if you haven't checked if you still";
+    #     # echo "have some open branches or some git stashes you may need later.";
+    #     # echo
+    #     # txt_warn "Please check carefully branches and stashes before you go on.";
+    #     # echo "Path: '${DIPAS_BASE_ROOT_PATH}'";
+    #     # echo
+    #     # txt_warn "DELETE ALL OF THE CODE? There is no undo!";
+    #
+    #     # if confirmCommand "Please confirm"; then
+    #     #     # confirmed (0): y selected...
+    #     #     echo -n "Will delete existing code now... ";
+    #     #     #rm "${DIPAS_BASE_ROOT_PATH}/.... no good idea here!
+    #     #     echo "Done!";
+    #     # else
+    #     #     echo "Skip deletion of code";
+    #     # fi
+    # else
+    #     echo "Good, we can go on...";
+    # fi
 
     echo
     echo "Installing DIPAS code and enviroment configs to '${DIPAS_BASE_ROOT_PATH}'. ";
@@ -1179,12 +1180,16 @@ function do_installDipas() {
     }
 
     echo -n "Creating DIPAS ROOT PATH '${DIPAS_BASE_ROOT_PATH}'... ";
-    if ! mkdir -p "${DIPAS_BASE_ROOT_PATH}"; then
-        txt_err "Error creating the path. Check permissions. Abort";
+    if [ -f "${DIPAS_BASE_ROOT_PATH}" ]; then
+        echo "Already exists";
+    else
+        if ! mkdir -p "${DIPAS_BASE_ROOT_PATH}"; then
+            txt_err "Error creating the path. Check permissions. Abort";
 
-        return 1;
+            return 1;
+        fi
+        echo "Done";
     fi
-    echo "Done";
 
     cd "${DIPAS_BASE_ROOT_PATH}" || {
         echo "Failed to cd '${DIPAS_BASE_ROOT_PATH}' path. Abort";
@@ -1192,7 +1197,7 @@ function do_installDipas() {
         return 2;
     }
 
-    echo -n "Creating a share/transfer directory for data i/o eg. db dumps... ";
+    echo -n "Creating a share/ transfer directory for data i/o eg. db dumps... ";
     if ! mkdir -p "${DIPAS_BASE_ROOT_PATH}/${DIPAS_DB_DUMP_SUBPATH}"; then
         txt_err "Error creating the directory. Check permissions. Abort";
 
@@ -1441,6 +1446,9 @@ INSTALLHINTS
             return 11;
         }
     fi
+
+    echo
+    echo "$(mark_ok) 'Install DIPAS enviroment' done";
 }
 
 
@@ -1780,21 +1788,22 @@ DIPAS_XEXT_REPO_DIPASnavigator_NODEVERSION_NVM="v10.24.1";
 #  3. 'docker compose' (builtin from docker.com which maybe dont work currently eg in WSL)
 SCRIPT_CMD_DOCKERCOMPOSE="/usr/local/bin/docker-compose";
 # Depending on docker-compose this may vari.
-#SCRIPT_PKGLIST_FOR_DOCKER="sudo docker.io docker-compose containerd git"; #debian11,12,Ubuntu2[0|2].04
-SCRIPT_PKGLIST_FOR_DOCKER="sudo docker.io docker-compose containerd git";
+#SCRIPT_PKGLIST_FOR_DOCKER="sudo docker.io docker-compose containerd git pv"; #debian11,12,Ubuntu2[0|2].04
+SCRIPT_PKGLIST_FOR_DOCKER="sudo docker.io docker-compose containerd git pv";
 SCRIPT_CONFIGFILE_CURRENT="${SCRIPT_DIRECTORY_REAL}/.DIPA.sh.config";
 
 ###
-# source config if exists to overwrite prev. defaults
+# source standard config if exists to overwrite the defaults
 if [ -f "${SCRIPT_CONFIGFILE_CURRENT}" ]; then
     # shellcheck source=/dev/null
     . "${SCRIPT_CONFIGFILE_CURRENT}";
 fi
 
+# source custom config if exists to overwrite prev. config values
 if [ -f "$1" ]; then
     # overload custom config
     echo "Custom config overload detected for '$1'";
-    SCRIPT_CONFIGFILE_CURRENT="$1"; # TODO! real location? script dir? what if same name?
+    SCRIPT_CONFIGFILE_CURRENT="$1";
     # shellcheck source=/dev/null
     . "${SCRIPT_CONFIGFILE_CURRENT}";
 fi
@@ -1842,7 +1851,10 @@ PRG_GLOBALS=(
 
     [SCRIPT_CMD_DOCKERCOMPOSE]="$SCRIPT_CMD_DOCKERCOMPOSE"
     [SCRIPT_PKGLIST_FOR_DOCKER]="$SCRIPT_PKGLIST_FOR_DOCKER"
-    [SCRIPT_CONFIGFILE_CURRENT]="$SCRIPT_CONFIGFILE_CURRENT"
+
+    # dont source this key! load configB but there the config value is configA
+    # and loads the wrong config; keep this out of the config
+    #[SCRIPT_CONFIGFILE_CURRENT]="$SCRIPT_CONFIGFILE_CURRENT"
 );
 
 # end YOUR default configs }}}
