@@ -988,8 +988,8 @@ function do_setupConfig() {
 
     echo
     echo "---";
-    echo "Can save config to \"${SCRIPT_CONFIGFILE_CURRENT}\"";
-    if confirmCommand "Save the config to be used for this session?"; then
+    echo "Can save the config to \"${SCRIPT_CONFIGFILE_CURRENT}\"";
+    if confirmCommand "Save the config?"; then
         typeset -p "${prg_sorted[@]}" > "${SCRIPT_CONFIGFILE_CURRENT}";
         echo
         echo "$(mark_ok) Config saved to:";
@@ -1018,7 +1018,7 @@ function do_setupReset() {
             rm "${SCRIPT_CONFIGFILE_CURRENT}";
             echo
             echo "$(mark_ok) Setup/ custom config '${SCRIPT_CONFIGFILE_CURRENT}'";
-            echo "was removed. Please start this script again.";
+            echo "was removed. Please start this script again. Does it already exist?";
             do_exit;
         else
             echo
@@ -1103,11 +1103,6 @@ function do_installEnviroment() {
                 txt_warn "Command 'sudo' available but you are not in the list already..."
                 txt_warn "Add user '$USER' to sudo'er list...";
                 su -c "/usr/sbin/adduser $USER sudo";
-                echo
-                txt_warn "At this step the program can exit but logout must be done by you.";
-                txt_warn "Come back again to finish the setup/ install process.";
-
-                exit;
             fi
 
             # sudo and in sudoers done...
@@ -1131,6 +1126,13 @@ function do_installEnviroment() {
             txt_warn "Installation of core packages done. Setup proxy settings if needed now!";
             echo
             txt_warn "Logout and come back again to be sure your rights are set and active now!"
+            echo
+            txt_warn "To be sure: Close WSL, then"
+            txt_warn "Powershell: "
+            txt_warn "    wsl --shutdown # to shutdown";
+            echo
+            txt_warn "    # To verify if it is DOWN! otherwise open things in editor may block it";
+            txt_warn "    wsl -l -v";
             echo
 
             exit;
@@ -1795,6 +1797,7 @@ SCRIPT_CONFIGFILE_CURRENT="${SCRIPT_DIRECTORY_REAL}/.DIPA.sh.config";
 ###
 # source standard config if exists to overwrite the defaults
 if [ -f "${SCRIPT_CONFIGFILE_CURRENT}" ]; then
+    echo "Load and overwrite configs from '${SCRIPT_CONFIGFILE_CURRENT}'";
     # shellcheck source=/dev/null
     . "${SCRIPT_CONFIGFILE_CURRENT}";
 fi
@@ -1802,7 +1805,7 @@ fi
 # source custom config if exists to overwrite prev. config values
 if [ -f "$1" ]; then
     # overload custom config
-    echo "Custom config overload detected for '$1'";
+    echo "Load and overwrite configs custom configs from '$1'";
     SCRIPT_CONFIGFILE_CURRENT="$1";
     # shellcheck source=/dev/null
     . "${SCRIPT_CONFIGFILE_CURRENT}";
@@ -2224,15 +2227,15 @@ $(ct_yellow "DIPAS_XEXT_REPO_DIPASnavigator_NODEVERSION_NVM")
 # Depeding on the versions of your OS (debian, Ubuntu, WSL) and included
 # external packages (source.list), docker compose can come in different
 # flavors. eg:
-#  1. '/usr/bin/docker-compose' (debian 11, 12; Ubuntu 22.04; real OS's from origin)
+#  1. '/usr/bin/docker-compose' (debian 11, 12; Ubuntu 20.04; real OS's from origin)
 #  2. '/usr/local/bin/docker-compose' (probably manual install, WSL, debian, Ubuntu, mixed)
 #  3. 'docker compose' (builtin from docker.com which maybe dont work currently eg in WSL)
 # Current way: 2 (def: $(ct_yellow "/usr/local/bin/docker-compose")
 $(ct_yellow "SCRIPT_CMD_DOCKERCOMPOSE");
 
 # Depending on 'docker-compose' this may vari.
-# Current test OS: debian 11,12,2204, def: $(ct_yellow "sudo docker.io docker-compose containerd git")
-#SCRIPT_PKGLIST_FOR_DOCKER=\"sudo docker.io docker-compose containerd git\"; # debian 12
+# Current test OS: debian 11,12, Ubuntu 2204, def: $(ct_yellow "sudo docker.io docker-compose containerd git pv")
+#SCRIPT_PKGLIST_FOR_DOCKER=\"sudo docker.io docker-compose containerd git pv\"; # debian 12
 $(ct_yellow "SCRIPT_PKGLIST_FOR_DOCKER")
 
 
@@ -2387,7 +2390,7 @@ do
         else
             txt_err "A direct call is not implemented.";
             txt_err "Missing 'exec:' prefix for '${MENU_KEY[$MENU_INPUT_VALUE_A]}'";
-            txt_err "To do so implement a switch based on the action key";
+            txt_err "Todo: Implement a switch based on the action key";
         fi
     else
         # Not the 'exec:...' case?
