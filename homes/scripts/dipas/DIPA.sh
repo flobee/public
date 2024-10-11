@@ -38,7 +38,7 @@
 # solutions for development and bring up your enviroment.
 #
 # @autor Florian Blasel
-# @version 2.8.7
+# @version 2.9.0
 # @since 2024-01
 #
 #####
@@ -88,7 +88,7 @@ DEBUG=0;
 
 # Using Semver but for visual reasons: no two chars lenght of major, minor,
 # bugfix versions: Just N.N.N, where N means only 1 digit!
-VERSION='2.8.7';
+VERSION='2.9.0';
 VERSION_STRING="DIPA.sh - Mode Version ${VERSION}";
 
 
@@ -787,14 +787,14 @@ function do_dockerServicesCheck() {
 }
 
 
-# plural version for service and containers
+# plural version for service and containers to start
 function do_dockerServicesStart() {
     do_dockerServiceStart;
     do_dockerContainerStart;
 }
 
 
-# plural version for service and containers
+# plural version for service and containers to stop
 function do_dockerServicesStop() {
     do_dockerContainerStop;
     do_dockerServiceStop;
@@ -808,11 +808,14 @@ function do_dockerServiceStart() {
             txt_warn "$(mark_fail) Service docker start failt";
 
             return 1;
-        fi
-    fi
+        else
+            echo "$(mark_ok) Service docker start successful";
 
-    echo "$(mark_ok) Service docker start successful";
-    return 0;
+            return 0;
+        fi
+    else
+        return 0;
+    fi
 }
 
 
@@ -840,6 +843,13 @@ function do_dockerShutdown() {
 
 
 function do_dockerServiceCheckIsUp() {
+    # TODO alternativ check in WSL: better?
+    #  if ! sudo service docker status &> /dev/null; then
+    #     sudo service docker start || {
+    #         echo "Error starting docker";
+    #     };
+    # fi
+
     FILE=/var/run/docker.pid;
     if [ -f "$FILE" ]; then
         echo -e "$(mark_ok) Docker service is running";
@@ -847,7 +857,6 @@ function do_dockerServiceCheckIsUp() {
         return 0;
     else
         echo -e "$(mark_fail) $(txt_warn "Docker service is NOT running")";
-        echo -e "Please start the docker service with '$(ct_grey 'sudo service docker start')'";
 
         return 1;
     fi
@@ -941,6 +950,24 @@ function do_dockerContainerBuild() {
     }
     echo "Building containers. This may take some time...";
     $SCRIPT_CMD_DOCKERCOMPOSE build --no-cache
+}
+
+
+# free's some space in WSL. Soft way, keeps things up
+function do_dockerContainerRemoveDangling_Soft() {
+    if ! do_dockerServiceStart; then
+        txt_warn "Error detected. Check prev. messages";
+        return 1;
+    else
+        if [ "$(docker volume ls -qf dangling=true)" != "" ]; then
+            echo "Dangling containers found and will be removed:";
+            sudo docker volume rm $(docker volume ls -qf dangling=true);
+            return 0;
+        else
+            echo "$(mark_ok) No dangling containers found";
+            return 1;
+        fi
+    fi
 }
 
 
@@ -1884,6 +1911,7 @@ declare -a MENU_NAM
 declare -a MENU_KEY
 declare -a MENU_HLP
 _IDX=0;
+MENU_BREAKLINE="------------------------------";
 
 # menu config
 
@@ -1926,7 +1954,7 @@ MENU_HLP[_IDX]="Execute all available PHP/dupal tests.
 $(txt_err "No tests available")";
 
 ((_IDX=_IDX+1)); # 8
-MENU_NAM[_IDX]="-----------------------";
+MENU_NAM[_IDX]="${MENU_BREAKLINE}";
 MENU_KEY[_IDX]="exec:do_noop";
 
 ((_IDX=_IDX+1)); # 9
@@ -1950,7 +1978,7 @@ MENU_NAM[_IDX]="PHP: Drush Fix domain entries";
 MENU_KEY[_IDX]="exec:goto_containerPhp_doDrushFixDomainEntries";
 
 ((_IDX=_IDX+1)); # 14
-MENU_NAM[_IDX]="-----------------------";
+MENU_NAM[_IDX]="${MENU_BREAKLINE}";
 MENU_KEY[_IDX]="exec:do_noop";
 
 ((_IDX=_IDX+1)); # 15
@@ -1971,7 +1999,7 @@ MENU_KEY[_IDX]="exec:goto_containerDb_do";
 MENU_HLP[_IDX]="Enter the postgre database docker container to do individual actions";
 
 ((_IDX=_IDX+1)); # 18
-MENU_NAM[_IDX]="-----------------------";
+MENU_NAM[_IDX]="${MENU_BREAKLINE}";
 MENU_KEY[_IDX]="exec:do_noop";
 
 ((_IDX=_IDX+1)); # 19
@@ -2027,7 +2055,7 @@ dont change the default settings or enter a custom export filename.
 ";
 
 ((_IDX=_IDX+1));
-MENU_NAM[_IDX]="-----------------------";
+MENU_NAM[_IDX]="${MENU_BREAKLINE}";
 MENU_KEY[_IDX]="exec:do_noop";
 
 ((_IDX=_IDX+1));
@@ -2045,7 +2073,7 @@ MENU_NAM[_IDX]="SYS: Docker services stop";
 MENU_KEY[_IDX]="exec:do_dockerServicesStop"
 
 ((_IDX=_IDX+1));
-MENU_NAM[_IDX]="-----------------------";
+MENU_NAM[_IDX]="${MENU_BREAKLINE}";
 MENU_KEY[_IDX]="exec:do_noop";
 
 ((_IDX=_IDX+1));
@@ -2085,7 +2113,7 @@ Then follow all requested qustions to install the enviroment and DIPAS code.
 ";
 
 ((_IDX=_IDX+1));
-MENU_NAM[_IDX]="-----------------------";
+MENU_NAM[_IDX]="${MENU_BREAKLINE}";
 MENU_KEY[_IDX]="exec:do_noop";
 
 ((_IDX=_IDX+1));
@@ -2252,7 +2280,7 @@ default: '.DIPA.sh.config' and exits the program.
 Start DIPA.sh new and our default config values will be used.";
 
 # ((_IDX=_IDX+1));
-# MENU_NAM[_IDX]="-----------------------";
+# MENU_NAM[_IDX]="${MENU_BREAKLINE}";
 # MENU_KEY[_IDX]="exec:do_noop";
 
 ((_IDX=_IDX+1));
@@ -2294,6 +2322,16 @@ The installer then will guide you to set the following steps:
     cd $DIPAS_BASE_ROOT_PATH
 ";
 
+((_IDX=_IDX+1));
+MENU_NAM[_IDX]="${MENU_BREAKLINE}";
+MENU_KEY[_IDX]="exec:do_noop";
+
+((_IDX=_IDX+1));
+MENU_NAM[_IDX]="SYS: Maintainance";
+MENU_KEY[_IDX]="exec:do_dockerContainerRemoveDangling_Soft"
+MENU_HLP[_IDX]="Currently: Only remove dangling docker containers are in.
+
+But: With WSL run it regulary to save diskspace";
 
 # End YOUR Menu config }}}
 
@@ -2403,7 +2441,7 @@ do
             do_exit
             ;;
 
-        ### TODO to be removed! ############################################>>>>>
+        ### TODO # hidden feature to be removed! ##########################>>>>>
         "cr")
             # hidden feature
             goto_containerPhp_doDrushCr;
