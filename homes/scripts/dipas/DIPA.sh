@@ -38,7 +38,7 @@
 # solutions for development and bring up your enviroment.
 #
 # @autor Florian Blasel
-# @version 2.9.0
+# @version 2.9.4
 # @since 2024-01
 #
 #####
@@ -88,7 +88,7 @@ DEBUG=0;
 
 # Using Semver but for visual reasons: no two chars lenght of major, minor,
 # bugfix versions: Just N.N.N, where N means only 1 digit!
-VERSION='2.9.0';
+VERSION='2.9.4';
 VERSION_STRING="DIPA.sh - Mode Version ${VERSION}";
 
 
@@ -422,7 +422,8 @@ function goto_containerPhp_doDrushCim() {
     goto_containerPhp_do "${cmdPhpMem512Drush} cim -y";
 }
 
-
+# Apply any database updates required
+# drush updbst   # List any pending database updates.
 function goto_containerPhp_doDrushUpdb() {
     echo
     echo "Runs: 'drush updb -y'...";
@@ -808,14 +809,11 @@ function do_dockerServiceStart() {
             txt_warn "$(mark_fail) Service docker start failt";
 
             return 1;
-        else
-            echo "$(mark_ok) Service docker start successful";
-
-            return 0;
         fi
-    else
-        return 0;
     fi
+
+    echo "$(mark_ok) Service docker start successful";
+    return 0;
 }
 
 
@@ -857,6 +855,7 @@ function do_dockerServiceCheckIsUp() {
         return 0;
     else
         echo -e "$(mark_fail) $(txt_warn "Docker service is NOT running")";
+        echo -e "Please start the docker service with '$(ct_grey 'sudo service docker start')'";
 
         return 1;
     fi
@@ -957,14 +956,17 @@ function do_dockerContainerBuild() {
 function do_dockerContainerRemoveDangling_Soft() {
     if ! do_dockerServiceStart; then
         txt_warn "Error detected. Check prev. messages";
+
         return 1;
     else
         if [ "$(docker volume ls -qf dangling=true)" != "" ]; then
             echo "Dangling containers found and will be removed:";
             sudo docker volume rm $(docker volume ls -qf dangling=true);
+
             return 0;
         else
             echo "$(mark_ok) No dangling containers found";
+
             return 1;
         fi
     fi
@@ -1407,23 +1409,24 @@ INSTALLHINTS
         echo "drupal configs are copied: 'settings.local.php' and 'services.local.yml'";
     fi
     echo "Please edit db or proxy setting in 'settings.local.php'";
+    echo
+    echo "Hint: With a verfied 'settings.local.php': php/ drupal/ vue dependencies";
+    echo "can be installed.";
     if confirmCommand "Confirm 'settings.local.php' is set correctly"; then
         echo
         echo 'Yes selected... you checked the files already!';
 
-        echo "With a verfied 'settings.local.php', php/drupal/vue dependencies";
-        echo "can be installed now (composer install)";
-        if confirmCommand "Run 'composer install'?"; then
+        if confirmCommand "Run 'composer install' to install dependencies?"; then
             goto_containerPhp_doComposerInstall;
             # todo correct?
             #goto_containerPhp_do "cd /app/htdocs; ./vendor/bin/drush site:install -y";
             # todo correct?
             #goto_containerPhp_do "cd /app/htdocs; ./vendor/bin/drush upwd admin admin";
         else
-            echo "Skip 'composer install'";
+            echo "Skipping 'composer install'";
         fi
     else
-        txt_warn 'No selected. Skip...';
+        txt_warn 'No selected. Skip install dependencies (composer install)';
     fi
     echo
     echo "Make sure the configs are verified before using drupal!";
@@ -1812,10 +1815,10 @@ DIPAS_XEXT_REPO_DIPASnavigator_NODEVERSION_NVM="v10.24.1";
 # Depeding on the versions of your OS (debian, Ubuntu, WSL) and included
 # external packages (source.list), docker compose can come in different
 # flavors. eg:
-#  1. '/usr/bin/docker-compose' (debian 11, 12; Ubuntu 22.04; real OS's from origin)
-#  2. '/usr/local/bin/docker-compose' (probably manual install, WSL, debian, Ubuntu, mixed)
+#  1. '/usr/bin/docker-compose' (debian 11, 12; Ubuntu 22.04; real OS's from origin, maybe from docker.com)
+#  2. '/usr/local/bin/docker-compose' (probably manual install from docker.com for WSL, debian, Ubuntu, others)
 #  3. 'docker compose' (builtin from docker.com which maybe dont work currently eg in WSL)
-SCRIPT_CMD_DOCKERCOMPOSE="/usr/local/bin/docker-compose";
+SCRIPT_CMD_DOCKERCOMPOSE="/usr/bin/docker-compose";
 # Depending on docker-compose this may vari.
 #SCRIPT_PKGLIST_FOR_DOCKER="sudo docker.io docker-compose containerd git pv"; #debian11,12,Ubuntu2[0|2].04
 SCRIPT_PKGLIST_FOR_DOCKER="sudo docker.io docker-compose containerd git pv";
@@ -2441,7 +2444,7 @@ do
             do_exit
             ;;
 
-        ### TODO # hidden feature to be removed! ##########################>>>>>
+        ### Hidden features ############################################>>>>>
         "cr")
             # hidden feature
             goto_containerPhp_doDrushCr;
@@ -2456,7 +2459,12 @@ do
             # hidden feature
             goto_containerPhp_doDrushUpdb;
             ;;
-        ### TODO to be removed! ###########################################<<<<<
+
+        "i18n")
+            #
+            goto_containerPhp_doDrushImpTrans;
+            ;;
+            ### Hidden features ########################################<<<<<
 
         *)
             # All others which do not match
