@@ -38,7 +38,7 @@
 # solutions for development and bring up your enviroment.
 #
 # @autor Florian Blasel
-# @version 2.9.4
+# @version 2.9.5
 # @since 2024-01
 #
 #####
@@ -88,7 +88,7 @@ DEBUG=0;
 
 # Using Semver but for visual reasons: no two chars lenght of major, minor,
 # bugfix versions: Just N.N.N, where N means only 1 digit!
-VERSION='2.9.4';
+VERSION='2.9.5';
 VERSION_STRING="DIPA.sh - Mode Version ${VERSION}";
 
 
@@ -1774,7 +1774,7 @@ BANNER_OUTRO="$(getBannerOutro)";
 
 
 ################################################################################
-# {{{ ### YOUR default configs #################################################
+# {{{ ### Script default configs handling ######################################
 ################################################################################
 
 DIPAS_BASE_ROOT_PATH="/home/${USER}/projects/DIPAS";
@@ -1827,7 +1827,7 @@ SCRIPT_CONFIGFILE_CURRENT="${SCRIPT_DIRECTORY_REAL}/.DIPA.sh.config";
 ###
 # source standard config if exists to overwrite the defaults
 if [ -f "${SCRIPT_CONFIGFILE_CURRENT}" ]; then
-    echo "Load and overwrite configs from '${SCRIPT_CONFIGFILE_CURRENT}'";
+    echo "Load and overwrite default configs from '${SCRIPT_CONFIGFILE_CURRENT}'";
     # shellcheck source=/dev/null
     . "${SCRIPT_CONFIGFILE_CURRENT}";
 fi
@@ -1835,14 +1835,14 @@ fi
 # source custom config if exists to overwrite prev. config values
 if [ -f "$1" ]; then
     # overload custom config
-    echo "Load and overwrite configs custom configs from '$1'";
+    echo "Load and overwrite custom configs from '$1'";
     SCRIPT_CONFIGFILE_CURRENT="$1";
     # shellcheck source=/dev/null
     . "${SCRIPT_CONFIGFILE_CURRENT}";
 fi
 
 # ###
-# # source custom modules if exists to add aditional functions/feature
+# # source custom modules if exists to add aditional functions/features
 # if [ -f "${SCRIPT_DIRECTORY_REAL}/.DIPA.sh.modules" ]; then
 #     # shellcheck source=/dev/null
 #     . "${SCRIPT_DIRECTORY_REAL}/.DIPA.sh.modules";
@@ -1890,7 +1890,7 @@ PRG_GLOBALS=(
     #[SCRIPT_CONFIGFILE_CURRENT]="$SCRIPT_CONFIGFILE_CURRENT"
 );
 
-# end YOUR default configs }}}
+# end Script default configs handling }}}
 
 
 
