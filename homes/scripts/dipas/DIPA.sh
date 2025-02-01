@@ -38,7 +38,7 @@
 # solutions for development and bring up your enviroment.
 #
 # @autor Florian Blasel
-# @version 2.9.5
+# @version 2.9.8
 # @since 2024-01
 #
 #####
@@ -88,7 +88,7 @@ DEBUG=0;
 
 # Using Semver but for visual reasons: no two chars lenght of major, minor,
 # bugfix versions: Just N.N.N, where N means only 1 digit!
-VERSION='2.9.5';
+VERSION='2.9.8';
 VERSION_STRING="DIPA.sh - Mode Version ${VERSION}";
 
 
@@ -443,14 +443,15 @@ function goto_containerPhp_doDrushCimUpdbCr() {
 # Import translation file
 function goto_containerPhp_doDrushImpTrans() {
     echo
-    echo "Runs: 'drush locale:import de /app/config/de.po' import de.po file...";
-    goto_containerPhp_do "cd /app/htdocs; ./vendor/bin/drush locale:import de /app/config/de.po";
+    echo "Runs: 'drush locale:import --override=all de /app/config/de.po' import de.po file...";
+    goto_containerPhp_do "cd /app/htdocs; ./vendor/bin/drush locale:import --override=all de /app/config/de.po";
 }
 
 
 function goto_containerPhp_doDrushFixDomainEntries() {
     echo
     echo "Fix domain entrys for development:";
+    local cmdPhpMem512Drush="php -d memory_limit=${DIPAS_EXTS_CFG_PHP_MEMLIMIT} /app/htdocs/vendor/bin/drush";
     local cmdFixDomains="${cmdPhpMem512Drush} dipas-dev:fix-domain-entries \
         --host=${DIPAS_XEXT_PHP_FIXDOMAIN_HOST} \
         --port=${DIPAS_XEXT_PHP_FIXDOMAIN_PORT}";
@@ -919,7 +920,7 @@ function do_dockerContainerRestart() {
     echo "Stop containers...";
     $SCRIPT_CMD_DOCKERCOMPOSE down 2> /dev/null;
     echo "Start containers...";
-    $SCRIPT_CMD_DOCKERCOMPOSE up --detach;
+    $SCRIPT_CMD_DOCKERCOMPOSE up --detach --remove-orphans;
 }
 
 
@@ -929,7 +930,7 @@ function do_dockerContainerStart() {
     }
 
     echo "Start containers...";
-    $SCRIPT_CMD_DOCKERCOMPOSE up --detach;
+    $SCRIPT_CMD_DOCKERCOMPOSE up --detach --remove-orphans;
 }
 
 
@@ -954,6 +955,14 @@ function do_dockerContainerBuild() {
 
 # free's some space in WSL. Soft way, keeps things up
 function do_dockerContainerRemoveDangling_Soft() {
+    # TODO reset docker to the state befor.
+    # local activ=0;
+    # if ! do_dockerServiceCheckIsUp; then
+    #     activ=0;
+    # else
+    #     activ=1;
+    # fi
+
     if ! do_dockerServiceStart; then
         txt_warn "Error detected. Check prev. messages";
 
@@ -2039,7 +2048,7 @@ This does the following actions:
 - Runs: 'drush updb -y' To veryfiy prev. run
 - Runs: 'drush cr' (Rebuild all caches)...
 - Runs: 'drush en dipas_dev' enable dipas dev module
-- Runs: 'drush locale:import de /app/config/de.po' Import the de.po file
+- Runs: 'drush locale:import --override=all de /app/config/de.po' Import the de.po file
 - Runs: 'drush en dipas_statistics' Enables dipas statistics module
 
 Fixes local domain entrys for development (here: default values):
@@ -2434,10 +2443,10 @@ do
             txt_err "Todo: Implement a switch based on the action key";
         fi
     else
-        # Not the 'exec:...' case?
+        # Not the <num>/ 'exec:...' case?
         # So check if the selected menu key exists and if special and needs to
         # be implemented here in a switch case stmt ... do it...
-        # E.g: a "q" for quit
+        # E.g: "q" for quit
 
         case $REPLY in
         "q")
@@ -2445,6 +2454,14 @@ do
             ;;
 
         ### Hidden features ############################################>>>>>
+        "cs")
+            # hidden feature: coding style checks (lint, formatting)
+            do_codeCSCheck;
+            ;;
+        "rt")
+            # hidden feature: run tests
+            do_codeTestAll
+            ;;
         "cr")
             # hidden feature
             goto_containerPhp_doDrushCr;
@@ -2460,7 +2477,7 @@ do
             goto_containerPhp_doDrushUpdb;
             ;;
 
-        "i18n")
+        "i18n" | "lng" | "lang"  | "trans")
             #
             goto_containerPhp_doDrushImpTrans;
             ;;

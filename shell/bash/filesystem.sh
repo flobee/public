@@ -16,7 +16,7 @@ getFileDirectory() {
     dirname "$1";
 }
 
-
+# @param string $1 Loction to a file
 # @returns True if file exists and is a regular file.
 fileExists() {
     if [ -f "$1" ]; then
