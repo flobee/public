@@ -38,7 +38,7 @@
 # solutions for development and bring up your enviroment.
 #
 # @autor Florian Blasel
-# @version 2.9.8
+# @version 2.9.9
 # @since 2024-01
 #
 #####
@@ -88,7 +88,7 @@ DEBUG=0;
 
 # Using Semver but for visual reasons: no two chars lenght of major, minor,
 # bugfix versions: Just N.N.N, where N means only 1 digit!
-VERSION='2.9.8';
+VERSION='2.9.9';
 VERSION_STRING="DIPA.sh - Mode Version ${VERSION}";
 
 
@@ -455,7 +455,7 @@ function goto_containerPhp_doDrushFixDomainEntries() {
     local cmdFixDomains="${cmdPhpMem512Drush} dipas-dev:fix-domain-entries \
         --host=${DIPAS_XEXT_PHP_FIXDOMAIN_HOST} \
         --port=${DIPAS_XEXT_PHP_FIXDOMAIN_PORT}";
-    echo -n "Runs: Fix domain entrys ";
+    echo -n "Runs: Fix domain entrys (mod dipas_dev must be enabled) ";
     echo "--host=${DIPAS_XEXT_PHP_FIXDOMAIN_HOST} --port=${DIPAS_XEXT_PHP_FIXDOMAIN_PORT}";
     goto_containerPhp_do "$cmdFixDomains";
 }
