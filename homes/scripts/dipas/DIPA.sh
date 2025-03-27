@@ -38,7 +38,7 @@
 # solutions for development and bring up your enviroment.
 #
 # @autor Florian Blasel
-# @version 2.9.9
+# @version 3.0.1
 # @since 2024-01
 #
 #####
@@ -88,7 +88,7 @@ DEBUG=0;
 
 # Using Semver but for visual reasons: no two chars lenght of major, minor,
 # bugfix versions: Just N.N.N, where N means only 1 digit!
-VERSION='2.9.9';
+VERSION='3.0.1';
 VERSION_STRING="DIPA.sh - Mode Version ${VERSION}";
 
 
@@ -382,6 +382,18 @@ function goto_containerVue_do() {
     checkExitCode "$?" "Container not available?"
 }
 
+###
+# @param string $1 optional action to pipe in
+function goto_containerVueInsights_do() {
+    if [ "$1" = "" ]; then
+        docker exec -it dipas_vue_insights /bin/bash;
+    else
+        docker exec -it dipas_vue_insights /bin/bash -c "$1";
+    fi
+
+    checkExitCode "$?" "Container not available?"
+}
+
 
 # @param string $1 optional action to pipe in
 function goto_containerDb_do() {
@@ -464,6 +476,7 @@ function goto_containerPhp_doDrushFixDomainEntries() {
 function do_codeCSCheck() {
     echo "Run Vue lint + CS checks...";
     goto_containerVue_do "npm run lint";
+    goto_containerVueInsights_do "npm run lint";
 
     txt_warn "Run PHP lint + CS checks... not implemented :-(";
     #goto_containerPhp_do "cd /app/htdocs/drupal/tests; ./runCSCheck.sh";
@@ -474,6 +487,7 @@ function do_codeCSCheck() {
 function do_codeCSFix() {
     echo "Run Vue CS fixes (lint fixes)...";
     goto_containerVue_do 'npm run lint:fix';
+    goto_containerVueInsights_do 'npm run lint:fix';
 
     txt_warn "Run PHP lint + CS fixes... not implemented :-(";
     #goto_containerPhp_do "cd /app/htdocs/drupal/tests; ./runCSFix.sh";
@@ -491,6 +505,7 @@ function do_codeTestAll() {
 function do_codeTestJsVue() {
     echo "Run Js/Vue tests...";
     goto_containerVue_do 'npm run test:unit';
+    goto_containerVueInsights_do 'npm run test:unit';
 }
 
 
@@ -834,13 +849,6 @@ function do_dockerServiceStop() {
     return 0;
 }
 
-
-function do_dockerShutdown() {
-    do_dockerContainerStop;
-    do_dockerServiceStop;
-}
-
-
 function do_dockerServiceCheckIsUp() {
     # TODO alternativ check in WSL: better?
     #  if ! sudo service docker status &> /dev/null; then
@@ -893,11 +901,18 @@ function do_dockerContainerCheckExists() {
         echo -e "$(mark_fail) $(txt_warn "PG Admin Container is not running")";
         check=1;
     fi
-    # FRONTEND DIPAS
+    # FRONTEND DIPAS vue
     if [ "$( docker container inspect -f '{{.State.Running}}' dipas_vue )" = "true" ]; then
         echo -e "$(mark_ok) DIPAS Frontend Container is running";
     else
         echo -e "$(mark_fail) $(txt_warn "DIPAS Frontend Container is not running")";
+        check=1;
+    fi
+    # FRONTEND DIPAS vue_insights
+    if [ "$( docker container inspect -f '{{.State.Running}}' vue_insights )" = "true" ]; then
+        echo -e "$(mark_ok) DIPAS vue_insights Frontend Container is running";
+    else
+        echo -e "$(mark_fail) $(txt_warn "DIPAS vue_insights Frontend Container is not running")";
         check=1;
     fi
     # nginx proxy
@@ -909,18 +924,6 @@ function do_dockerContainerCheckExists() {
     fi
 
     return $check;
-}
-
-
-function do_dockerContainerRestart() {
-    cd "${DIPAS_BASE_ROOT_PATH}/docker/" || {
-        txt_warn "cd to path: '${DIPAS_BASE_ROOT_PATH}/docker/' failt (L:$LINENO)";
-    }
-
-    echo "Stop containers...";
-    $SCRIPT_CMD_DOCKERCOMPOSE down 2> /dev/null;
-    echo "Start containers...";
-    $SCRIPT_CMD_DOCKERCOMPOSE up --detach --remove-orphans;
 }
 
 
@@ -936,11 +939,21 @@ function do_dockerContainerStart() {
 
 function do_dockerContainerStop() {
     cd "${DIPAS_BASE_ROOT_PATH}/docker/" || {
-        txt_warn "cd to path: '${DIPAS_BASE_ROOT_PATH}/docker/' failt";
+        txt_warn "cd to path: '${DIPAS_BASE_ROOT_PATH}/docker/' failt (L:$LINENO)";
     }
 
     echo "Stop containers...";
-    $SCRIPT_CMD_DOCKERCOMPOSE down
+    $SCRIPT_CMD_DOCKERCOMPOSE down; # 2> /dev/null;
+}
+
+
+function do_dockerContainerRestart() {
+    cd "${DIPAS_BASE_ROOT_PATH}/docker/" || {
+        txt_warn "cd to path: '${DIPAS_BASE_ROOT_PATH}/docker/' failt (L:$LINENO)";
+    }
+
+    do_dockerContainerStop;
+    do_dockerContainerStart;
 }
 
 
@@ -1939,25 +1952,25 @@ MENU_HLP[_IDX]="Exit the program
 Press CTRL+C, 'q' or select '$_IDX' from the menu to exit the program";
 
 ((_IDX=_IDX+1)); # 3
-MENU_NAM[_IDX]="Code: CS Check";
+MENU_NAM[_IDX]="Code: CS Check (all)";
 MENU_KEY[_IDX]="exec:do_codeCSCheck";
-MENU_HLP[_IDX]="Run the coding style checks for all available parts (e.g: js/vue, php....)";
+MENU_HLP[_IDX]="Run the coding style checks for all available parts (e.g: js/vue. js/vue_insights, php....)";
 
 ((_IDX=_IDX+1)); # 4
-MENU_NAM[_IDX]="Code: CS Fix";
+MENU_NAM[_IDX]="Code: CS Fix (all)";
 MENU_KEY[_IDX]="exec:do_codeCSFix";
-MENU_HLP[_IDX]="Run the coding style fixer for all available parts (e.g: js/vue, php....)";
+MENU_HLP[_IDX]="Run the coding style fixer for all available parts (e.g: js/vue, js/vue_insights, php....)";
 
 ((_IDX=_IDX+1)); # 5
 MENU_NAM[_IDX]="Code: Test (all)";
 MENU_KEY[_IDX]="exec:do_codeTestAll";
 MENU_HLP[_IDX]="Execute all available tests.
-Currently only some Vue tests exists... more to come....";
+Currently only Vue/ vue_insights tests exists... more to come....";
 
 ((_IDX=_IDX+1)); # 6
 MENU_NAM[_IDX]="Code: Test (Js/Vue)";
 MENU_KEY[_IDX]="exec:do_codeTestJsVue";
-MENU_HLP[_IDX]="Executes all available Js/Vue tests.";
+MENU_HLP[_IDX]="Executes all available JS/vue, JS/vue_insights tests.";
 
 ((_IDX=_IDX+1)); # 7
 MENU_NAM[_IDX]="Code: Test (php)";
@@ -1969,164 +1982,7 @@ $(txt_err "No tests available")";
 MENU_NAM[_IDX]="${MENU_BREAKLINE}";
 MENU_KEY[_IDX]="exec:do_noop";
 
-((_IDX=_IDX+1)); # 9
-MENU_NAM[_IDX]="PHP: Composer Install";
-MENU_KEY[_IDX]="exec:goto_containerPhp_doComposerInstall";
-
-((_IDX=_IDX+1)); # 10
-MENU_NAM[_IDX]="PHP: Drush Clear Cache (cr)";
-MENU_KEY[_IDX]="exec:goto_containerPhp_doDrushCr";
-
-((_IDX=_IDX+1)); # 11
-MENU_NAM[_IDX]="PHP: Drush 2x cim + updb + cr";
-MENU_KEY[_IDX]="exec:goto_containerPhp_doDrushCimUpdbCr";
-
-((_IDX=_IDX+1)); # 12
-MENU_NAM[_IDX]="PHP: Drush Import i18n (*.po)";
-MENU_KEY[_IDX]="exec:goto_containerPhp_doDrushImpTrans";
-
-((_IDX=_IDX+1)); # 13
-MENU_NAM[_IDX]="PHP: Drush Fix domain entries";
-MENU_KEY[_IDX]="exec:goto_containerPhp_doDrushFixDomainEntries";
-
-((_IDX=_IDX+1)); # 14
-MENU_NAM[_IDX]="${MENU_BREAKLINE}";
-MENU_KEY[_IDX]="exec:do_noop";
-
-((_IDX=_IDX+1)); # 15
-MENU_NAM[_IDX]="Goto docker: PHP";
-MENU_KEY[_IDX]="exec:goto_containerPhp_do";
-MENU_HLP[_IDX]="Enter the php docker container to do individual actions e.g:
-DB dumps, 'composer install' 'drush abc xyz' and so on....";
-
-((_IDX=_IDX+1)); # 16
-MENU_NAM[_IDX]="Goto docker: Vue";
-MENU_KEY[_IDX]="exec:goto_containerVue_do";
-MENU_HLP[_IDX]="Enter the Vue docker container to do individual actions e.g:
-'npm run lint', 'npm run test:unit' or 'npm run lint:fix'...";
-
-((_IDX=_IDX+1)); # 17
-MENU_NAM[_IDX]="Goto docker: DB";
-MENU_KEY[_IDX]="exec:goto_containerDb_do";
-MENU_HLP[_IDX]="Enter the postgre database docker container to do individual actions";
-
-((_IDX=_IDX+1)); # 18
-MENU_NAM[_IDX]="${MENU_BREAKLINE}";
-MENU_KEY[_IDX]="exec:do_noop";
-
-((_IDX=_IDX+1)); # 19
-MENU_NAM[_IDX]="SYS: DB Import";
-MENU_KEY[_IDX]="exec:do_dbImport";
-MENU_HLP[_IDX]="This does only handle the database import of a sql dump file.
-All further actions needs to be made by hand.";
-
-((_IDX=_IDX+1));
-MENU_NAM[_IDX]="SYS: DB Import + BE upds";
-MENU_KEY[_IDX]="exec:do_dbImport_extended";
-MENU_HLP[_IDX]="DB Import + Backend updates
-Daily business:
-You get a new DB. Import it and you want upgrading it to the latest changes of
-the local 'drupal' installation to check for errors or for working on the
-current (newer) code base.
-
-This does the following actions:
-
-- Checks if services are up to go on
-- Request db file to import
-- Resets db (backup before exists?)
-- Runs: 'composer install' to bind php dependencies (if changed)
-- Imports the db file
-
-- Resets credential to the defaults: admin/admin
-    - Runs: 'drush ucrt admin'
-    - Runs: 'drush upwd admin admin'
-    - Runs: 'drush urol siteadmin admin'
-
-- Runs: 'drush cim -y' Imports configs from the config directory
-- Runs: 'drush cim -y' To veryfiy prev. run
-- Runs: 'drush updb -y' Apply any required db updates
-- Runs: 'drush updb -y' To veryfiy prev. run
-- Runs: 'drush cr' (Rebuild all caches)...
-- Runs: 'drush en dipas_dev' enable dipas dev module
-- Runs: 'drush locale:import --override=all de /app/config/de.po' Import the de.po file
-- Runs: 'drush en dipas_statistics' Enables dipas statistics module
-
-Fixes local domain entrys for development (here: default values):
-- Runs: 'drush dipas-dev:fix-domain-entries --host=localhost --port=80'
-
-
-... more to come if needed
-";
-
-((_IDX=_IDX+1));
-MENU_NAM[_IDX]="SYS: DB Export";
-MENU_KEY[_IDX]="exec:do_dbExport";
-MENU_HLP[_IDX]="Export/ backup current dipas database.
-It will be stored in 'DIPAS ROOT PATH/transfer/dipas-dump-export.sql' if you
-dont change the default settings or enter a custom export filename.
-";
-
-((_IDX=_IDX+1));
-MENU_NAM[_IDX]="${MENU_BREAKLINE}";
-MENU_KEY[_IDX]="exec:do_noop";
-
-((_IDX=_IDX+1));
-MENU_NAM[_IDX]="SYS: Docker services check";
-MENU_KEY[_IDX]="exec:do_dockerServicesCheck"
-MENU_HLP[_IDX]="Checks if docker service is running
-and also if the docker containers exists and are activ";
-
-((_IDX=_IDX+1));
-MENU_NAM[_IDX]="SYS: Docker services start";
-MENU_KEY[_IDX]="exec:do_dockerServicesStart"
-
-((_IDX=_IDX+1));
-MENU_NAM[_IDX]="SYS: Docker services stop";
-MENU_KEY[_IDX]="exec:do_dockerServicesStop"
-
-((_IDX=_IDX+1));
-MENU_NAM[_IDX]="${MENU_BREAKLINE}";
-MENU_KEY[_IDX]="exec:do_noop";
-
-((_IDX=_IDX+1));
-MENU_NAM[_IDX]="SYS: Docker containers build";
-MENU_KEY[_IDX]="exec:do_dockerContainerBuild";
-MENU_HLP[_IDX]="Initial install job.
-Containers must be build (first time or on changes of the container setup)
-to be able to run the docker containers.";
-
-((_IDX=_IDX+1));
-MENU_NAM[_IDX]="SYS: Install DIPAS enviroment";
-MENU_KEY[_IDX]="exec:do_installDipas";
-MENU_HLP[_IDX]="Install DIPAS from scratch.
-
-Make sure running 'setup custom config' first. Otherwise the script defaults
-will be used.
-
-First install:
-Asking you for 'root' privileges to install required software if not already
-available. Read carefully the output and make sure to logout after each step
-if the program ask you for it so that settings will be activ for the next step.
-When using 'wsl2' it mostly means your user password to become 'root'
-
-'sudo', 'docker' and 'git' are the most important packages which must be
-available. If all is already installed/ available the program skip's this first
-install step.
-
-!!! Details are in the help of 'setup custom config' from menu.!!!
-
-You should be in the group of 'docker' and 'sudo' for this setup. This install
-process will ask you to make it available. Otherwise: Admins: you need to know.
-
-If docker is not activ by default run: 'sudo service docker start'
-@see: 'Docker services start' in menu.
-
-Then follow all requested qustions to install the enviroment and DIPAS code.
-";
-
-((_IDX=_IDX+1));
-MENU_NAM[_IDX]="${MENU_BREAKLINE}";
-MENU_KEY[_IDX]="exec:do_noop";
+#---
 
 ((_IDX=_IDX+1));
 MENU_NAM[_IDX]="CFG: Setup custom config";
@@ -2291,9 +2147,49 @@ MENU_HLP[_IDX]="This will delete your custom config, currently:
 default: '.DIPA.sh.config' and exits the program.
 Start DIPA.sh new and our default config values will be used.";
 
-# ((_IDX=_IDX+1));
-# MENU_NAM[_IDX]="${MENU_BREAKLINE}";
-# MENU_KEY[_IDX]="exec:do_noop";
+((_IDX=_IDX+1));
+MENU_NAM[_IDX]="${MENU_BREAKLINE}";
+MENU_KEY[_IDX]="exec:do_noop";
+
+((_IDX=_IDX+1));
+MENU_NAM[_IDX]="SYS: Docker containers build";
+MENU_KEY[_IDX]="exec:do_dockerContainerBuild";
+MENU_HLP[_IDX]="Initial install job.
+Containers must be build (first time or on changes of the container setup)
+to be able to run the docker containers.";
+
+((_IDX=_IDX+1));
+MENU_NAM[_IDX]="SYS: Install DIPAS enviroment";
+MENU_KEY[_IDX]="exec:do_installDipas";
+MENU_HLP[_IDX]="Install DIPAS from scratch.
+
+Make sure running 'setup custom config' first. Otherwise the script defaults
+will be used.
+
+First install:
+Asking you for 'root' privileges to install required software if not already
+available. Read carefully the output and make sure to logout after each step
+if the program ask you for it so that settings will be activ for the next step.
+When using 'wsl2' it mostly means your user password to become 'root'
+
+'sudo', 'docker' and 'git' are the most important packages which must be
+available. If all is already installed/ available the program skip's this first
+install step.
+
+!!! Details are in the help of 'setup custom config' from menu.!!!
+
+You should be in the group of 'docker' and 'sudo' for this setup. This install
+process will ask you to make it available. Otherwise: Admins: you need to know.
+
+If docker is not activ by default run: 'sudo service docker start'
+@see: 'Docker services start' in menu.
+
+Then follow all requested qustions to install the enviroment and DIPAS code.
+";
+
+((_IDX=_IDX+1));
+MENU_NAM[_IDX]="${MENU_BREAKLINE}";
+MENU_KEY[_IDX]="exec:do_noop";
 
 ((_IDX=_IDX+1));
 MENU_NAM[_IDX]="--- DIPAS_navigator ---";
@@ -2338,12 +2234,154 @@ The installer then will guide you to set the following steps:
 MENU_NAM[_IDX]="${MENU_BREAKLINE}";
 MENU_KEY[_IDX]="exec:do_noop";
 
+#---
+
+((_IDX=_IDX+1));
+MENU_NAM[_IDX]="SYS: Docker services check";
+MENU_KEY[_IDX]="exec:do_dockerServicesCheck"
+MENU_HLP[_IDX]="Checks if docker service is running
+and also if the docker containers exists and are activ";
+
+((_IDX=_IDX+1));
+MENU_NAM[_IDX]="SYS: Docker services start";
+MENU_KEY[_IDX]="exec:do_dockerServicesStart"
+
+((_IDX=_IDX+1));
+MENU_NAM[_IDX]="SYS: Docker services stop";
+MENU_KEY[_IDX]="exec:do_dockerServicesStop"
+
+((_IDX=_IDX+1));
+MENU_NAM[_IDX]="SYS: Docker containers restart";
+MENU_KEY[_IDX]="exec:do_dockerContainerRestart"
+
+#---
+
+((_IDX=_IDX+1));
+MENU_NAM[_IDX]="${MENU_BREAKLINE}";
+MENU_KEY[_IDX]="exec:do_noop";
+
+#---
+
 ((_IDX=_IDX+1));
 MENU_NAM[_IDX]="SYS: Maintainance";
 MENU_KEY[_IDX]="exec:do_dockerContainerRemoveDangling_Soft"
 MENU_HLP[_IDX]="Currently: Only remove dangling docker containers are in.
 
 But: With WSL run it regulary to save diskspace";
+
+((_IDX=_IDX+1));
+MENU_NAM[_IDX]="${MENU_BREAKLINE}";
+MENU_KEY[_IDX]="exec:do_noop";
+
+#---
+
+((_IDX=_IDX+1)); # 9
+MENU_NAM[_IDX]="PHP: Composer Install";
+MENU_KEY[_IDX]="exec:goto_containerPhp_doComposerInstall";
+
+((_IDX=_IDX+1)); # 10
+MENU_NAM[_IDX]="PHP: Drush Clear Cache (cr)";
+MENU_KEY[_IDX]="exec:goto_containerPhp_doDrushCr";
+
+((_IDX=_IDX+1)); # 11
+MENU_NAM[_IDX]="PHP: Drush 2x cim + updb + cr";
+MENU_KEY[_IDX]="exec:goto_containerPhp_doDrushCimUpdbCr";
+
+((_IDX=_IDX+1)); # 12
+MENU_NAM[_IDX]="PHP: Drush Import i18n (*.po)";
+MENU_KEY[_IDX]="exec:goto_containerPhp_doDrushImpTrans";
+
+((_IDX=_IDX+1)); # 13
+MENU_NAM[_IDX]="PHP: Drush Fix domain entries";
+MENU_KEY[_IDX]="exec:goto_containerPhp_doDrushFixDomainEntries";
+
+((_IDX=_IDX+1)); # 14
+MENU_NAM[_IDX]="${MENU_BREAKLINE}";
+MENU_KEY[_IDX]="exec:do_noop";
+
+((_IDX=_IDX+1)); # 15
+MENU_NAM[_IDX]="Goto docker: PHP";
+MENU_KEY[_IDX]="exec:goto_containerPhp_do";
+MENU_HLP[_IDX]="Enter the php docker container to do individual actions e.g:
+DB dumps, 'composer install' 'drush abc xyz' and so on....";
+
+((_IDX=_IDX+1)); # 16
+MENU_NAM[_IDX]="Goto docker: Vue";
+MENU_KEY[_IDX]="exec:goto_containerVue_do";
+MENU_HLP[_IDX]="Enter the Vue docker container to do individual actions e.g:
+'npm run lint', 'npm run test:unit' or 'npm run lint:fix'...";
+
+((_IDX=_IDX+1)); # 16
+MENU_NAM[_IDX]="Goto docker: Vue_Insights";
+MENU_KEY[_IDX]="exec:goto_containerVueInsights_do";
+MENU_HLP[_IDX]="Enter the Vue Insights docker container to do individual actions e.g:
+'npm run lint', 'npm run test:unit' ...";
+
+((_IDX=_IDX+1)); # 17
+MENU_NAM[_IDX]="Goto docker: DB";
+MENU_KEY[_IDX]="exec:goto_containerDb_do";
+MENU_HLP[_IDX]="Enter the postgre database docker container to do individual actions";
+
+((_IDX=_IDX+1)); # 18
+MENU_NAM[_IDX]="${MENU_BREAKLINE}";
+MENU_KEY[_IDX]="exec:do_noop";
+
+((_IDX=_IDX+1)); # 19
+MENU_NAM[_IDX]="SYS: DB Import";
+MENU_KEY[_IDX]="exec:do_dbImport";
+MENU_HLP[_IDX]="This does only handle the database import of a sql dump file.
+All further actions needs to be made by hand.";
+
+((_IDX=_IDX+1));
+MENU_NAM[_IDX]="SYS: DB Import + BE upds";
+MENU_KEY[_IDX]="exec:do_dbImport_extended";
+MENU_HLP[_IDX]="DB Import + Backend updates
+Daily business:
+You get a new DB. Import it and you want upgrading it to the latest changes of
+the local 'drupal' installation to check for errors or for working on the
+current (newer) code base.
+
+This does the following actions:
+
+- Checks if services are up to go on
+- Request db file to import
+- Resets db (backup before exists?)
+- Runs: 'composer install' to bind php dependencies (if changed)
+- Imports the db file
+
+- Resets credential to the defaults: admin/admin
+    - Runs: 'drush ucrt admin'
+    - Runs: 'drush upwd admin admin'
+    - Runs: 'drush urol siteadmin admin'
+
+- Runs: 'drush cim -y' Imports configs from the config directory
+- Runs: 'drush cim -y' To veryfiy prev. run
+- Runs: 'drush updb -y' Apply any required db updates
+- Runs: 'drush updb -y' To veryfiy prev. run
+- Runs: 'drush cr' (Rebuild all caches)...
+- Runs: 'drush en dipas_dev' enable dipas dev module
+- Runs: 'drush locale:import --override=all de /app/config/de.po' Import the de.po file
+- Runs: 'drush en dipas_statistics' Enables dipas statistics module
+
+Fixes local domain entrys for development (here: default values):
+- Runs: 'drush dipas-dev:fix-domain-entries --host=localhost --port=80'
+
+
+... more to come if needed
+";
+
+((_IDX=_IDX+1));
+MENU_NAM[_IDX]="SYS: DB Export";
+MENU_KEY[_IDX]="exec:do_dbExport";
+MENU_HLP[_IDX]="Export/ backup current dipas database.
+It will be stored in 'DIPAS ROOT PATH/transfer/dipas-dump-export.sql' if you
+dont change the default settings or enter a custom export filename.
+";
+
+((_IDX=_IDX+1));
+MENU_NAM[_IDX]="${MENU_BREAKLINE}";
+MENU_KEY[_IDX]="exec:do_noop";
+
 
 # End YOUR Menu config }}}
 
@@ -2449,7 +2487,7 @@ do
         # E.g: "q" for quit
 
         case $REPLY in
-        "q")
+        "q" | "exit")
             do_exit
             ;;
 
