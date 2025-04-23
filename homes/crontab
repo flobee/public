@@ -1,5 +1,35 @@
 # cleanup thumbs. last check: dont work with dconf-editor: 512MB vs. 10GB in real )-:
 find ~/.cache/thumbnails/ -type f -mtime +365  -exec rm {} \;
 
+
+# needs a start by hand or wont work
+#40  14   *   *   *   php to/vdr-tools/tools/vdrVMActions.sh.php
+
+
+# copy gpx files (plans and routes) to devices (phone1,phone2) to be synced
+#10  3   3   *   *   to/localGPXTools/deploy2devices.sh.php run
+
+
+#11  3   *   *   1,4 to/vdr-search-recording updatedb                                                                                                                            
+
+
+# AT pi3:
+##00 9,23 *   *   *  php to/vdr-tools/tools/vdrEPG2Mysql.php /var/cache/vdr/epg.data # in vdrRunBackup.sh
+##45 9,23 *  *   *   to/vdr-tools/tools/vdrRunBackup.sh
+
+
+# encode mobile audio recordings and dB logs
+##*/15 *  *  *  *     to/scripts/audioNormalize.manage.sh to/Music/Recordings
+#*/15  *  *  *  *     XDG_RUNTIME_DIR=/run/user/$(id -u) to/Music/Recordings/toNormalize.sh
+#*/15  *  *  *  *     XDG_RUNTIME_DIR=/run/user/$(id -u) to/Documents/SoundMeter/toNormalize.sh
+
+
+# Standuhr Gong - StanduhrGong.sh [numGongs] [volume:1-100] [lenght(sec):0.8]
+# *    *  * * *  XDG_RUNTIME_DIR=/run/user/$(id -u) to/scripts/StanduhrGong.sh 1 25
+#15 07-09 * * *  XDG_RUNTIME_DIR=/run/user/$(id -u) to/scripts/StanduhrGong.sh 1 20 0.5
+#30 10-23 * * *  XDG_RUNTIME_DIR=/run/user/$(id -u) to/scripts/StanduhrGong.sh 1 20 0.8
+#45 07-09 * * *  XDG_RUNTIME_DIR=/run/user/$(id -u) to/scripts/StanduhrGong.sh 1 20 0.5
+
+
 # others
 
