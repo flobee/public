@@ -22,9 +22,13 @@
  *      git config --global alias.visual '!gitk' # git visual
  *      git config --global --unset alias.visual # dropped in 'drop' to unset
  *
- * Requires: node packages (`apt install node node-json5` ) or get nvm to have
+ * Requires: node packages (`sudo apt install nodejs node-json5` ) or get nvm to have
  * node in user space: https://github.com/nvm-sh/nvm BUT: you may need json5
  * package local (here in ./).
+ *
+ * Usage:
+ * Dry run: `nodejs ./mk_git_aliases.node.js`
+ * Execute: `nodejs ./mk_git_aliases.node.js run`
  */
 
 const FS = require( 'node:fs' );

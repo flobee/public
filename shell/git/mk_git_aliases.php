@@ -22,7 +22,11 @@
  *      git config --global alias.visual '!gitk' # git visual
  *      git config --global --unset alias.visual # dropped in 'drop' to unset
  *
- * Requires: php-cli package (apt install php-cli)
+ * Requires: php-cli package (`sudo apt install php-cli`)
+ *
+ * Usage:
+ * Dry run: `php ./mk_git_aliases.php`
+ * Execute: `php ./mk_git_aliases.php run`
  */
 
 
