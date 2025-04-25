@@ -5,30 +5,11 @@
 /**
  * Git alias generator - node version
  *
- * # @autor Florian Blasel
+ * @autor Florian Blasel
  *
- * Executes shell commands to update/remove or init git aliases to
- * global ~/.gitconfig (your user)
- * When runnin as root:
- *  - 'system' (system wide (/etc)),
- *  - 'global' (current user/ your user (you|root)),
- *  - 'local' (current repo)
- * can be handled.
- * To be used in bash or zsh... to have 'git aliases'
+ * Executes shell commands to update/remove or init git aliases
  *
- * Including own helper aliases for daily business.
- *
- * Examples what this script does, eg:
- *      git config --global alias.visual '!gitk' # git visual
- *      git config --global --unset alias.visual # dropped in 'drop' to unset
- *
- * Requires: node packages (`sudo apt install nodejs node-json5` ) or get nvm to have
- * node in user space: https://github.com/nvm-sh/nvm BUT: you may need json5
- * package local (here in ./).
- *
- * Usage:
- * Dry run: `nodejs ./mk_git_aliases.node.js`
- * Execute: `nodejs ./mk_git_aliases.node.js run`
+ * Check: mk_git_aliases.README.md for more
  */
 
 const FS = require( 'node:fs' );
@@ -38,7 +19,8 @@ const PROCESS = require( 'node:process' );
 
 function gitaliases( test )
 {
-    let file = './mk_git_aliases.json.tmp';
+    // let file = './mk_git_aliases.json.tmp';
+    let file = __dirname + '/mk_git_aliases.shared-config.json5';
     let jsontxt = FS.readFileSync( file, 'utf8' );
     const jsonstring = JSON5.parse( jsontxt );
     let user = OS.userInfo().username;
@@ -62,8 +44,7 @@ function gitaliases( test )
                 way = '--' + way;
             }
 
-            switch ( job )
-            {
+            switch ( job ) {
                 case 'cleanup':
                     if ( commands === true ) {
                         // console.log(  jsonstring[ 'add' ][wayRaw] );
