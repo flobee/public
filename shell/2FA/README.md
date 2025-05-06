@@ -22,8 +22,8 @@ Where `provider-xy` may be `you@email.tld` to login incl. 2FA code.
 
 + [Requirements](#requirements)
 + [Setup](#setup)
-  + [Key generation](#key-generation)
-  + [TOTP or SHARED_SECRET handling](#totp-or-shared_secret-handling)
+    + [Key generation](#key-generation)
+    + [TOTP or SHARED_SECRET handling](#totp-or-shared_secret-handling)
 + [Usage](#usage)
 + [Source/ License](#source-license)
 
@@ -41,11 +41,11 @@ Where `provider-xy` may be `you@email.tld` to login incl. 2FA code.
 
 Install:
 
-    apt install bash gnupg2 oathtool
-
-or
-
     apt install bash gnupg2 oathtool xclip
+
+or without xclip program
+
+    apt install bash gnupg2 oathtool
 
 
 
@@ -56,8 +56,10 @@ Copy `2fa-config.sh-dist` to `2fa-config.sh` and edit to fit your needs.
 
 ### Key generation
 
-You have not a gnupg cert to encrypt a SHARED_SECRET to avoid it stays as
-plaintext file on FS, USB Stick... whatever? If not create one as follow:
+You have not a gnupg cert to encrypt a SHARED_SECRET or some other text to be secret
+to avoid it stays as plaintext file on FS, USB Stick... whatever?
+
+If not, create one as follow:
 
     # which asks all questions, e.g. for a 4096 rsa key, never expires
     gpg --full-gen-key
@@ -69,7 +71,7 @@ plaintext file on FS, USB Stick... whatever? If not create one as follow:
     # Rollout to other maschines.
     # When export and import the private and public key, make sure to set the
     # trust of the keys again on the another computer:
-    # https://unix.stackexchange.com/questions/184947/how-to-import-secret-gpg-key-copied-from-one-machine-to-another
+    # <https://unix.stackexchange.com/questions/184947/how-to-import-secret-gpg-key-copied-from-one-machine-to-another>
     gpg --export ${KEY} > public.key
     gpg --export-secret-key ${KEY} > private.key
 
@@ -94,13 +96,15 @@ Have a new totp or SHARED_SECRET for 2FA?
     # 'YourNewNameForTheUsage' as 'service' name:
     # eg. 2FA code for your you@mail.tld account: mkdir you@mail.tld
     mkdir YourNewNameForTheUsage
-    # Open your editor and past the code to be saved at:
-    # `./YourNewNameForTheUsage/.key` otherwise (if cli history is not tracked)
+
+    # Open your editor and past the code to be saved at: `.../YourNewNameForTheUsage/.key`
+    # otherwise (if cli history is not tracked):
     echo -n 'SHARED_SECRET' > YourNewNameForTheUsage/.key
 
     # encrypt the SHARED_SECRET
     ./2fa-EncryptSharedSecret.sh ~/path/to/2FA-service-dirs/YourNewNameForTheUsage
-    # After: Allow removing the .key file to not leave it there in plaintext.
+
+    # After: Allow removing the .key file **to not leave it there in plaintext**.
 
 done.
 
@@ -134,7 +138,7 @@ Note: When not in $PATH the usage would be, e.g:
 
 ## Source/ License
 
-The scripts here are slightly modified and renamed.
+The scripts here are modified and renamed.
 
 Based on sources and documentation from:
 [https://www.cyberciti.biz/faq/use-oathtool-linux-command-line-for-2-step-verification-2fa/]
