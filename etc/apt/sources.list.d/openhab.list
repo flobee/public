@@ -1,0 +1,2 @@
+# https://www.openhab.org/download/
+deb [signed-by=/usr/share/keyrings/openhab.gpg] https://openhab.jfrog.io/artifactory/openhab-linuxpkg stable main
