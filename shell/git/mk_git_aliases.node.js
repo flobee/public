@@ -46,7 +46,12 @@ function readConfigFile( filePath ) {
  * @returns {string} The constructed Git command.
  */
 function createGitCommand( action, scope, alias, command = '' ) {
-    return `git config ${scope} ${action} alias.${alias} ${command}`.trim();
+    if (action === '--add' && command) {
+        // Escape any double quotes in the command
+        const safeCmd = command.replace(/"/g, '\\"');
+        return `git config ${scope} ${action} alias.${alias} "${safeCmd}"`.trim();
+    }
+    return `git config ${scope} ${action} alias.${alias}`.trim();
 }
 
 /**

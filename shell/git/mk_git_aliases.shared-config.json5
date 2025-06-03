@@ -75,7 +75,7 @@
             "stat": "status",
             // # todo 'stat-dir' => '! git-stat-dir.sh',
             "br": "branch",
-            // #'fall' => 'fetch --all',
+            "fa": "fetch --all",
             // #'mr' => 'merge',
             "df": "diff",
             "dfs ": "diff --staged",
@@ -130,7 +130,7 @@
             // 'cached' => '!git diff --cached --',
             "discard": "!git checkout -- ",
             // local = branch --list
-            "visual": "!gitk",
+            "visual": "gitk",
 
             "tags": "!git tag",
             // latest tag (if tags available and maintained)
