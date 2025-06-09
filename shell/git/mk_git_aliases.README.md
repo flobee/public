@@ -2,7 +2,7 @@
 
 Executes shell commands to update/remove or init git aliases to
 
-+ 'system' (system wide (/etc)), when runnin as root
++ 'system' (system wide (`/etc`)), when runnin as root
 
 + 'global' (current user/ your user (you)) to `~/.gitconfig`
 
@@ -14,8 +14,8 @@ To be used in CLI to have `git aliases` command and the configured
 aliases available.
 
 Including own helper aliases for daily business.
-Configuration in `mk_git_aliases.shared-config.json5`.
-Edit to your needs or read to learn what you can get/use.
+
+Configuration in `mk_git_aliases.shared-config.json5` by default.
 
 Examples what this script does, eg:
 
@@ -23,7 +23,14 @@ Examples what this script does, eg:
     git config --global --unset alias.visual # dropped in 'drop' to unset
 
 
-There are several script which use the shared config: `mk_git_aliases.shared-config.json5`
+There are several script (nodejs, php currently) which use the shared json5
+config: `mk_git_aliases.shared-config.json5`
+
+
+Custom config:
+
+Create your config file: `mk_git_aliases.config-custom.json5` which will be
+used instead of the default onfiguration file.
 
 
 ## PHP context

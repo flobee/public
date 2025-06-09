@@ -14,6 +14,7 @@
 
 const
     FS = require( 'node:fs' ),
+    PATH = require('node:path'),
     JSON5 = require( 'json5' ),
     OS = require( "node:os" ),
     PROCESS = require( 'node:process' ),
@@ -60,8 +61,25 @@ function createGitCommand( action, scope, alias, command = '' ) {
  * @param {boolean} test - If true, commands are printed instead of executed.
  */
 function gitaliases( test ) {
-    const file = `${__dirname}/mk_git_aliases.shared-config.json5`;
-    const config = readConfigFile( file );
+    const possibleFiles = [
+        PATH.join( __dirname, 'mk_git_aliases.config-custom.json5' ),
+        PATH.join( __dirname, 'mk_git_aliases.config-shared.json5' )
+    ];
+
+    let configFileToUse = null;
+    for ( const file of possibleFiles ) {
+        if (FS.existsSync(file)) {
+            configFileToUse = file;
+            break;
+        }
+    }
+
+    if ( !configFileToUse ) {
+        console.error('No config found');
+        process.exit(1);
+    }
+
+    const config = readConfigFile( configFileToUse );
     const user = OS.userInfo().username;
     const execlist = [];
 
