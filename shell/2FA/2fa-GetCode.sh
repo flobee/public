@@ -59,11 +59,9 @@ echo -n "# Your code for '$s' "
 code=$($BIN_OATHTOOL -b --totp "$totp")
 ## Copy to clipboard too ##
 ## if xclip command found  on Linux system ##
-type -a xclip &>/dev/null
-
-[ $? -eq 0 ] && {
+if type -a xclip &>/dev/null; then
     echo -n "$code" | xclip -sel clip; echo "**Code copied to clipboard**";
-}
+fi
 
 echo "$code"
 

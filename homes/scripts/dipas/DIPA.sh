@@ -983,6 +983,7 @@ function do_dockerContainerRemoveDangling_Soft() {
     else
         if [ "$(docker volume ls -qf dangling=true)" != "" ]; then
             echo "Dangling containers found and will be removed:";
+            # shellcheck disable=SC2046
             sudo docker volume rm $(docker volume ls -qf dangling=true);
 
             return 0;
