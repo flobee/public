@@ -38,7 +38,7 @@
 # solutions for development and bring up your enviroment.
 #
 # @autor Florian Blasel
-# @version 3.0.1
+# @version 3.1.2
 # @since 2024-01
 #
 #####
@@ -88,7 +88,7 @@ DEBUG=0;
 
 # Using Semver but for visual reasons: no two chars lenght of major, minor,
 # bugfix versions: Just N.N.N, where N means only 1 digit!
-VERSION='3.0.1';
+VERSION='3.1.2';
 VERSION_STRING="DIPA.sh - Mode Version ${VERSION}";
 
 
@@ -171,7 +171,8 @@ function mark_fail() { echo -e "$(ctb_red "\xE2\x9C\x96") "; }
 #
 # @param string $1 Input string to be trimmed
 function trim() {
-   echo "$1" | xargs;
+#    echo "$1" | xargs;
+   echo "$1" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//'
 }
 
 
@@ -272,7 +273,13 @@ function menuhelpitem() {
 function menuhelp () {
     tput reset;
     local txt="";
-    local txtbanner="${BANNER_INTRO}";
+
+    if [ "$SCRIPT_XFEAT_BANNER_PROMOTION_HIDE" = "1" ]; then
+        local txtbanner="";
+    else
+        local txtbanner="${BANNER_INTRO}";
+    fi
+
     local ln=$((ln+$(($(echo "${BANNER_INTRO}" | wc -l)+1))));
     local l=$(($(tput lines)+0));
 
@@ -334,10 +341,12 @@ function do_noop() {
 ###
 # Do exit the program.
 function do_exit() {
-   echo "$BANNER_OUTRO";
-   echo
+    if [ "$SCRIPT_XFEAT_BANNER_PROMOTION_HIDE" = "0" ]; then
+        echo "$BANNER_OUTRO";
+        echo
+    fi
 
-   exit;
+    exit;
 }
 
 
@@ -366,7 +375,7 @@ function goto_containerPhp_do() {
         docker exec -it dipas_php /bin/bash -c "$1";
     fi
 
-    checkExitCode "$?" "Container not available?"
+    checkExitCode "$?" "Container dipas_php not available?"
 }
 
 
@@ -379,7 +388,7 @@ function goto_containerVue_do() {
         docker exec -it dipas_vue /bin/bash -c "$1";
     fi
 
-    checkExitCode "$?" "Container not available?"
+    checkExitCode "$?" "Container dipas_vue not available?"
 }
 
 ###
@@ -391,7 +400,7 @@ function goto_containerVueInsights_do() {
         docker exec -it dipas_vue_insights /bin/bash -c "$1";
     fi
 
-    checkExitCode "$?" "Container not available?"
+    checkExitCode "$?" "Container dipas_vue_insights not available?"
 }
 
 
@@ -403,7 +412,7 @@ function goto_containerDb_do() {
         docker exec -it dipas_postgres /bin/bash -c "$1";
     fi
 
-    checkExitCode "$?" "Container not available?"
+    checkExitCode "$?" "Container dipas_postgres not available?"
 }
 
 
@@ -452,13 +461,12 @@ function goto_containerPhp_doDrushCimUpdbCr() {
 }
 
 
-# Import translation file
+# Import translation global file
 function goto_containerPhp_doDrushImpTrans() {
     echo
     echo "Runs: 'drush locale:import --override=all de /app/config/de.po' import de.po file...";
     goto_containerPhp_do "cd /app/htdocs; ./vendor/bin/drush locale:import --override=all de /app/config/de.po";
 }
-
 
 function goto_containerPhp_doDrushFixDomainEntries() {
     echo
@@ -909,10 +917,10 @@ function do_dockerContainerCheckExists() {
         check=1;
     fi
     # FRONTEND DIPAS vue_insights
-    if [ "$( docker container inspect -f '{{.State.Running}}' vue_insights )" = "true" ]; then
+    if [ "$( docker container inspect -f '{{.State.Running}}' dipas_vue_insights )" = "true" ]; then
         echo -e "$(mark_ok) DIPAS vue_insights Frontend Container is running";
     else
-        echo -e "$(mark_fail) $(txt_warn "DIPAS vue_insights Frontend Container is not running")";
+        echo -e "$(mark_fail) $(txt_warn "DIPAS dipas_vue_insights Frontend Container is not running")";
         check=1;
     fi
     # nginx proxy
@@ -1015,6 +1023,8 @@ function do_setupConfig() {
         prg_sorted+=( "$key" )
     done < <(printf '%s\0' "${!PRG_GLOBALS[@]}" | sort -z)
 
+    echo
+    echo "You may check the help menu for this task first which explains all in detail.";
     echo
     echo "Your current config:";
     for itemKey in "${prg_sorted[@]}"; do
@@ -1668,22 +1678,34 @@ BANNER_INTRO="${BANNER_INTRO_PRE/VERSION_STRING/${VERSION_STRING}}";
 BANNER_OUTRO_PRE_XMS=$(
     cat <<'BANNER_OUTRO_DEC'
 
-                     .-"``"-.
-                    /______; \
-                   {_______}\|
-                   (/ a a \)(_)
-                   (.-.).-.)
-      _______ooo__(    ^    )____________
-     /             '-.___.-'             \
-    |  Have a wonderful Christmas season  |
-    |           and a good day            |
-     \___________________________________/
-                   |_  |  _|
-                   \___|___/
-                   {___|___}
-                    |_ | _|
-                    /-'Y'-\
-                   (__/ \__)
+       o
+  o '.\'/.' o
+    :->@<-:
+  o .'/.\'. o       .-"``"-.
+       o            /______; \                        .-----.
+                   {_______}\|                       ( #-...'`\
+                   (/ a a \)(_)                       \ #     |
+                   (.-.).-.)                         _ )"===="|_
+      _______ooo__(    ^    )____________           (_`"======"`_)
+                   '-.___.-'                         /`""""""""`\
+                                                     |        o _o\
+                                   ,_                |         (_>|
+              ___                 {` `}__             \      '.___/--#
+ _  _      ."`   `"=,             `;"`   `"=,          '.    ;-._:'\
+{_}:_`'=='` _,=="""=,\            /     _.-'`\           )===\  <>_/  __
+     `'--.=" _.====, `|          ;  _.'`   _.;`    .---""`====`-'\__.' `|
+         `'_(| ^.^ |)/           ;'`    _.:_^}    /             ()\     /
+           )';_'='_/.'  _  .'=_._\___.-;`|| || _  \___..--'        \_.-'
+        .'`    '.=/(__/` | _`-.=||_||_||_||_|/` |    |           () |
+       /    /   o|  \ \_/  .=`-`/           \\_/     ;              ;
+      /`-,_/    o|  |-'        /`-..-'   ~~ |/        \          ()/
+      `(`___   o/__/           \_/`        /           \      '.  /
+       _`\ \`""`  \  __        __\ \   '-./ __,     _.'`\       `;
+      || `'.'._   /-"//       {{o '.'.   //" //    (     `\       \_
+      ||  ,/`-.`./  //        {{  \/`.`.//  //      \    .-`\       `\
+  jgs `\\_/    `'-.//         `\\_/   `'; o//        \___)   `._____.'
+                                `"`      `"`
+https://ascii.co.uk/
 
 BANNER_OUTRO_DEC
 );
@@ -1737,7 +1759,7 @@ BANNER_OUTRO_PRE_BUG=$(
                        ':::::::::::::::'
     +--------------c42-----/_ __ _\----------------------+
     |    BAD, BAD, BUG HERE. CHECK THE DATE AND TIME     |
-    |     HAPPY XMAS and a HAPPY NEW YEAR, DARLING !     |
+    |        HAPPY XMAS and a HAPPY NEW YEAR ;-)         |
     +----------------------------------------------------+
 
 BANNER_OUTRO_BUG
@@ -1775,6 +1797,7 @@ function getBannerOutro() {
             ;;
         # 09-2[2-9] | 09-3* | 1[012]-[01]* | 12-2[012])
         #     echo "autumn" ;;
+
         12-2[4-6] | 01-01 | 12-31)
             banner="$BANNER_OUTRO_PRE_BUG";
             ;;
@@ -1845,20 +1868,28 @@ SCRIPT_CMD_DOCKERCOMPOSE="/usr/bin/docker-compose";
 # Depending on docker-compose this may vari.
 #SCRIPT_PKGLIST_FOR_DOCKER="sudo docker.io docker-compose containerd git pv"; #debian11,12,Ubuntu2[0|2].04
 SCRIPT_PKGLIST_FOR_DOCKER="sudo docker.io docker-compose containerd git pv";
+
+# Hide the promotion banner on start and on exit
+SCRIPT_XFEAT_BANNER_PROMOTION_HIDE=0;
+
+# dont source in external config file!
 SCRIPT_CONFIGFILE_CURRENT="${SCRIPT_DIRECTORY_REAL}/.DIPA.sh.config";
 
 ###
 # source standard config if exists to overwrite the defaults
 if [ -f "${SCRIPT_CONFIGFILE_CURRENT}" ]; then
-    echo "Load and overwrite default configs from '${SCRIPT_CONFIGFILE_CURRENT}'";
+    echo "Load and overwrite defaults from config '${SCRIPT_CONFIGFILE_CURRENT}'";
     # shellcheck source=/dev/null
     . "${SCRIPT_CONFIGFILE_CURRENT}";
 fi
 
 # source custom config if exists to overwrite prev. config values
-if [ -f "$1" ]; then
+if [ -f "$1" ] && {
+    [ "${SCRIPT_CONFIGFILE_CURRENT}" != "$1" ] && [ "${SCRIPT_DIRECTORY_REAL}/$1" != "${SCRIPT_CONFIGFILE_CURRENT}" ];
+    };
+then
     # overload custom config
-    echo "Load and overwrite custom configs from '$1'";
+    echo "Load and overwrite from custom config '$1'";
     SCRIPT_CONFIGFILE_CURRENT="$1";
     # shellcheck source=/dev/null
     . "${SCRIPT_CONFIGFILE_CURRENT}";
@@ -1907,6 +1938,8 @@ PRG_GLOBALS=(
 
     [SCRIPT_CMD_DOCKERCOMPOSE]="$SCRIPT_CMD_DOCKERCOMPOSE"
     [SCRIPT_PKGLIST_FOR_DOCKER]="$SCRIPT_PKGLIST_FOR_DOCKER"
+
+    [SCRIPT_XFEAT_BANNER_PROMOTION_HIDE]="$SCRIPT_XFEAT_BANNER_PROMOTION_HIDE"
 
     # dont source this key! load configB but there the config value is configA
     # and loads the wrong config; keep this out of the config
@@ -2134,6 +2167,11 @@ $(ct_yellow "SCRIPT_CMD_DOCKERCOMPOSE");
 # Current test OS: debian 11,12, Ubuntu 2204, def: $(ct_yellow "sudo docker.io docker-compose containerd git pv")
 #SCRIPT_PKGLIST_FOR_DOCKER=\"sudo docker.io docker-compose containerd git pv\"; # debian 12
 $(ct_yellow "SCRIPT_PKGLIST_FOR_DOCKER")
+
+# If you dont like the promotion banners, here you can hide them. 0 = On, 1 = Hide
+$(ct_yellow "SCRIPT_XFEAT_BANNER_PROMOTION_HIDE")
+Current value: $(ct_yellow "$SCRIPT_XFEAT_BANNER_PROMOTION_HIDE")
+Default value: $(ct_yellow "0")
 
 
 more to come...
@@ -2398,8 +2436,9 @@ MENU_KEY[_IDX]="exec:do_noop";
 
 # tput reset;
 # print banner once at startup
-echo -e "${BANNER_INTRO}";
-# ct_blue "${BANNER_INTRO}";
+if [ "$SCRIPT_XFEAT_BANNER_PROMOTION_HIDE" = "0" ]; then
+    echo -e "${BANNER_INTRO}";
+fi
 
 ##
 # program pre checks
