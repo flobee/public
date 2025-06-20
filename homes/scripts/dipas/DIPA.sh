@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# shellcheck source=DIPAS_promotion.sh
 #
 #              ███████████████████████████████████████████
 #              █                                         █
@@ -38,7 +39,7 @@
 # solutions for development and bring up your enviroment.
 #
 # @autor Florian Blasel
-# @version 3.1.2
+# @version 3.4.2
 # @since 2024-01
 #
 #####
@@ -88,7 +89,8 @@ DEBUG=0;
 
 # Using Semver but for visual reasons: no two chars lenght of major, minor,
 # bugfix versions: Just N.N.N, where N means only 1 digit!
-VERSION='3.1.2';
+VERSION='3.4.2';
+# shellcheck disable=SC2034
 VERSION_STRING="DIPA.sh - Mode Version ${VERSION}";
 
 
@@ -342,8 +344,9 @@ function do_noop() {
 # Do exit the program.
 function do_exit() {
     if [ "$SCRIPT_XFEAT_BANNER_PROMOTION_HIDE" = "0" ]; then
-        echo "$BANNER_OUTRO";
-        echo
+        # BANNER_OUTRO="$(getBannerOutro)";
+        # echo "$BANNER_OUTRO";
+        getBannerOutro
     fi
 
     exit;
@@ -366,9 +369,13 @@ function do_checkDipasExists() {
 }
 
 
+# todo: goto_containerXYZ_do do all the same, limit to a helper function with: func "containername" "cmd"
+
+
 ###
 # @param string $1 optional action to pipe in
 function goto_containerPhp_do() {
+    # TODO: dipas-dev mod must be enabled
     if [ "$1" = "" ]; then
         docker exec -it dipas_php /bin/bash;
     else
@@ -403,6 +410,17 @@ function goto_containerVueInsights_do() {
     checkExitCode "$?" "Container dipas_vue_insights not available?"
 }
 
+###
+# @param string $1 optional action to pipe in
+function goto_containerVueLivedashboard_do() {
+    if [ "$1" = "" ]; then
+        docker exec -it dipas_vue_livedashboard /bin/bash;
+    else
+        docker exec -it dipas_vue_livedashboard /bin/bash -c "$1";
+    fi
+
+    checkExitCode "$?" "Container dipas_vue_livedashboard not available?"
+}
 
 # @param string $1 optional action to pipe in
 function goto_containerDb_do() {
@@ -880,56 +898,24 @@ function do_dockerServiceCheckIsUp() {
 
 
 function do_dockerContainerCheckExists() {
-    local check=0;
-    #  php
-    if [ "$( docker container inspect -f '{{.State.Running}}' dipas_php )" = "true" ]; then
-        echo -e "$(mark_ok) PHP Container is running";
-    else
-        echo -e "$(mark_fail) $(txt_warn "PHP Container is not running")";
-        check=1;
+    local check=0
+
+    read -ra containers <<< "${PRG_GLOBALS[DIPAS_XFEAT_CONTAINERS]}";
+
+    if [ "${#containers[@]}" -eq 0 ]; then
+        txt_warn "No containers defined in config. Nothing to check.";
+
+        return 1;
     fi
-    # apache
-    if [ "$( docker container inspect -f '{{.State.Running}}' dipas_apache )" = "true" ]; then
-        echo -e "$(mark_ok) Apache Container is running";
-    else
-        echo -e "$(mark_fail) $(txt_warn "Apache Container is not running")";
-        check=1;
-    fi
-    # DB
-    if [ "$( docker container inspect -f '{{.State.Running}}' dipas_postgres )" = "true" ]; then
-        echo -e "$(mark_ok) Postgres Container is running";
-    else
-        echo -e "$(mark_fail) $(txt_warn Postgres Container is not running)";
-        check=1;
-    fi
-    # DB PGADMIN
-    if [ "$( docker container inspect -f '{{.State.Running}}' dipas_pgadmin )" = "true" ]; then
-        echo -e "$(mark_ok) PG Admin Container is running"
-    else
-        echo -e "$(mark_fail) $(txt_warn "PG Admin Container is not running")";
-        check=1;
-    fi
-    # FRONTEND DIPAS vue
-    if [ "$( docker container inspect -f '{{.State.Running}}' dipas_vue )" = "true" ]; then
-        echo -e "$(mark_ok) DIPAS Frontend Container is running";
-    else
-        echo -e "$(mark_fail) $(txt_warn "DIPAS Frontend Container is not running")";
-        check=1;
-    fi
-    # FRONTEND DIPAS vue_insights
-    if [ "$( docker container inspect -f '{{.State.Running}}' dipas_vue_insights )" = "true" ]; then
-        echo -e "$(mark_ok) DIPAS vue_insights Frontend Container is running";
-    else
-        echo -e "$(mark_fail) $(txt_warn "DIPAS dipas_vue_insights Frontend Container is not running")";
-        check=1;
-    fi
-    # nginx proxy
-    if [ "$( docker container inspect -f '{{.State.Running}}' dipas_glue_nginx )" = "true" ]; then
-        echo -e "$(mark_ok) DIPAS Proxy Container is running";
-    else
-        echo -e "$(mark_fail) $(txt_warn "DIPAS Proxy Container is not running")";
-        check=1;
-    fi
+
+    for cname in "${containers[@]}"; do
+        if [ "$(docker container inspect -f '{{.State.Running}}' "$cname" 2>/dev/null)" = "true" ]; then
+            echo -e "$(mark_ok) $cname is running";
+        else
+            echo -e "$(mark_fail) $(txt_warn "$cname is not running")";
+            check=1;
+        fi
+    done
 
     return $check;
 }
@@ -1040,8 +1026,16 @@ function do_setupConfig() {
     for itemKey in "${prg_sorted[@]}"; do
         echo
         echo "Config: '$(ct_yellow "$itemKey")' = '$(ct_green "${PRG_GLOBALS[$itemKey]}")'";
-        echo -n "Enter new value or <enter> for no change: ";
-        read -r TMP_VAR;
+        if [ "$itemKey" = "DIPAS_XFEAT_CONTAINERS" ]; then
+            echo "Current containers (one per line):";
+            for cname in ${PRG_GLOBALS[$itemKey]}; do
+                echo "  - $cname"
+            done
+            echo -n "Enter new container list (space-separated, or <enter> for no change): ";
+        else
+            echo -n "Enter new value or <enter> for no change: ";
+        fi
+        read -r TMP_VAR
         if [ "${TMP_VAR}" = "q" ];then
             return 0;
         fi
@@ -1640,185 +1634,6 @@ function do_installDipasNavigator() {
 # End YOUR program functions }}}
 
 
-
-################################################################################
-# {{{ ### Promotion for this program ###########################################
-################################################################################
-
-# its: ANSI Regular & Hand Made
-BANNER_INTRO_PRE=$(
-    cat <<'BANNER_INTRO'
-
-              ███████████████████████████████████████████
-              █                                         █
-              █                                         █
-                                                        █
-    ██████   ██\033[0m  \033[36m██████   █████      ███████  ██   ██\033[0m   █
-    ██   ██  ██\033[0m  \033[36m██   ██ ██   ██     ██       ██   ██\033[0m   █
-    ██   ██  ██\033[0m  \033[36m██████  ███████     ███████  ███████\033[0m   █
-    ██   ██  ██\033[0m  \033[36m██      ██   ██          ██  ██   ██\033[0m   █
-    ██████   ██\033[0m  \033[36m██      ██   ██  █  ███████  ██   ██\033[0m   █
-                                                        █
-              █          VERSION_STRING   █
-              █    ██████████████████████████████████████
-              █   █
-              █  █     Digitales Partizipationssystem
-              █ █      DIPAS - dipas.org
-              ██       Hamburg / Germany
-              █
-        [D]eep [I]nstall and [P]roject [A]ssistant [Sh]ellscript
-        For development tasks: DIPA.sh
-
-BANNER_INTRO
-);
-
-BANNER_INTRO="${BANNER_INTRO_PRE/VERSION_STRING/${VERSION_STRING}}";
-
-# Umpf TL:DR: 1 - 26 DEC!
-BANNER_OUTRO_PRE_XMS=$(
-    cat <<'BANNER_OUTRO_DEC'
-
-       o
-  o '.\'/.' o
-    :->@<-:
-  o .'/.\'. o       .-"``"-.
-       o            /______; \                        .-----.
-                   {_______}\|                       ( #-...'`\
-                   (/ a a \)(_)                       \ #     |
-                   (.-.).-.)                         _ )"===="|_
-      _______ooo__(    ^    )____________           (_`"======"`_)
-                   '-.___.-'                         /`""""""""`\
-                                                     |        o _o\
-                                   ,_                |         (_>|
-              ___                 {` `}__             \      '.___/--#
- _  _      ."`   `"=,             `;"`   `"=,          '.    ;-._:'\
-{_}:_`'=='` _,=="""=,\            /     _.-'`\           )===\  <>_/  __
-     `'--.=" _.====, `|          ;  _.'`   _.;`    .---""`====`-'\__.' `|
-         `'_(| ^.^ |)/           ;'`    _.:_^}    /             ()\     /
-           )';_'='_/.'  _  .'=_._\___.-;`|| || _  \___..--'        \_.-'
-        .'`    '.=/(__/` | _`-.=||_||_||_||_|/` |    |           () |
-       /    /   o|  \ \_/  .=`-`/           \\_/     ;              ;
-      /`-,_/    o|  |-'        /`-..-'   ~~ |/        \          ()/
-      `(`___   o/__/           \_/`        /           \      '.  /
-       _`\ \`""`  \  __        __\ \   '-./ __,     _.'`\       `;
-      || `'.'._   /-"//       {{o '.'.   //" //    (     `\       \_
-      ||  ,/`-.`./  //        {{  \/`.`.//  //      \    .-`\       `\
-  jgs `\\_/    `'-.//         `\\_/   `'; o//        \___)   `._____.'
-                                `"`      `"`
-https://ascii.co.uk/
-
-BANNER_OUTRO_DEC
-);
-
-# North earth : ~21 Mar - ~20Jun
-BANNER_OUTRO_PRE_SPR=$(
-    cat <<'BANNER_OUTRO_SPR'
-
-          ,
-      /\^/`\
-     | \/   |         SPRING IS IN THE AIR!
-     \ \    /                                          _ _
-      '\\//'                                         _{ ' }_
-        ||                DON'T PANIC               { `.!.` }
-        ||  ,                                         {_,_}
-    |\  ||  |\                                          |
-    | | ||  | |         Have a good day               (\|  /)
-    | | || / /                                         \| //
-     \ \||/ / \\   `   /       ´      `   \\   o //     |//
-      `\\//`   \\   \./    \\ /    ///     \\ o //   \\ |/ /
-     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-BANNER_OUTRO_SPR
-);
-
-#  ~21 Juni | Jul | Aug | ~ 20Sep
-BANNER_OUTRO_PRE_SUM=$(
-    cat <<'BANNER_OUTRO_SUM'
-      SUMMER TIME             .
-                         .    |    .
-                          \   |   /
-                      '.   \  '  /   .'
-                        '. .'```'. .'
-    <>.............:::::::`.......`:::::::................<>
-    <>:                                see you the beach :<>
-    <>:                              and have a good day :<>
-    <><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-
-BANNER_OUTRO_SUM
-);
-
-# Bug to be shown at 24.12 and 31.12 - 1.1
-BANNER_OUTRO_PRE_BUG=$(
-    cat <<'BANNER_OUTRO_BUG'
-                         _ ._  _ , _ ._
-                       (_ ' ( `  )_  .__)
-                     ( (  (    )   `)  ) _)
-                    (__ (_   (_ . _) _) ,__)
-                        `~~`\ ' . /`~~`
-                        ,::: ;   ; :::,
-                       ':::::::::::::::'
-    +--------------c42-----/_ __ _\----------------------+
-    |    BAD, BAD, BUG HERE. CHECK THE DATE AND TIME     |
-    |        HAPPY XMAS and a HAPPY NEW YEAR ;-)         |
-    +----------------------------------------------------+
-
-BANNER_OUTRO_BUG
-);
-
-
-BANNER_OUTRO_PRE_DEF=$(
-    cat <<'EOTXT'
-          _\|/_
-          (o o)
- +---- oOO-{_}-OOo----+
- |   Have a good day  |
- / ------------------ \
-
-EOTXT
-);
-
-
-function getBannerOutro() {
-    local banner="$BANNER_OUTRO_PRE_DEF";
-
-    case $(date +%m-%d) in
-        # north hemisphere lazy strict and nearby
-        #
-        # BANNER_OUTRO_PRE_SPR # spring    # North earth : ~21 Mar - ~20Jun
-        # BANNER_OUTRO_PRE_SUM # summer    # ~21 Juni | Jul | Aug | ~ 20Sep
-        # BANNER_OUTRO_PRE_XMS # xmas time # Upf TL;DR: 1 - 26 DEC!
-        # BANNER_OUTRO_PRE_BUG #           # Bug to be shown at 24-26.12 and 31.12 - 1.1
-
-        03-2[1-9] | 03-3* | 04-[0123]* | 05-[0123]* | 06-[01]* | 06-20)
-            banner="$BANNER_OUTRO_PRE_SPR";
-            ;;
-        06-2[1-9] | 06-3* | 07-[0123]* | 08-[0123]* | 09-[01]* | 09-20)
-            banner="$BANNER_OUTRO_PRE_SUM";
-            ;;
-        # 09-2[2-9] | 09-3* | 1[012]-[01]* | 12-2[012])
-        #     echo "autumn" ;;
-
-        12-2[4-6] | 01-01 | 12-31)
-            banner="$BANNER_OUTRO_PRE_BUG";
-            ;;
-        12-0[1-9] | 12-1[0-9] | 12-2[0-6]*)
-            banner="$BANNER_OUTRO_PRE_XMS";
-            ;;
-        # 12-2[1-9] | 12-3* | 01-[0123]* | 02-[0123]* | 03-[1*|20)
-        #     banner="wintertime";
-        #     ;;
-    esac
-
-    echo "$banner";
-}
-
-BANNER_OUTRO="$(getBannerOutro)";
-
-
-# End promotion }}}
-
-
-
 ################################################################################
 # {{{ ### Script default configs handling ######################################
 ################################################################################
@@ -1904,9 +1719,13 @@ fi
 
 ################################################################################
 # mapper for the configs to save custom configs
+# NOTE!:
+# Ignore the order of entrys here. a-z by var name counts in real.
+# For DIPAS_XFEAT_CONTAINERS: Ordered list of container names. Edit this list to add/
+# remove containers. The order matters!
 #
 declare -A PRG_GLOBALS
-# ignore the order of entrys here. a-z by var name counts in real.
+
 PRG_GLOBALS=(
     [DIPAS_BASE_ROOT_PATH]="$DIPAS_BASE_ROOT_PATH"
     [DIPAS_DB_DUMP_SUBPATH]="$DIPAS_DB_DUMP_SUBPATH"
@@ -1935,6 +1754,16 @@ PRG_GLOBALS=(
     [DIPAS_XEXT_REPO_DIPASnavigator_BRANCH]="$DIPAS_XEXT_REPO_DIPASnavigator_BRANCH"
     [DIPAS_XEXT_REPO_DIPASnavigator_BRANCHDEFAULT]="$DIPAS_XEXT_REPO_DIPASnavigator_BRANCHDEFAULT"
     [DIPAS_XEXT_REPO_DIPASnavigator_NODEVERSION_NVM]="$DIPAS_XEXT_REPO_DIPASnavigator_NODEVERSION_NVM"
+
+    [DIPAS_XFEAT_CONTAINERS]="\
+dipas_php \
+dipas_apache \
+dipas_postgres \
+dipas_pgadmin \
+dipas_vue \
+dipas_vue_insights \
+dipas_vue_livedashboard \
+dipas_glue_nginx"
 
     [SCRIPT_CMD_DOCKERCOMPOSE]="$SCRIPT_CMD_DOCKERCOMPOSE"
     [SCRIPT_PKGLIST_FOR_DOCKER]="$SCRIPT_PKGLIST_FOR_DOCKER"
@@ -2357,15 +2186,21 @@ MENU_HLP[_IDX]="Enter the Vue Insights docker container to do individual actions
 'npm run lint', 'npm run test:unit' ...";
 
 ((_IDX=_IDX+1)); # 17
+MENU_NAM[_IDX]="Goto docker: Vue_Livedashboard";
+MENU_KEY[_IDX]="exec:goto_containerVueLivedashboard_do";
+MENU_HLP[_IDX]="Enter the Vue Livedashboard docker container to do individual actions e.g:
+'npm run lint', 'npm run test:unit' ...";
+
+((_IDX=_IDX+1)); # 18
 MENU_NAM[_IDX]="Goto docker: DB";
 MENU_KEY[_IDX]="exec:goto_containerDb_do";
 MENU_HLP[_IDX]="Enter the postgre database docker container to do individual actions";
 
-((_IDX=_IDX+1)); # 18
+((_IDX=_IDX+1)); # ++
 MENU_NAM[_IDX]="${MENU_BREAKLINE}";
 MENU_KEY[_IDX]="exec:do_noop";
 
-((_IDX=_IDX+1)); # 19
+((_IDX=_IDX+1)); # ++
 MENU_NAM[_IDX]="SYS: DB Import";
 MENU_KEY[_IDX]="exec:do_dbImport";
 MENU_HLP[_IDX]="This does only handle the database import of a sql dump file.
@@ -2424,6 +2259,23 @@ MENU_KEY[_IDX]="exec:do_noop";
 
 # End YOUR Menu config }}}
 
+
+################################################################################
+# {{{ ### Promotion for this program ###########################################
+################################################################################
+
+# Source promotion banners if not hidden and file exists
+if [ "$SCRIPT_XFEAT_BANNER_PROMOTION_HIDE" = "0" ]; then
+    PROMOTION_FILE="${SCRIPT_DIRECTORY_REAL}/DIPAS_promotion.sh"
+    if [ -f "$PROMOTION_FILE" ]; then
+        # shellcheck disable=SC1091
+        . "$PROMOTION_FILE";
+    else
+        echo "Promotion file '$PROMOTION_FILE' not found. Skipping banners."
+    fi
+fi
+
+# End promotion }}}
 
 
 ################################################################################
