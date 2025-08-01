@@ -39,7 +39,7 @@
 # solutions for development and bring up your enviroment.
 #
 # @autor Florian Blasel
-# @version 3.4.2
+# @version 3.4.3
 # @since 2024-01
 #
 #####
@@ -77,7 +77,10 @@
 # set foldmethod=marker
 # " Autoclose folds, when moving out of them
 # set foldclose=all
-
+#
+# Coding:
+#   - "todo" as markup for technical todo's
+#   - "to-do" as markup for text parts
 ### }}}
 
 
@@ -89,7 +92,7 @@ DEBUG=0;
 
 # Using Semver but for visual reasons: no two chars lenght of major, minor,
 # bugfix versions: Just N.N.N, where N means only 1 digit!
-VERSION='3.4.2';
+VERSION='3.4.3';
 # shellcheck disable=SC2034
 VERSION_STRING="DIPA.sh - Mode Version ${VERSION}";
 
@@ -503,6 +506,7 @@ function do_codeCSCheck() {
     echo "Run Vue lint + CS checks...";
     goto_containerVue_do "npm run lint";
     goto_containerVueInsights_do "npm run lint";
+    goto_containerVueLivedashboard_do "npm run lint";
 
     txt_warn "Run PHP lint + CS checks... not implemented :-(";
     #goto_containerPhp_do "cd /app/htdocs/drupal/tests; ./runCSCheck.sh";
@@ -514,6 +518,7 @@ function do_codeCSFix() {
     echo "Run Vue CS fixes (lint fixes)...";
     goto_containerVue_do 'npm run lint:fix';
     goto_containerVueInsights_do 'npm run lint:fix';
+    goto_containerVueLivedashboard_do 'npm run lint:fix';
 
     txt_warn "Run PHP lint + CS fixes... not implemented :-(";
     #goto_containerPhp_do "cd /app/htdocs/drupal/tests; ./runCSFix.sh";
@@ -532,6 +537,7 @@ function do_codeTestJsVue() {
     echo "Run Js/Vue tests...";
     goto_containerVue_do 'npm run test:unit';
     goto_containerVueInsights_do 'npm run test:unit';
+    goto_containerVueLivedashboard_do 'npm run test:unit';
 }
 
 
@@ -1495,7 +1501,7 @@ INSTALLHINTS
     echo
     echo "You may want to install also the DIPAS navigator which uses the DIPAS";
     echo "backend. If all previous actions works fine, you may agree to go on,";
-    echo "otherwise check previous TODOs or errors first and come back again";
+    echo "otherwise check previous TO-DOs or errors first and come back again";
     echo "or select from the menu";
     if confirmCommand "Confirm to start installing DIPAS navigator..."; then
         do_installDipasNavigator || {
@@ -1725,7 +1731,6 @@ fi
 # remove containers. The order matters!
 #
 declare -A PRG_GLOBALS
-
 PRG_GLOBALS=(
     [DIPAS_BASE_ROOT_PATH]="$DIPAS_BASE_ROOT_PATH"
     [DIPAS_DB_DUMP_SUBPATH]="$DIPAS_DB_DUMP_SUBPATH"
@@ -2370,7 +2375,7 @@ do
         else
             txt_err "A direct call is not implemented.";
             txt_err "Missing 'exec:' prefix for '${MENU_KEY[$MENU_INPUT_VALUE_A]}'";
-            txt_err "Todo: Implement a switch based on the action key";
+            txt_err "To-do: Implement a switch based on the action key";
         fi
     else
         # Not the <num>/ 'exec:...' case?
