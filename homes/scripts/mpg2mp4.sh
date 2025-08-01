@@ -54,7 +54,7 @@ done
 
 echo "compression: $COMP, name: $NAME; batch?: $BATCH; force overwrite: $OVERWRITE";
 
-[ ! -f "$NAME" ] && echo 'No file' && usage
+[ ! -f "$NAME" ] && echo 'No file' && usage # use /recordings, not /recs!
 [ $COMP -lt 0 ] && echo 'comp min invalid' && usage
 [ $COMP -gt 36 ] && echo 'comp max invalid' && usage
 
